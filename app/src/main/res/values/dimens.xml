@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="indicator_margin">5dp</dimen>
+    <dimen name="elevation_profile_image_view">4dp</dimen>
+    <dimen name="padding_drawable">6dp</dimen>
+    <dimen name="radius_corner_button">4dp</dimen>
 </resources>
