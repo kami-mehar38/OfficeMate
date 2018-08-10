@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.krtechnologies.officemate.helpers
 
 import android.annotation.SuppressLint
@@ -22,6 +24,7 @@ class Helper {
         @SuppressLint("StaticFieldLeak")
         private var helper: Helper? = null
 
+        @Synchronized
         fun getInstance(): Helper {
             synchronized(Helper::class) {
                 if (helper == null)
@@ -51,13 +54,12 @@ class Helper {
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         val imageFileName = "JPEG_" + timeStamp + "_"
         val storageDir = context!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        val image = File.createTempFile(
+
+        // Save a file: path for use with ACTION_VIEW intents
+        return File.createTempFile(
                 imageFileName, /* prefix */
                 ".jpg", /* suffix */
                 storageDir      /* directory */
         )
-
-        // Save a file: path for use with ACTION_VIEW intents
-        return image
     }
 }
