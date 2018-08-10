@@ -5,4 +5,9 @@
     <string name="enter_email">Enter email</string>
     <string name="enter_your_organization_name">Enter your organization name</string>
     <string name="enter_your_designation">Enter your designation</string>
+
+    <array name="image_pick_options">
+        <item>Camera</item>
+        <item>Gallery</item>
+    </array>
 </resources>
