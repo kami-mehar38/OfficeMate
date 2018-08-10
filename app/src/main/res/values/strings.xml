@@ -4,4 +4,5 @@
     <string name="sign_up">Sign Up</string>
     <string name="enter_email">Enter email</string>
     <string name="enter_your_organization_name">Enter your organization name</string>
+    <string name="enter_your_designation">Enter your designation</string>
 </resources>

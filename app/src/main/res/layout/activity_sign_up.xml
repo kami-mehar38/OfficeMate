@@ -71,9 +71,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/background_button_stroke"
         android:clickable="true"
-        android:elevation="2dp"
         android:focusable="true"
-        android:foreground="?selectableItemBackground"
         android:text="@string/sign_up"
         android:textColor="@color/colorAccentDark"
         app:layout_constraintBottom_toTopOf="@+id/guideline4"
@@ -112,5 +110,21 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/etEmail" />
+
+    <EditText
+        android:id="@+id/etDesignation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:drawableLeft="@drawable/ic_action_designation"
+        android:drawablePadding="@dimen/padding_drawable"
+        android:drawableStart="@drawable/ic_action_designation"
+        android:ems="10"
+        android:hint="@string/enter_your_designation"
+        android:inputType="textCapWords"
+        android:singleLine="true"
+        app:layout_constraintEnd_toStartOf="@+id/guideline3"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/etOrganizationName" />
 
 </android.support.constraint.ConstraintLayout>

@@ -10,6 +10,9 @@ class SignUpActivity : AppCompatActivity() {
 
     // properties
     private var etName: EditText? = null
+    private var etEmail: EditText? = null
+    private var etOrganizationName: EditText? = null
+    private var etDesignation: EditText? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,9 +20,15 @@ class SignUpActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        etName = findViewById<EditText>(R.id.etName)
+        etName = findViewById(R.id.etName)
+        etEmail = findViewById(R.id.etEmail)
+        etOrganizationName = findViewById(R.id.etOrganizationName)
+        etDesignation = findViewById(R.id.etDesignation)
 
         etName?.setOnFocusChangeListener { view, b -> if (b) changeToAccent(view as EditText) else changeToPrimary(view as EditText) }
+        etEmail?.setOnFocusChangeListener { view, b -> if (b) changeToAccent(view as EditText) else changeToPrimary(view as EditText) }
+        etOrganizationName?.setOnFocusChangeListener { view, b -> if (b) changeToAccent(view as EditText) else changeToPrimary(view as EditText) }
+        etDesignation?.setOnFocusChangeListener { view, b -> if (b) changeToAccent(view as EditText) else changeToPrimary(view as EditText) }
     }
 
 
