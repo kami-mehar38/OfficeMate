@@ -36,6 +36,8 @@ class SignUpActivity : AppCompatActivity() {
     private var mCurrentPhotoPath: String? = null
     private val PERMISION_CONSTANT: Int = 101
     private val REQUEST_IMAGE_CAPTURE = 1
+    private val REQUEST_IMAGE_SELECT = 2
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,9 +60,15 @@ class SignUpActivity : AppCompatActivity() {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             Glide.with(this)
                     .load(mCurrentPhotoPath)
-                    .apply(RequestOptions().override(150, 150).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true))
+                    .apply(RequestOptions().override(250, 250).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true))
                     .into(ivProfilePicture);
             galleryAddPic()
+        } else if (requestCode == REQUEST_IMAGE_SELECT && resultCode == Activity.RESULT_OK && data != null && data.data != null) {
+            toast(Helper.getInstance().getPath(data.data!!)!!)
+            Glide.with(this)
+                    .load(Helper.getInstance().getPath(data.data!!))
+                    .apply(RequestOptions().override(250, 250).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).error(R.drawable.person).fallback(R.drawable.person))
+                    .into(ivProfilePicture);
         }
     }
 
@@ -80,7 +88,7 @@ class SignUpActivity : AppCompatActivity() {
                         object : Aira.OnPermissionResultListener {
                             override fun onPermissionGranted(p0: MutableList<String>?) {
                                 if (p0?.size!! > 0)
-                                    toast("Granted")
+                                    showImageOptions()
                             }
 
                             override fun onPermissionFailed(p0: MutableList<String>?) {
@@ -99,7 +107,7 @@ class SignUpActivity : AppCompatActivity() {
     // this function show the options of Camera or Gallery to the user
     private fun showImageOptions() {
         val alertDialogBuilder = AlertDialog.Builder(this)
-        alertDialogBuilder.setItems(R.array.image_pick_options) { _: DialogInterface, position: Int -> if (position == 0) dispatchTakePictureIntent() else selectImage() }
+        alertDialogBuilder.setItems(R.array.image_pick_options) { _: DialogInterface, position: Int -> if (position == 0) dispatchTakePictureIntent() else dispatchSelectImageIntent() }
         alertDialogBuilder.create().show()
     }
 
@@ -127,8 +135,12 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
-    private fun selectImage() {
 
+    private fun dispatchSelectImageIntent() {
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.addCategory(Intent.CATEGORY_OPENABLE)
+        intent.type = "image/*"
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_IMAGE_SELECT)
     }
 
     // After capturing the image through camera, this function adds the captured image to gallery
