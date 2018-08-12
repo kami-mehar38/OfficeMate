@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HomeActivity">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/menuNewsfeed"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:drawableTop="@drawable/ic_action_name"
+            android:focusable="true"
+            android:foreground="?selectableItemBackgroundBorderless"
+            android:gravity="center_vertical|center_horizontal"
+            android:maxWidth="60dp"
+            android:padding="@dimen/padding_drawable"
+            android:text="@string/news_feed"
+            android:textColor="@color/colorPrimary" />
+
+        <TextView
+            android:id="@+id/menuWorkstation"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:drawableTop="@drawable/ic_action_email"
+            android:focusable="true"
+            android:foreground="?selectableItemBackgroundBorderless"
+            android:gravity="center_vertical|center_horizontal"
+            android:maxWidth="60dp"
+            android:padding="@dimen/padding_drawable"
+            android:text="@string/workstation"
+            android:textColor="@color/colorPrimary" />
+
+        <TextView
+            android:id="@+id/menuMembers"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:drawableTop="@drawable/ic_action_organization"
+            android:focusable="true"
+            android:foreground="?selectableItemBackgroundBorderless"
+            android:gravity="center_vertical|center_horizontal"
+            android:maxWidth="60dp"
+            android:padding="@dimen/padding_drawable"
+            android:text="@string/members"
+            android:textColor="@color/colorPrimary" />
+
+        <TextView
+            android:id="@+id/menuProfile"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:drawableTop="@drawable/ic_action_designation"
+            android:focusable="true"
+            android:foreground="?selectableItemBackgroundBorderless"
+            android:gravity="center_vertical|center_horizontal"
+            android:maxWidth="60dp"
+            android:padding="@dimen/padding_drawable"
+            android:text="@string/profile"
+            android:textColor="@color/colorPrimary" />
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>
