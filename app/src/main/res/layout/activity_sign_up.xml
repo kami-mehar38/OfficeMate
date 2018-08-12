@@ -29,12 +29,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
-            android:layout_marginBottom="6dp"
-            android:visibility="gone"
+            android:layout_marginBottom="3dp"
             android:layout_marginEnd="@dimen/padding_drawable"
             android:layout_marginRight="@dimen/padding_drawable"
             android:src="@drawable/ic_action_cancel"
             android:stateListAnimator="@animator/elevation_button"
+            android:visibility="gone"
             app:backgroundTint="@android:color/white"
             app:fabSize="mini"
             tools:ignore="ContentDescription"
@@ -74,8 +74,9 @@
     <EditText
         android:id="@+id/etName"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginTop="32dp"
+        android:background="@drawable/background_edittext_stroke"
         android:drawableLeft="@drawable/ic_action_name"
         android:drawablePadding="@dimen/padding_drawable"
         android:drawableStart="@drawable/ic_action_name"
@@ -106,8 +107,9 @@
     <EditText
         android:id="@+id/etEmail"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginTop="8dp"
+        android:background="@drawable/background_edittext_stroke"
         android:drawableLeft="@drawable/ic_action_email"
         android:drawablePadding="@dimen/padding_drawable"
         android:drawableStart="@drawable/ic_action_email"
@@ -122,8 +124,9 @@
     <EditText
         android:id="@+id/etOrganizationName"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginTop="8dp"
+        android:background="@drawable/background_edittext_stroke"
         android:drawableLeft="@drawable/ic_action_organization"
         android:drawablePadding="@dimen/padding_drawable"
         android:drawableStart="@drawable/ic_action_organization"
@@ -139,8 +142,9 @@
     <EditText
         android:id="@+id/etDesignation"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginTop="8dp"
+        android:background="@drawable/background_edittext_stroke"
         android:drawableLeft="@drawable/ic_action_designation"
         android:drawablePadding="@dimen/padding_drawable"
         android:drawableStart="@drawable/ic_action_designation"
@@ -151,5 +155,34 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/etOrganizationName" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="I am :"
+        android:textAppearance="@style/TextAppearance.AppCompat.Button"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/etDesignation" />
+
+    <CheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Admin"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <CheckBox
+        android:id="@+id/checkBox2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:text="CheckBox"
+        app:layout_constraintBaseline_toBaselineOf="@+id/checkBox"
+        app:layout_constraintStart_toEndOf="@+id/checkBox" />
 
 </android.support.constraint.ConstraintLayout>

@@ -28,8 +28,7 @@ import android.os.Build
 import android.os.Message
 import android.util.Log
 import android.view.View
-import android.view.animation.AnimationSet
-import android.view.animation.OvershootInterpolator
+import android.view.animation.*
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -72,7 +71,12 @@ class SignUpActivity : AppCompatActivity() {
             if (profileImage != null) {
                 profileImage = null
                 ivProfilePicture.setImageDrawable(resources.getDrawable(R.drawable.person))
+                popDown()
             }
+        }
+
+        btnSignUp.setOnClickListener {
+            startActivity(Intent(this, LoginActivity::class.java))
         }
 
         etName.setOnFocusChangeListener { view, b -> if (b) Helper.getInstance().changeToAccent(view as EditText) else Helper.getInstance().changeToPrimary(view as EditText) }
@@ -152,6 +156,12 @@ class SignUpActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
+    override fun onEnterAnimationComplete() {
+        super.onEnterAnimationComplete()
+        if (profileImage != null)
+            popUp()
+    }
+
     // this function checks for the permissions and then shows the image options
     private fun checkPermissionFirst() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
@@ -186,7 +196,7 @@ class SignUpActivity : AppCompatActivity() {
         alertDialogBuilder.create().show()
     }
 
-    var photoFile: File? = null
+    private var photoFile: File? = null
 
     // this function dispatches the intent to start the camera and capture image
     private fun dispatchTakePictureIntent() {
@@ -234,37 +244,62 @@ class SignUpActivity : AppCompatActivity() {
         Toast.makeText(this@SignUpActivity, message, Toast.LENGTH_SHORT).show()
     }
 
-    override fun onEnterAnimationComplete() {
-        super.onEnterAnimationComplete()
-        popUp()
-    }
 
     private fun popUp() {
 
-        val scaleX = ObjectAnimator.ofInt(btnCancelProfilePicture, "scaleX", 0, 1)
-        val scaleY = ObjectAnimator.ofInt(btnCancelProfilePicture, "scaleY", 0, 1)
+        val animScaleX = ObjectAnimator.ofFloat(btnCancelProfilePicture, View.SCALE_X.name, 0f, 1f)
+        val animScaleY = ObjectAnimator.ofFloat(btnCancelProfilePicture, View.SCALE_Y.name, 0f, 1f)
 
-        val animator = AnimatorSet()
-        animator.playTogether(scaleX, scaleY)
-        animator.addListener(object : Animator.AnimatorListener {
-            override fun onAnimationStart(animation: Animator) {
-                btnCancelProfilePicture.visibility = View.VISIBLE
+        val animatorSet = AnimatorSet()
+        animatorSet.playTogether(animScaleX, animScaleY)
+        animatorSet.duration = 500
+        animatorSet.interpolator = OvershootInterpolator()
+        animatorSet.addListener(object : Animator.AnimatorListener {
+            override fun onAnimationRepeat(animation: Animator?) {
             }
 
-            override fun onAnimationEnd(animation: Animator) {
-
+            override fun onAnimationEnd(animation: Animator?) {
             }
 
-            override fun onAnimationCancel(animation: Animator) {
-
+            override fun onAnimationCancel(animation: Animator?) {
             }
 
-            override fun onAnimationRepeat(animation: Animator) {
-
+            override fun onAnimationStart(animation: Animator?) {
+                if (btnCancelProfilePicture.visibility == View.GONE)
+                    btnCancelProfilePicture.visibility = View.VISIBLE
             }
+
         })
-        animator.interpolator = OvershootInterpolator()
-        animator.duration = 500
-        animator.start()
+        animatorSet.start()
+
+    }
+
+    private fun popDown() {
+
+        val animScaleX = ObjectAnimator.ofFloat(btnCancelProfilePicture, View.SCALE_X.name, 1f, 0f)
+        val animScaleY = ObjectAnimator.ofFloat(btnCancelProfilePicture, View.SCALE_Y.name, 1f, 0f)
+
+        val animatorSet = AnimatorSet()
+        animatorSet.playTogether(animScaleX, animScaleY)
+        animatorSet.duration = 300
+        animatorSet.interpolator = AccelerateDecelerateInterpolator()
+        animatorSet.addListener(object : Animator.AnimatorListener {
+            override fun onAnimationRepeat(animation: Animator?) {
+            }
+
+            override fun onAnimationEnd(animation: Animator?) {
+                if (btnCancelProfilePicture.visibility == View.VISIBLE)
+                    btnCancelProfilePicture.visibility = View.GONE
+            }
+
+            override fun onAnimationCancel(animation: Animator?) {
+            }
+
+            override fun onAnimationStart(animation: Animator?) {
+            }
+
+        })
+        animatorSet.start()
+
     }
 }
