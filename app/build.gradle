@@ -35,7 +35,7 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     testImplementation 'junit:junit:4.12'
 
-    // circle imageview
+    // circle image view
     implementation 'de.hdodenhof:circleimageview:2.2.0'
 
     // google sign up
@@ -50,6 +50,7 @@ dependencies {
 
     // image cropper
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.7.0'
+
 
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'

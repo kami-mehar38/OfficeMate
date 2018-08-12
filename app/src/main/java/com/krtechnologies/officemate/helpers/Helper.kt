@@ -18,6 +18,7 @@ import android.os.Build
 import android.provider.DocumentsContract
 import android.content.ContentUris
 import android.database.Cursor
+import android.graphics.drawable.Drawable
 
 
 /**
@@ -46,13 +47,18 @@ class Helper {
     }
 
     // changes the color filter of drawable to accent color
-    fun changeToAccent(editText: EditText) {
-        editText.compoundDrawables?.get(0)?.setColorFilter(context!!.resources.getColor(R.color.colorAccentDark), PorterDuff.Mode.SRC_ATOP)
+    fun changeToAccent(drawable: Drawable) {
+        drawable.setColorFilter(context!!.resources.getColor(R.color.colorAccentDark), PorterDuff.Mode.SRC_ATOP)
+    }
+
+    // changes the color filter of drawable to red color
+    fun changeToRed(drawable: Drawable) {
+        drawable.setColorFilter(context!!.resources.getColor(R.color.colorRed), PorterDuff.Mode.SRC_ATOP)
     }
 
     // changes the color filter of drawable to primary color
-    fun changeToPrimary(editText: EditText) {
-        editText.compoundDrawables?.get(0)?.setColorFilter(context!!.resources.getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP)
+    fun changeToPrimary(drawable: Drawable) {
+        drawable.setColorFilter(context!!.resources.getColor(R.color.colorPrimaryLight), PorterDuff.Mode.SRC_ATOP)
     }
 
     @Throws(IOException::class)

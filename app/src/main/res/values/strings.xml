@@ -8,6 +8,13 @@
     <string name="log_in">LOG IN</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
+    <string name="i_am">I am :</string>
+    <string name="admin">Admin</string>
+    <string name="employee">Employee</string>
+    <string name="news_feed">News feed</string>
+    <string name="workstation">Workstation</string>
+    <string name="members">Members</string>
+    <string name="profile">Profile</string>
 
     <array name="image_pick_options">
         <item>Camera</item>

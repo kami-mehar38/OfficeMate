@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
+import android.annotation.TargetApi
 import android.app.Activity
 import android.content.DialogInterface
 import android.graphics.PorterDuff
@@ -23,6 +24,7 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Message
@@ -59,6 +61,10 @@ class SignUpActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // making the status bar transparent
+        setStatusBarColor()
+
         setContentView(R.layout.activity_sign_up)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -79,10 +85,17 @@ class SignUpActivity : AppCompatActivity() {
             startActivity(Intent(this, LoginActivity::class.java))
         }
 
-        etName.setOnFocusChangeListener { view, b -> if (b) Helper.getInstance().changeToAccent(view as EditText) else Helper.getInstance().changeToPrimary(view as EditText) }
-        etEmail.setOnFocusChangeListener { view, b -> if (b) Helper.getInstance().changeToAccent(view as EditText) else Helper.getInstance().changeToPrimary(view as EditText) }
-        etOrganizationName.setOnFocusChangeListener { view, b -> if (b) Helper.getInstance().changeToAccent(view as EditText) else Helper.getInstance().changeToPrimary(view as EditText) }
-        etDesignation.setOnFocusChangeListener { view, b -> if (b) Helper.getInstance().changeToAccent(view as EditText) else Helper.getInstance().changeToPrimary(view as EditText) }
+        etName.setOnFocusChangeListener { view, b -> if (b) Helper.getInstance().changeToAccent(etName.compoundDrawables[0]) else Helper.getInstance().changeToPrimary(etName.compoundDrawables[0]) }
+        etEmail.setOnFocusChangeListener { view, b -> if (b) Helper.getInstance().changeToAccent(etEmail.compoundDrawables[0]) else Helper.getInstance().changeToPrimary(etEmail.compoundDrawables[0]) }
+        etOrganizationName.setOnFocusChangeListener { view, b -> if (b) Helper.getInstance().changeToAccent(etOrganizationName.compoundDrawables[0]) else Helper.getInstance().changeToPrimary(etOrganizationName.compoundDrawables[0]) }
+        etDesignation.setOnFocusChangeListener { view, b -> if (b) Helper.getInstance().changeToAccent(etDesignation.compoundDrawables[0]) else Helper.getInstance().changeToPrimary(etDesignation.compoundDrawables[0]) }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private fun setStatusBarColor() {
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        window.statusBarColor = Color.TRANSPARENT
+        supportActionBar?.hide()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
