@@ -16,6 +16,11 @@ class HomeActivity : AppCompatActivity() {
 
         // initializing the views
         initViews()
+
+        // loading the first menu from bottom navigation when application starts for the first time
+        if (savedInstanceState == null) {
+            selectBottomNavigationItem()
+        }
     }
 
     private fun initViews() {
