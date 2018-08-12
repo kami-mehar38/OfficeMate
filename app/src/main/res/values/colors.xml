@@ -8,4 +8,5 @@
     <color name="colorAccentLight">#ffff6e</color>
     <color name="primaryTextColor">#ffffff</color>
     <color name="secondaryTextColor">#000000</color>
+    <color name="colorWhiteOpacity60">#CCFFFFFF</color>
 </resources>

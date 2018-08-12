@@ -6,4 +6,5 @@
     <dimen name="radius_corner_button">4dp</dimen>
     <dimen name="margin_floating_action_button">14dp</dimen>
     <dimen name="radius_corner_button_white">30dp</dimen>
+    <dimen name="radius_corner_edittext_transparent">50dp</dimen>
 </resources>

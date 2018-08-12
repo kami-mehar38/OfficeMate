@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/colorWhiteOpacity60" />
+    <corners android:radius="@dimen/radius_corner_edittext_transparent" />
+    <padding
+        android:left="@dimen/margin_floating_action_button"
+        android:right="@dimen/margin_floating_action_button" />
+</shape>
