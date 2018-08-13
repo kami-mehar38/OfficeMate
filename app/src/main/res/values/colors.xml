@@ -6,6 +6,8 @@
     <color name="colorAccent">#cddc39</color>
     <color name="colorAccentDark">#99aa00</color>
     <color name="colorRed">#FF0000</color>
+    <color name="colorGrayLightExtra">#f7f7f7</color>
+    <color name="colorGrayLight">#efefef</color>
     <color name="colorAccentLight">#ffff6e</color>
     <color name="primaryTextColor">#ffffff</color>
     <color name="secondaryTextColor">#000000</color>

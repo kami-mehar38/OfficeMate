@@ -6,9 +6,12 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.hadiidbouk.charts.ChartProgressBar
 import com.krtechnologies.officemate.R
 import com.krtechnologies.officemate.helpers.NewsFeedDiffUtils
 import com.krtechnologies.officemate.models.NewsFeed
+import com.hadiidbouk.charts.BarData
+
 
 /**
  * This project is created by Kamran Ramzan on 13-Aug-18.
@@ -26,6 +29,7 @@ class NewsFeedAdapter(val context: Context) : RecyclerView.Adapter<NewsFeedAdapt
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
@@ -41,5 +45,7 @@ class NewsFeedAdapter(val context: Context) : RecyclerView.Adapter<NewsFeedAdapt
         this.newsFeedList.addAll(newList)
     }
 
-    class ViewHolder(val view: View) : RecyclerView.ViewHolder(view)
+    class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+        val chartProgressBar = view.findViewById<ChartProgressBar>(R.id.chartProgressbar)
+    }
 }
