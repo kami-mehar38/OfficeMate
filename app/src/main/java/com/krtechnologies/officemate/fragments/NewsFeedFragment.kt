@@ -2,17 +2,28 @@ package com.krtechnologies.officemate.fragments
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.krtechnologies.officemate.R
-import android.R.attr.endColor
-import android.R.attr.startColor
-import com.ldoublem.ringPregressLibrary.Ring
+import com.hadiidbouk.charts.ChartProgressBar
+import com.hadiidbouk.charts.BarData
+import com.krtechnologies.officemate.adapters.NewsFeedAdapter
+import com.krtechnologies.officemate.models.NewsFeed
 import kotlinx.android.synthetic.main.fragment_news_feed.*
 
 
 class NewsFeedFragment : Fragment() {
+
+    private var newsFeedAdapter: NewsFeedAdapter? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        context?.let {
+            newsFeedAdapter = NewsFeedAdapter(it)
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -20,21 +31,22 @@ class NewsFeedFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_news_feed, container, false)
     }
 
-    private var mCounter: Int = 0
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val r1 = Ring(50, "Hi there", "50%", startColor, endColor)
-        val r2 = Ring(50, "Hi there", "50%", startColor, endColor)
-        val r3 = Ring(50, "Hi there", "50%", startColor, endColor)
-        val r4 = Ring(50, "Hi there", "50%", startColor, endColor)
+        rvNewsFeed.layoutManager = LinearLayoutManager(context)
+        rvNewsFeed.hasFixedSize()
 
-        val listRing = ArrayList<Ring>()
-        listRing.add(r1)
-        listRing.add(r2)
-        listRing.add(r3)
-        listRing.add(r4)
-        ring_progress.setData(listRing, 1500)
+        newsFeedAdapter?.let {
+            rvNewsFeed.adapter = it
+        }
 
+        val listNewsFeed: MutableList<NewsFeed> = ArrayList()
+        listNewsFeed.add(NewsFeed("0", "Kamran Ramzan"))
+        listNewsFeed.add(NewsFeed("1", "Kamran Ramzan"))
+        listNewsFeed.add(NewsFeed("2", "Kamran Ramzan"))
+        listNewsFeed.add(NewsFeed("3", "Kamran Ramzan"))
+
+        newsFeedAdapter?.updateList(listNewsFeed)
     }
 
     companion object {

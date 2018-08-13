@@ -3,8 +3,10 @@
     <dimen name="indicator_margin">5dp</dimen>
     <dimen name="elevation_profile_image_view">4dp</dimen>
     <dimen name="padding_drawable">6dp</dimen>
-    <dimen name="radius_corner_button">4dp</dimen>
+    <dimen name="margin_bottom_cardview">10dp</dimen>
+    <dimen name="radius_corner_cardview">8dp</dimen>
     <dimen name="margin_floating_action_button">14dp</dimen>
     <dimen name="radius_corner_button_white">30dp</dimen>
     <dimen name="radius_corner_edittext_transparent">50dp</dimen>
+    <dimen name="padding_recycler_view">12dp</dimen>
 </resources>

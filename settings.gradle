@@ -1,1 +1,1 @@
-include ':app', ':ringprogresslibrary'
+include ':app'
