@@ -5,14 +5,14 @@
         <shape xmlns:android="http://schemas.android.com/apk/res/android"
             android:shape="rectangle">
             <corners android:radius="@dimen/radius_corner_button_white" />
-            <solid android:color="@android:color/white" />
+            <solid android:color="@color/colorWhiteOpacity60" />
         </shape>
     </item>
 
     <item>
         <shape xmlns:android="http://schemas.android.com/apk/res/android"
             android:shape="rectangle">
-            <solid android:color="@android:color/white" />
+            <solid android:color="@color/colorWhiteOpacity60" />
             <corners android:radius="@dimen/radius_corner_button_white" />
         </shape>
     </item>

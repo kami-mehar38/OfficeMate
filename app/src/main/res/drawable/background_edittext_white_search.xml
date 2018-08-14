@@ -4,6 +4,5 @@
 
     <solid android:color="@android:color/white" />
     <padding
-        android:left="@dimen/padding_edittext"
         android:right="@dimen/padding_edittext" />
 </shape>

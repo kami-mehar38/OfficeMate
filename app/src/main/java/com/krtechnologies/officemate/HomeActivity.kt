@@ -1,24 +1,28 @@
 package com.krtechnologies.officemate
 
+import android.animation.Animator
+import android.annotation.TargetApi
+import android.content.Context
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewAnimationUtils
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.krtechnologies.officemate.fragments.NewsFeedFragment
 import com.krtechnologies.officemate.fragments.WorkstationFragment
 import com.krtechnologies.officemate.helpers.Helper
 import kotlinx.android.synthetic.main.activity_home.*
-import android.R.attr.y
-import android.R.attr.x
-import android.animation.Animator
-import android.os.Build
-import android.view.animation.AnimationUtils
-import android.opengl.ETC1.getHeight
-import android.opengl.ETC1.getWidth
-import android.view.*
-import android.view.animation.AccelerateDecelerateInterpolator
 
 
 class HomeActivity : AppCompatActivity() {
@@ -28,6 +32,7 @@ class HomeActivity : AppCompatActivity() {
     private var newsFeedFragment: NewsFeedFragment? = null
     private var workstationFragment: WorkstationFragment? = null
     private var isSearchExpanded = false
+    private var inputMethodManager: InputMethodManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +49,8 @@ class HomeActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             selectBottomNavigationItem()
         }
+
+        inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -89,30 +96,49 @@ class HomeActivity : AppCompatActivity() {
             currentIndex = 3
             selectBottomNavigationItem()
         }
+
+        ivBack.setOnClickListener {
+            if (isSearchExpanded)
+                hideSearchEditText()
+        }
+
+        etSearch.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                newsFeedFragment?.filterNewsFeed(p0.toString())
+            }
+
+        })
     }
 
     private fun selectBottomNavigationItem() {
         when (currentIndex) {
             0 -> {
-                Helper.getInstance().changeToRed(menuNewsfeed.compoundDrawables[1])
-                menuNewsfeed.setTextColor(ContextCompat.getColor(this, R.color.colorRed))
+                Helper.getInstance().changeToSecondary(menuNewsfeed.compoundDrawables[1])
+                menuNewsfeed.setTextColor(ContextCompat.getColor(this, R.color.colorSecondary))
                 loadFragment()
             }
 
             1 -> {
-                Helper.getInstance().changeToRed(menuWorkstation.compoundDrawables[1])
-                menuWorkstation.setTextColor(ContextCompat.getColor(this, R.color.colorRed))
+                Helper.getInstance().changeToSecondary(menuWorkstation.compoundDrawables[1])
+                menuWorkstation.setTextColor(ContextCompat.getColor(this, R.color.colorSecondary))
                 loadFragment()
             }
 
             2 -> {
-                Helper.getInstance().changeToRed(menuMembers.compoundDrawables[1])
-                menuMembers.setTextColor(ContextCompat.getColor(this, R.color.colorRed))
+                Helper.getInstance().changeToSecondary(menuMembers.compoundDrawables[1])
+                menuMembers.setTextColor(ContextCompat.getColor(this, R.color.colorSecondary))
             }
 
             3 -> {
-                Helper.getInstance().changeToRed(menuProfile.compoundDrawables[1])
-                menuProfile.setTextColor(ContextCompat.getColor(this, R.color.colorRed))
+                Helper.getInstance().changeToSecondary(menuProfile.compoundDrawables[1])
+                menuProfile.setTextColor(ContextCompat.getColor(this, R.color.colorSecondary))
             }
         }
 
@@ -179,28 +205,33 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun showSearchEditText() {
-        etSearch.postDelayed({
-            val endRadius = Math.hypot(etSearch.width.toDouble(), etSearch.height.toDouble()).toInt()
+        searchContainer.postDelayed({
+            val endRadius = Math.hypot(searchContainer.width.toDouble(), searchContainer.height.toDouble()).toInt()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                val animView = ViewAnimationUtils.createCircularReveal(etSearch, etSearch.right - ((etSearch.right / 2) / 6), etSearch.top + (etSearch.height / 2), 0f, endRadius.toFloat())
+                val animView = ViewAnimationUtils.createCircularReveal(searchContainer, searchContainer.right - ((searchContainer.right / 2) / 6), searchContainer.top + (searchContainer.height / 2), 0f, endRadius.toFloat())
                 animView.addListener(object : Animator.AnimatorListener {
                     override fun onAnimationRepeat(animation: Animator?) {
                     }
 
                     override fun onAnimationEnd(animation: Animator?) {
+                        etSearch.requestFocus()
+                        inputMethodManager?.showSoftInput(etSearch, InputMethodManager.SHOW_IMPLICIT)
+
                     }
 
                     override fun onAnimationCancel(animation: Animator?) {
                     }
 
                     override fun onAnimationStart(animation: Animator?) {
-                        if (etSearch.visibility != View.VISIBLE)
-                            etSearch.visibility = View.VISIBLE
+                        if (searchContainer.visibility != View.VISIBLE)
+                            searchContainer.visibility = View.VISIBLE
+
+                        changeStatusBarColorToBlack()
                         isSearchExpanded = true
                     }
 
                 })
-                animView.duration = 500
+                animView.duration = 300
                 animView.interpolator = AccelerateDecelerateInterpolator()
                 animView.start()
             } else {
@@ -211,29 +242,30 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun hideSearchEditText() {
-        etSearch.postDelayed({
-            val startRadius = Math.hypot(etSearch.width.toDouble(), etSearch.height.toDouble()).toInt()
+        searchContainer.postDelayed({
+            val startRadius = Math.hypot(searchContainer.width.toDouble(), searchContainer.height.toDouble()).toInt()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                val animView = ViewAnimationUtils.createCircularReveal(etSearch, etSearch.right - ((etSearch.right / 2) / 6), etSearch.top + (etSearch.height / 2), startRadius.toFloat(), 0f)
+                val animView = ViewAnimationUtils.createCircularReveal(searchContainer, searchContainer.right - ((searchContainer.right / 2) / 6), searchContainer.top + (searchContainer.height / 2), startRadius.toFloat(), 0f)
                 animView.addListener(object : Animator.AnimatorListener {
                     override fun onAnimationRepeat(animation: Animator?) {
                     }
 
                     override fun onAnimationEnd(animation: Animator?) {
-                        if (etSearch.visibility != View.INVISIBLE)
-                            etSearch.visibility = View.INVISIBLE
+                        if (searchContainer.visibility != View.INVISIBLE)
+                            searchContainer.visibility = View.INVISIBLE
                         isSearchExpanded = false
+                        inputMethodManager?.hideSoftInputFromWindow(etSearch.windowToken, InputMethodManager.HIDE_IMPLICIT_ONLY)
                     }
 
                     override fun onAnimationCancel(animation: Animator?) {
                     }
 
                     override fun onAnimationStart(animation: Animator?) {
-
+                        changeStatusBarColorToPrimaryDark()
                     }
 
                 })
-                animView.duration = 500
+                animView.duration = 300
                 animView.interpolator = AccelerateDecelerateInterpolator()
                 animView.start()
             } else {
@@ -241,6 +273,16 @@ class HomeActivity : AppCompatActivity() {
             }
         }, 1)
 
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private fun changeStatusBarColorToBlack() {
+        window.statusBarColor = Color.BLACK
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private fun changeStatusBarColorToPrimaryDark() {
+        window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimaryDark)
     }
 
     private fun HomeActivity.toast(message: String, length: Int = Toast.LENGTH_SHORT) {

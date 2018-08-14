@@ -24,7 +24,7 @@
             android:layout_marginRight="16dp"
             android:layout_marginTop="16dp"
             android:src="@drawable/person"
-            app:civ_border_color="@color/colorPrimaryLight"
+            app:civ_border_color="@color/colorPrimaryLightExtra"
             app:civ_border_width="1dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

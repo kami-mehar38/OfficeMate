@@ -7,7 +7,6 @@ import android.content.Context
 import android.graphics.PorterDuff
 import android.net.Uri
 import android.os.Environment
-import android.widget.EditText
 import com.krtechnologies.officemate.R
 import java.io.File
 import java.io.IOException
@@ -19,6 +18,8 @@ import android.provider.DocumentsContract
 import android.content.ContentUris
 import android.database.Cursor
 import android.graphics.drawable.Drawable
+import android.text.Spannable
+import android.text.SpannableString
 
 
 /**
@@ -52,8 +53,8 @@ class Helper {
     }
 
     // changes the color filter of drawable to red color
-    fun changeToRed(drawable: Drawable) {
-        drawable.setColorFilter(context!!.resources.getColor(R.color.colorRed), PorterDuff.Mode.SRC_ATOP)
+    fun changeToSecondary(drawable: Drawable) {
+        drawable.setColorFilter(context!!.resources.getColor(R.color.colorSecondary), PorterDuff.Mode.SRC_ATOP)
     }
 
     // changes the color filter of drawable to primary color
@@ -192,5 +193,13 @@ class Helper {
      */
     private fun isGooglePhotosUri(uri: Uri): Boolean {
         return "com.google.android.apps.photos.content" == uri.authority
+    }
+
+    public fun getSpannableFactory(): Spannable.Factory {
+        return object : Spannable.Factory() {
+            override fun newSpannable(source: CharSequence?): Spannable {
+                return source as Spannable
+            }
+        }
     }
 }

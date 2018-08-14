@@ -21,6 +21,6 @@ class NewsFeedDiffUtils(private val newList: MutableList<NewsFeed>, private val 
     override fun getNewListSize(): Int = newList.size
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return false
+        return true
     }
 }

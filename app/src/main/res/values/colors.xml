@@ -13,4 +13,5 @@
     <color name="primaryTextColor">#ffffff</color>
     <color name="secondaryTextColor">#000000</color>
     <color name="colorWhiteOpacity60">#CCFFFFFF</color>
+    <color name="colorSecondary">#00b09b</color>
 </resources>

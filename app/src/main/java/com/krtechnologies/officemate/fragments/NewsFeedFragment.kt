@@ -1,11 +1,15 @@
 package com.krtechnologies.officemate.fragments
 
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.text.Spannable
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.krtechnologies.officemate.R
 import com.krtechnologies.officemate.adapters.NewsFeedAdapter
 import com.krtechnologies.officemate.models.NewsFeed
@@ -15,12 +19,17 @@ import kotlinx.android.synthetic.main.fragment_news_feed.*
 class NewsFeedFragment : Fragment() {
 
     private var newsFeedAdapter: NewsFeedAdapter? = null
+    private var listNewsFeed: MutableList<NewsFeed>? = null
+    private var newListNewsFeed: MutableList<NewsFeed>? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         context?.let {
             newsFeedAdapter = NewsFeedAdapter(it)
         }
+        listNewsFeed = ArrayList()
+        newListNewsFeed = ArrayList()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -38,13 +47,15 @@ class NewsFeedFragment : Fragment() {
             rvNewsFeed.adapter = it
         }
 
-        val listNewsFeed: MutableList<NewsFeed> = ArrayList()
-        listNewsFeed.add(NewsFeed("0", "Kamran Ramzan"))
-        listNewsFeed.add(NewsFeed("1", "Kamran Ramzan"))
-        listNewsFeed.add(NewsFeed("2", "Kamran Ramzan"))
-        listNewsFeed.add(NewsFeed("3", "Kamran Ramzan"))
+        listNewsFeed?.let {
+            it.add(NewsFeed("0", "Kamran Ramzan"))
+            it.add(NewsFeed("1", "Kamran Ramzan"))
+            it.add(NewsFeed("2", "Kamran Ramzan"))
+            it.add(NewsFeed("3", "Bhai"))
+        }
 
-        newsFeedAdapter?.updateList(listNewsFeed)
+
+        newsFeedAdapter?.updateList(listNewsFeed!!)
     }
 
     companion object {
@@ -67,7 +78,24 @@ class NewsFeedFragment : Fragment() {
     }
 
 
-    public fun filterNewsFeed(searchText: String) {
+    fun filterNewsFeed(searchText: String) {
 
+        if (searchText.isNotEmpty()) {
+            listNewsFeed?.let {
+                it.forEach { newsFeed: NewsFeed ->
+                    if (newsFeed.name.contains(searchText, true))
+                        newListNewsFeed?.add(newsFeed)
+                }
+            }
+            newsFeedAdapter?.updateList(newListNewsFeed!!)
+        } else newsFeedAdapter?.updateList(listNewsFeed!!)
+
+        newListNewsFeed?.clear()
+
+
+    }
+
+    private fun toast(message: String, length: Int = Toast.LENGTH_SHORT) {
+        Toast.makeText(this.context, message, length).show()
     }
 }
