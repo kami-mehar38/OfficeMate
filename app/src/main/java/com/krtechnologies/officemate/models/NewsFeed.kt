@@ -6,9 +6,6 @@ package com.krtechnologies.officemate.models
 
 data class NewsFeed(val id: String, val name: String) : Comparable<NewsFeed> {
 
-
-    override fun compareTo(other: NewsFeed): Int {
-        return 0
-    }
+    override fun compareTo(other: NewsFeed): Int = if (other.id == this.id) 0 else 1
 
 }

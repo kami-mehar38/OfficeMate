@@ -7,8 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.krtechnologies.officemate.R
-import com.hadiidbouk.charts.ChartProgressBar
-import com.hadiidbouk.charts.BarData
 import com.krtechnologies.officemate.adapters.NewsFeedAdapter
 import com.krtechnologies.officemate.models.NewsFeed
 import kotlinx.android.synthetic.main.fragment_news_feed.*
@@ -66,5 +64,10 @@ class NewsFeedFragment : Fragment() {
 
                     }
                 }
+    }
+
+
+    public fun filterNewsFeed(searchText: String) {
+
     }
 }

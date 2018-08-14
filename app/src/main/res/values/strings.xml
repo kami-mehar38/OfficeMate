@@ -21,34 +21,8 @@
         <item>Gallery</item>
     </array>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="view_all">VIEW ALL</string>
+    <string name="search">Search</string>
 
-    <string-array name="devlight">
-        <item>#ffa50a</item>
-        <item>#e08e00</item>
-        <item>#b87400</item>
-        <item>#8f5a00</item>
-    </string-array>
 
-    <string-array name="bg">
-        <item>#64ffa50a</item>
-        <item>#64e08e00</item>
-        <item>#64b87400</item>
-        <item>#648f5a00</item>
-    </string-array>
-
-    <string-array name="polluted_waves">
-        <item>#394948</item>
-        <item>#5a7874</item>
-        <item>#499092</item>
-        <item>#43abae</item>
-    </string-array>
-
-    <string-array name="medical_express">
-        <item>#a3a3a3</item>
-        <item>#bbbbbb</item>
-        <item>#cccccc</item>
-        <item>#dddddd</item>
-    </string-array>
 </resources>

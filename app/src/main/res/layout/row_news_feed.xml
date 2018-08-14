@@ -4,14 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardElevation="@dimen/cardview_default_elevation"
+    android:layout_marginBottom="@dimen/margin_bottom_cardview"
     app:cardCornerRadius="@dimen/radius_corner_cardview"
-    android:layout_marginBottom="@dimen/margin_bottom_cardview">
+    app:cardElevation="@dimen/cardview_default_elevation">
 
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?selectableItemBackground">
 
         <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/ivProfilePicture"
@@ -27,7 +30,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/tvName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
@@ -41,34 +44,60 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.hadiidbouk.charts.ChartProgressBar
-            android:id="@+id/chartProgressbar"
-            android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:gravity="center"
-            app:hdBarCanBeClick="true"
-            app:hdBarHeight="170dp"
-            app:hdBarRadius="10dp"
-            app:hdBarTitleColor="@color/bar_title_color"
-            app:hdBarTitleMarginTop="9dp"
-            app:hdBarTitleSelectedColor="@color/colorPrimary"
-            app:hdBarTitleTxtSize="12sp"
-            app:hdBarWidth="20dp"
-            app:hdEmptyColor="@color/colorPrimaryLight"
-            app:hdMaxValue="10"
-            app:hdPinBackgroundColor="@color/pin_background"
-            app:hdPinDrawable="@drawable/ic_action_name"
-            app:hdPinMarginBottom="55dp"
-            app:hdPinMarginTop="10dp"
-            app:hdPinPaddingBottom="5dp"
-            app:hdPinTextColor="@color/pin_text"
-            app:hdPinTxtSize="17sp"
-            app:hdProgressClickColor="@color/colorAccentLight"
-            app:hdProgressColor="@color/colorAccent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+        <antonkozyriatskyi.circularprogressindicator.CircularProgressIndicator
+            android:id="@+id/ProgressBar"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            app:direction="clockwise"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textView3"
+            app:progressBackgroundColor="@color/colorPrimaryLightExtra"
+            app:progressColor="@color/colorAccent"
+            app:progressStrokeWidth="12dp"
+            app:textColor="@color/colorPrimary"
+            app:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:maxLines="4"
+            android:text="Currently working on the ingizly app... there d ert gter rt  ert wert rg ert srt ewr fgdfr y ty sfg t  sf weyt ssrt yyts y5we   dghrty fgsdfg tywgs gwty srg wrtt sdfg rtyaresome challenges for now but i will tackle them as soon as possible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/ProgressBar"
             app:layout_constraintTop_toBottomOf="@+id/ivProfilePicture" />
+
+        <Button
+            android:id="@+id/button"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:text="@string/view_all"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="4dp"
+            android:text="Ingizly App"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/ProgressBar"
+            app:layout_constraintStart_toStartOf="@+id/ProgressBar"
+            app:layout_constraintTop_toBottomOf="@+id/ProgressBar" />
 
 
     </android.support.constraint.ConstraintLayout>

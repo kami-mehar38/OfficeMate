@@ -5,10 +5,21 @@ import android.os.Handler
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
+import android.widget.Toast
 import com.krtechnologies.officemate.fragments.NewsFeedFragment
 import com.krtechnologies.officemate.fragments.WorkstationFragment
 import com.krtechnologies.officemate.helpers.Helper
 import kotlinx.android.synthetic.main.activity_home.*
+import android.R.attr.y
+import android.R.attr.x
+import android.animation.Animator
+import android.os.Build
+import android.view.animation.AnimationUtils
+import android.opengl.ETC1.getHeight
+import android.opengl.ETC1.getWidth
+import android.view.*
+import android.view.animation.AccelerateDecelerateInterpolator
+
 
 class HomeActivity : AppCompatActivity() {
 
@@ -16,10 +27,14 @@ class HomeActivity : AppCompatActivity() {
     private var previousIndex: Int = 0
     private var newsFeedFragment: NewsFeedFragment? = null
     private var workstationFragment: WorkstationFragment? = null
+    private var isSearchExpanded = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+
+        //setting the support action bar
+        setSupportActionBar(toolbar)
 
         // initializing the views
         initViews()
@@ -29,6 +44,24 @@ class HomeActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             selectBottomNavigationItem()
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_home_activity, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        item?.let {
+            return when (item.itemId) {
+                R.id.action_search -> {
+                    showSearchEditText()
+                    true
+                }
+                else -> false
+            }
+        }
+        return false
     }
 
     private fun initFragment() {
@@ -145,4 +178,79 @@ class HomeActivity : AppCompatActivity() {
         else -> newsFeedFragment as Fragment
     }
 
+    private fun showSearchEditText() {
+        etSearch.postDelayed({
+            val endRadius = Math.hypot(etSearch.width.toDouble(), etSearch.height.toDouble()).toInt()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                val animView = ViewAnimationUtils.createCircularReveal(etSearch, etSearch.right - ((etSearch.right / 2) / 6), etSearch.top + (etSearch.height / 2), 0f, endRadius.toFloat())
+                animView.addListener(object : Animator.AnimatorListener {
+                    override fun onAnimationRepeat(animation: Animator?) {
+                    }
+
+                    override fun onAnimationEnd(animation: Animator?) {
+                    }
+
+                    override fun onAnimationCancel(animation: Animator?) {
+                    }
+
+                    override fun onAnimationStart(animation: Animator?) {
+                        if (etSearch.visibility != View.VISIBLE)
+                            etSearch.visibility = View.VISIBLE
+                        isSearchExpanded = true
+                    }
+
+                })
+                animView.duration = 500
+                animView.interpolator = AccelerateDecelerateInterpolator()
+                animView.start()
+            } else {
+                TODO("VERSION.SDK_INT < LOLLIPOP")
+            }
+        }, 1)
+
+    }
+
+    private fun hideSearchEditText() {
+        etSearch.postDelayed({
+            val startRadius = Math.hypot(etSearch.width.toDouble(), etSearch.height.toDouble()).toInt()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                val animView = ViewAnimationUtils.createCircularReveal(etSearch, etSearch.right - ((etSearch.right / 2) / 6), etSearch.top + (etSearch.height / 2), startRadius.toFloat(), 0f)
+                animView.addListener(object : Animator.AnimatorListener {
+                    override fun onAnimationRepeat(animation: Animator?) {
+                    }
+
+                    override fun onAnimationEnd(animation: Animator?) {
+                        if (etSearch.visibility != View.INVISIBLE)
+                            etSearch.visibility = View.INVISIBLE
+                        isSearchExpanded = false
+                    }
+
+                    override fun onAnimationCancel(animation: Animator?) {
+                    }
+
+                    override fun onAnimationStart(animation: Animator?) {
+
+                    }
+
+                })
+                animView.duration = 500
+                animView.interpolator = AccelerateDecelerateInterpolator()
+                animView.start()
+            } else {
+                TODO("VERSION.SDK_INT < LOLLIPOP")
+            }
+        }, 1)
+
+    }
+
+    private fun HomeActivity.toast(message: String, length: Int = Toast.LENGTH_SHORT) {
+        Toast.makeText(this@HomeActivity, message, length).show()
+    }
+
+    override fun onBackPressed() {
+        if (isSearchExpanded)
+            hideSearchEditText()
+        else
+            super.onBackPressed()
+    }
 }

@@ -1,16 +1,23 @@
 package com.krtechnologies.officemate.adapters
 
 import android.content.Context
+import android.graphics.Color
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.hadiidbouk.charts.ChartProgressBar
+import antonkozyriatskyi.circularprogressindicator.CircularProgressIndicator
 import com.krtechnologies.officemate.R
 import com.krtechnologies.officemate.helpers.NewsFeedDiffUtils
 import com.krtechnologies.officemate.models.NewsFeed
-import com.hadiidbouk.charts.BarData
+import android.text.Spannable
+import android.text.style.ForegroundColorSpan
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.util.Log
+import android.widget.TextView
+import com.krtechnologies.officemate.fragments.NewsFeedFragment
 
 
 /**
@@ -29,12 +36,24 @@ class NewsFeedAdapter(val context: Context) : RecyclerView.Adapter<NewsFeedAdapt
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.progressBar.setProgress(50.0, 100.0)
+        holder.progressBar.setProgressTextAdapter { progress -> "$progress%" }
+
+        val spannableString = SpannableString("Kamran Ramzan")
+
+        holder.tvName.setText(spannableString, TextView.BufferType.SPANNABLE)
+        val spannableText = holder.tvName.text as Spannable
+        spannableText.setSpan(ForegroundColorSpan(Color.BLUE), 0, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
 
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
         if (payloads.isEmpty())
             super.onBindViewHolder(holder, position, payloads)
+        else {
+            TODO("Not implemented yet")
+        }
 
     }
 
@@ -46,6 +65,7 @@ class NewsFeedAdapter(val context: Context) : RecyclerView.Adapter<NewsFeedAdapt
     }
 
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        val chartProgressBar = view.findViewById<ChartProgressBar>(R.id.chartProgressbar)
+        val progressBar = view.findViewById<CircularProgressIndicator>(R.id.ProgressBar)!!
+        val tvName = view.findViewById<TextView>(R.id.tvName)!!
     }
 }
