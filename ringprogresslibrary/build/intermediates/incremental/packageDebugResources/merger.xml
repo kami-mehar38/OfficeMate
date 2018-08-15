@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main$Generated" generated="true"><source path="/Users/ingizly/AndroidStudioProjects/OfficeMate/ringprogresslibrary/src/main/res"/><source path="/Users/ingizly/AndroidStudioProjects/OfficeMate/ringprogresslibrary/build/generated/res/rs/debug"/><source path="/Users/ingizly/AndroidStudioProjects/OfficeMate/ringprogresslibrary/build/generated/res/resValues/debug"/></dataSet><dataSet config="main" generated-set="main$Generated"><source path="/Users/ingizly/AndroidStudioProjects/OfficeMate/ringprogresslibrary/src/main/res"><file path="/Users/ingizly/AndroidStudioProjects/OfficeMate/ringprogresslibrary/src/main/res/values/ringprogress_style.xml" qualifiers=""><declare-styleable name="RingProgress">
+        <attr format="color|reference" name="bgColor"/>
+        <attr format="color|reference" name="bgShadowColor"/>
+        <attr format="integer" name="rotate"/>
+        <attr format="boolean" name="showBackground"/>
+        <attr format="boolean" name="showBackgroundShadow"/>
+        <attr format="boolean" name="showRingCorner"/>
+        <attr format="float" name="ringWidthScale"/>
+        <attr format="integer" name="ringSweepAngle"/>
+
+
+
+    </declare-styleable></file><file path="/Users/ingizly/AndroidStudioProjects/OfficeMate/ringprogresslibrary/src/main/res/values/strings.xml" qualifiers=""><string name="app_name">RingPregressLibrary</string></file></source><source path="/Users/ingizly/AndroidStudioProjects/OfficeMate/ringprogresslibrary/build/generated/res/rs/debug"/><source path="/Users/ingizly/AndroidStudioProjects/OfficeMate/ringprogresslibrary/build/generated/res/resValues/debug"/></dataSet><dataSet config="debug$Generated" generated="true"><source path="/Users/ingizly/AndroidStudioProjects/OfficeMate/ringprogresslibrary/src/debug/res"/></dataSet><dataSet config="debug" generated-set="debug$Generated"><source path="/Users/ingizly/AndroidStudioProjects/OfficeMate/ringprogresslibrary/src/debug/res"/></dataSet><mergedItems><configuration qualifiers=""><declare-styleable name="RingProgress"><attr format="color|reference" name="bgColor"/><attr format="color|reference" name="bgShadowColor"/><attr format="integer" name="rotate"/><attr format="boolean" name="showBackground"/><attr format="boolean" name="showBackgroundShadow"/><attr format="boolean" name="showRingCorner"/><attr format="float" name="ringWidthScale"/><attr format="integer" name="ringSweepAngle"/></declare-styleable></configuration></mergedItems></merger>
