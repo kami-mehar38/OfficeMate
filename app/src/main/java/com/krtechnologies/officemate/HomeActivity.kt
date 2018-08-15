@@ -19,12 +19,11 @@ import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import com.krtechnologies.officemate.fragments.NewsFeedFragment
 import com.krtechnologies.officemate.fragments.WorkstationFragment
 import com.krtechnologies.officemate.helpers.Helper
 import kotlinx.android.synthetic.main.activity_home.*
-import org.jetbrains.anko.*
+import org.jetbrains.anko.doFromSdk
 
 
 class HomeActivity : AppCompatActivity() {

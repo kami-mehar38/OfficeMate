@@ -1,20 +1,14 @@
 package com.krtechnologies.officemate.fragments
 
-import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import com.krtechnologies.officemate.R
-import com.krtechnologies.officemate.adapters.NewsFeedAdapter
 import com.krtechnologies.officemate.adapters.WorkstationsProjectAdapter
-import com.krtechnologies.officemate.models.NewsFeed
 import com.krtechnologies.officemate.models.WorkstationProject
-import kotlinx.android.synthetic.main.fragment_news_feed.*
 import kotlinx.android.synthetic.main.fragment_workstation.*
 
 

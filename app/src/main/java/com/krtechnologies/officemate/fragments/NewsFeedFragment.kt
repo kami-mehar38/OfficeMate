@@ -1,20 +1,15 @@
 package com.krtechnologies.officemate.fragments
 
-import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.text.Spannable
-import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.krtechnologies.officemate.R
 import com.krtechnologies.officemate.adapters.NewsFeedAdapter
 import com.krtechnologies.officemate.models.NewsFeed
 import kotlinx.android.synthetic.main.fragment_news_feed.*
-import org.jetbrains.anko.toast
 
 
 class NewsFeedFragment : Fragment() {

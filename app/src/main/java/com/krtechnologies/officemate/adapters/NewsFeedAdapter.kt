@@ -2,13 +2,10 @@ package com.krtechnologies.officemate.adapters
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
-import android.text.Spannable
 import android.text.SpannableString
-import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,7 +23,6 @@ import com.krtechnologies.officemate.R
 import com.krtechnologies.officemate.helpers.Helper
 import com.krtechnologies.officemate.helpers.NewsFeedDiffUtils
 import com.krtechnologies.officemate.models.NewsFeed
-import kotlinx.android.synthetic.main.activity_sign_up.*
 
 
 /**

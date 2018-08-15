@@ -3,23 +3,22 @@
 package com.krtechnologies.officemate.helpers
 
 import android.annotation.SuppressLint
+import android.content.ContentUris
 import android.content.Context
+import android.database.Cursor
 import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
+import android.provider.DocumentsContract
+import android.provider.MediaStore
+import android.text.Spannable
 import com.krtechnologies.officemate.R
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
-import android.provider.MediaStore
-import android.os.Build
-import android.provider.DocumentsContract
-import android.content.ContentUris
-import android.database.Cursor
-import android.graphics.drawable.Drawable
-import android.text.Spannable
-import android.text.SpannableString
 
 
 /**

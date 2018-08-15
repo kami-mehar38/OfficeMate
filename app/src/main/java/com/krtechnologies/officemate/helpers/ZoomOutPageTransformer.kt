@@ -2,8 +2,6 @@ package com.krtechnologies.officemate.helpers
 
 import android.support.v4.view.ViewPager
 import android.view.View
-import android.opengl.ETC1.getHeight
-import android.opengl.ETC1.getWidth
 
 
 /**
