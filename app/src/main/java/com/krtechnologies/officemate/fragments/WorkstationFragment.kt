@@ -41,14 +41,14 @@ class WorkstationFragment : Fragment() {
             rvWorkstation.adapter = it
         }
 
-        listWorkstationProject?.let {
-            it.add(WorkstationProject("0"))
-            it.add(WorkstationProject("1"))
-            it.add(WorkstationProject("2"))
-            it.add(WorkstationProject("3"))
-            it.add(WorkstationProject("4"))
-            it.add(WorkstationProject("5"))
-            it.add(WorkstationProject("6"))
+        listWorkstationProject?.apply {
+            add(WorkstationProject("0"))
+            add(WorkstationProject("1"))
+            add(WorkstationProject("2"))
+            add(WorkstationProject("3"))
+            add(WorkstationProject("4"))
+            add(WorkstationProject("5"))
+            add(WorkstationProject("6"))
         }
 
 

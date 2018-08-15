@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.PersistableBundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
@@ -35,6 +36,9 @@ class HomeActivity : AppCompatActivity() {
     private var isSearchExpanded = false
     private var inputMethodManager: InputMethodManager? = null
 
+    private val KEY_CURRENT_INDEX_OF_BOTTOM_NAVIGATION: String = "CURRENT_INDEX"
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -46,12 +50,25 @@ class HomeActivity : AppCompatActivity() {
         initViews()
         initFragment()
 
+        savedInstanceState?.let {
+            if (it.containsKey(KEY_CURRENT_INDEX_OF_BOTTOM_NAVIGATION)) {
+                currentIndex = it.getInt(KEY_CURRENT_INDEX_OF_BOTTOM_NAVIGATION, 0)
+                selectBottomNavigationItem()
+            }
+        }
+
         // loading the first menu from bottom navigation when application starts for the first time
         if (savedInstanceState == null) {
             selectBottomNavigationItem()
         }
 
         inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    }
+
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState?.putInt(KEY_CURRENT_INDEX_OF_BOTTOM_NAVIGATION, currentIndex)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -225,6 +242,8 @@ class HomeActivity : AppCompatActivity() {
                     }
 
                     override fun onAnimationEnd(animation: Animator?) {
+                        if (toolbar.visibility != View.INVISIBLE)
+                            toolbar.visibility = View.INVISIBLE
                         etSearch.requestFocus()
                         inputMethodManager?.showSoftInput(etSearch, InputMethodManager.SHOW_IMPLICIT)
 
@@ -236,7 +255,6 @@ class HomeActivity : AppCompatActivity() {
                     override fun onAnimationStart(animation: Animator?) {
                         if (searchContainer.visibility != View.VISIBLE)
                             searchContainer.visibility = View.VISIBLE
-
                         changeStatusBarColorToBlack()
                         isSearchExpanded = true
                     }
@@ -273,6 +291,8 @@ class HomeActivity : AppCompatActivity() {
 
                     override fun onAnimationStart(animation: Animator?) {
                         changeStatusBarColorToPrimaryDark()
+                        if (toolbar.visibility != View.VISIBLE)
+                        toolbar.visibility = View.VISIBLE
                     }
 
                 })

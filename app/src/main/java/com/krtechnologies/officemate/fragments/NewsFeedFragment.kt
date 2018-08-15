@@ -1,5 +1,6 @@
 package com.krtechnologies.officemate.fragments
 
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -43,13 +44,12 @@ class NewsFeedFragment : Fragment() {
             rvNewsFeed.adapter = it
         }
 
-        listNewsFeed?.let {
-            it.add(NewsFeed("0", "Kamran Ramzan"))
-            it.add(NewsFeed("1", "Kamran Ramzan"))
-            it.add(NewsFeed("2", "Kamran Ramzan"))
-            it.add(NewsFeed("3", "Bhai"))
+        listNewsFeed?.apply {
+            add(NewsFeed("0", "Kamran Ramzan"))
+            add(NewsFeed("1", "Kamran Ramzan"))
+            add(NewsFeed("2", "Kamran Ramzan"))
+            add(NewsFeed("3", "Bhai"))
         }
-
 
         newsFeedAdapter?.updateList(listNewsFeed!!)
     }
