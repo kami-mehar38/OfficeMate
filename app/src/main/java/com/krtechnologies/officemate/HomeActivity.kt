@@ -1,6 +1,7 @@
 package com.krtechnologies.officemate
 
 import android.animation.Animator
+import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.content.Context
 import android.graphics.Color
@@ -23,6 +24,7 @@ import com.krtechnologies.officemate.fragments.NewsFeedFragment
 import com.krtechnologies.officemate.fragments.WorkstationFragment
 import com.krtechnologies.officemate.helpers.Helper
 import kotlinx.android.synthetic.main.activity_home.*
+import org.jetbrains.anko.*
 
 
 class HomeActivity : AppCompatActivity() {
@@ -59,16 +61,15 @@ class HomeActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        item?.let {
-            return when (item.itemId) {
-                R.id.action_search -> {
-                    showSearchEditText()
-                    true
-                }
-                else -> false
+
+        return when (item!!.itemId) {
+            R.id.action_search -> {
+                showSearchEditText()
+                true
             }
+            else -> false
         }
-        return false
+
     }
 
     private fun initFragment() {
@@ -111,7 +112,8 @@ class HomeActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                newsFeedFragment?.filterNewsFeed(p0.toString())
+                if (currentIndex == 0)
+                    newsFeedFragment?.filterNewsFeed(p0.toString())
             }
 
         })
@@ -122,23 +124,31 @@ class HomeActivity : AppCompatActivity() {
             0 -> {
                 Helper.getInstance().changeToSecondary(menuNewsfeed.compoundDrawables[1])
                 menuNewsfeed.setTextColor(ContextCompat.getColor(this, R.color.colorSecondary))
+                tvTitle.text = resources.getString(R.string.news_feed)
                 loadFragment()
+                ivBack.performClick()
             }
 
             1 -> {
                 Helper.getInstance().changeToSecondary(menuWorkstation.compoundDrawables[1])
                 menuWorkstation.setTextColor(ContextCompat.getColor(this, R.color.colorSecondary))
+                tvTitle.text = resources.getString(R.string.workstation)
                 loadFragment()
+                ivBack.performClick()
             }
 
             2 -> {
                 Helper.getInstance().changeToSecondary(menuMembers.compoundDrawables[1])
                 menuMembers.setTextColor(ContextCompat.getColor(this, R.color.colorSecondary))
+                tvTitle.text = resources.getString(R.string.members)
+                ivBack.performClick()
             }
 
             3 -> {
                 Helper.getInstance().changeToSecondary(menuProfile.compoundDrawables[1])
                 menuProfile.setTextColor(ContextCompat.getColor(this, R.color.colorSecondary))
+                tvTitle.text = resources.getString(R.string.profile)
+                ivBack.performClick()
             }
         }
 
@@ -204,10 +214,12 @@ class HomeActivity : AppCompatActivity() {
         else -> newsFeedFragment as Fragment
     }
 
+    @SuppressLint("NewApi")
     private fun showSearchEditText() {
-        searchContainer.postDelayed({
-            val endRadius = Math.hypot(searchContainer.width.toDouble(), searchContainer.height.toDouble()).toInt()
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+        doFromSdk(Build.VERSION_CODES.LOLLIPOP) {
+            searchContainer.postDelayed({
+                val endRadius = Math.hypot(searchContainer.width.toDouble(), searchContainer.height.toDouble()).toInt()
                 val animView = ViewAnimationUtils.createCircularReveal(searchContainer, searchContainer.right - ((searchContainer.right / 2) / 6), searchContainer.top + (searchContainer.height / 2), 0f, endRadius.toFloat())
                 animView.addListener(object : Animator.AnimatorListener {
                     override fun onAnimationRepeat(animation: Animator?) {
@@ -234,17 +246,17 @@ class HomeActivity : AppCompatActivity() {
                 animView.duration = 300
                 animView.interpolator = AccelerateDecelerateInterpolator()
                 animView.start()
-            } else {
-                TODO("VERSION.SDK_INT < LOLLIPOP")
-            }
-        }, 1)
+            }, 1)
 
+        }
     }
 
+    @SuppressLint("NewApi")
     private fun hideSearchEditText() {
-        searchContainer.postDelayed({
-            val startRadius = Math.hypot(searchContainer.width.toDouble(), searchContainer.height.toDouble()).toInt()
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+        doFromSdk(Build.VERSION_CODES.LOLLIPOP) {
+            searchContainer.postDelayed({
+                val startRadius = Math.hypot(searchContainer.width.toDouble(), searchContainer.height.toDouble()).toInt()
                 val animView = ViewAnimationUtils.createCircularReveal(searchContainer, searchContainer.right - ((searchContainer.right / 2) / 6), searchContainer.top + (searchContainer.height / 2), startRadius.toFloat(), 0f)
                 animView.addListener(object : Animator.AnimatorListener {
                     override fun onAnimationRepeat(animation: Animator?) {
@@ -268,10 +280,9 @@ class HomeActivity : AppCompatActivity() {
                 animView.duration = 300
                 animView.interpolator = AccelerateDecelerateInterpolator()
                 animView.start()
-            } else {
-                TODO("VERSION.SDK_INT < LOLLIPOP")
-            }
-        }, 1)
+
+            }, 1)
+        }
 
     }
 
@@ -283,10 +294,6 @@ class HomeActivity : AppCompatActivity() {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private fun changeStatusBarColorToPrimaryDark() {
         window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimaryDark)
-    }
-
-    private fun HomeActivity.toast(message: String, length: Int = Toast.LENGTH_SHORT) {
-        Toast.makeText(this@HomeActivity, message, length).show()
     }
 
     override fun onBackPressed() {

@@ -29,7 +29,6 @@
                 android:id="@+id/tvTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="News Feed"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

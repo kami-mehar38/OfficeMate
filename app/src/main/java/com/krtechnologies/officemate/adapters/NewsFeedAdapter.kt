@@ -92,6 +92,7 @@ class NewsFeedAdapter(val context: Context) : RecyclerView.Adapter<NewsFeedAdapt
                     }
 
                 })
+
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {

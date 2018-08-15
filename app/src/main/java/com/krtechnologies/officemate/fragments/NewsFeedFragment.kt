@@ -14,6 +14,7 @@ import com.krtechnologies.officemate.R
 import com.krtechnologies.officemate.adapters.NewsFeedAdapter
 import com.krtechnologies.officemate.models.NewsFeed
 import kotlinx.android.synthetic.main.fragment_news_feed.*
+import org.jetbrains.anko.toast
 
 
 class NewsFeedFragment : Fragment() {
@@ -91,11 +92,6 @@ class NewsFeedFragment : Fragment() {
         } else newsFeedAdapter?.updateList(listNewsFeed!!)
 
         newListNewsFeed?.clear()
-
-
     }
 
-    private fun toast(message: String, length: Int = Toast.LENGTH_SHORT) {
-        Toast.makeText(this.context, message, length).show()
-    }
 }
