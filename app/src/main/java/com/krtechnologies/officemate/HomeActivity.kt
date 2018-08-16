@@ -19,6 +19,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import com.krtechnologies.officemate.fragments.NewsFeedFragment
 import com.krtechnologies.officemate.fragments.WorkstationFragment
@@ -124,7 +125,6 @@ class HomeActivity : AppCompatActivity() {
 
         etSearch.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
-
             }
 
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -136,8 +136,16 @@ class HomeActivity : AppCompatActivity() {
                     1 -> workstationFragment?.filterWorkstationProject(p0.toString())
                 }
             }
-
         })
+        etSearch.setOnEditorActionListener { _, action, _ ->
+            when (action) {
+                EditorInfo.IME_ACTION_SEARCH -> {
+                    hideKeyboard()
+                    true
+                }
+                else -> false
+            }
+        }
     }
 
     private fun selectBottomNavigationItem() {
@@ -253,7 +261,7 @@ class HomeActivity : AppCompatActivity() {
                         if (toolbar.visibility != View.INVISIBLE)
                             toolbar.visibility = View.INVISIBLE
                         etSearch.requestFocus()
-                        inputMethodManager?.showSoftInput(etSearch, InputMethodManager.SHOW_IMPLICIT)
+                        showKeyboard()
 
                     }
 
@@ -276,6 +284,10 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    fun showKeyboard() {
+        inputMethodManager?.showSoftInput(etSearch, InputMethodManager.SHOW_IMPLICIT)
+    }
+
     @SuppressLint("NewApi")
     private fun hideSearchEditText() {
 
@@ -291,7 +303,12 @@ class HomeActivity : AppCompatActivity() {
                         if (searchContainer.visibility != View.INVISIBLE)
                             searchContainer.visibility = View.INVISIBLE
                         isSearchExpanded = false
-                        inputMethodManager?.hideSoftInputFromWindow(etSearch.windowToken, InputMethodManager.HIDE_IMPLICIT_ONLY)
+                        when (currentIndex) {
+                            0 -> newsFeedFragment?.resetData()
+                            1 -> workstationFragment?.resetData()
+                        }
+                        hideKeyboard()
+                        etSearch.text.clear()
                     }
 
                     override fun onAnimationCancel(animation: Animator?) {
@@ -302,7 +319,6 @@ class HomeActivity : AppCompatActivity() {
                         if (toolbar.visibility != View.VISIBLE)
                             toolbar.visibility = View.VISIBLE
                     }
-
                 })
                 animView.duration = 300
                 animView.interpolator = AccelerateDecelerateInterpolator()
@@ -311,6 +327,10 @@ class HomeActivity : AppCompatActivity() {
             }, 1)
         }
 
+    }
+
+    fun hideKeyboard() {
+        inputMethodManager?.hideSoftInputFromWindow(etSearch.windowToken, InputMethodManager.HIDE_IMPLICIT_ONLY)
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)

@@ -52,6 +52,7 @@ class NewsFeedFragment : Fragment(), AnkoLogger {
         newsFeedViewModel = ViewModelProviders.of(this).get(NewsFeedViewModel::class.java)
         newsFeedViewModel?.getData()?.observe(this, Observer<MutableList<NewsFeed>> {
             newsFeedAdapter?.updateList(it!!)
+            rvNewsFeed?.smoothScrollToPosition(0)
         })
 
         listNewsFeed = newsFeedViewModel?.getData()?.value
@@ -95,4 +96,7 @@ class NewsFeedFragment : Fragment(), AnkoLogger {
         newListNewsFeed?.clear()
     }
 
+    fun resetData() {
+        newsFeedViewModel?.updateData(listNewsFeed!!)
+    }
 }

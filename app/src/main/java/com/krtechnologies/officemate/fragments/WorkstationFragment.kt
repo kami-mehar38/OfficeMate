@@ -54,6 +54,7 @@ class WorkstationFragment : Fragment(), AnkoLogger {
         workstationProjectsViewModel = ViewModelProviders.of(this).get(WorkstationProjectsViewModel::class.java)
         workstationProjectsViewModel?.getData()?.observe(this, Observer<MutableList<WorkstationProject>> {
             workstationsProjectAdapter?.updateList(it!!)
+            rvWorkstation?.smoothScrollToPosition(0)
         })
 
         listWorkstationProject = workstationProjectsViewModel?.getData()?.value
@@ -93,5 +94,9 @@ class WorkstationFragment : Fragment(), AnkoLogger {
         } else workstationProjectsViewModel?.updateData(listWorkstationProject!!)
 
         newListWorkstationProject?.clear()
+    }
+
+    fun resetData() {
+        workstationProjectsViewModel?.updateData(listWorkstationProject!!)
     }
 }

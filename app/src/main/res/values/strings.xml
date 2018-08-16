@@ -24,6 +24,8 @@
     <string name="view_all">VIEW ALL</string>
     <string name="search">Search</string>
     <string name="enter_project_description">Enter project description...</string>
+    <string name="completed">Completed:</string>
+    <string name="eta">ETA:</string>
 
 
 </resources>

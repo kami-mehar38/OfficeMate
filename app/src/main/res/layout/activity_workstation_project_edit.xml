@@ -69,37 +69,6 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
 
-    <devlight.io.library.ArcProgressStackView
-        android:id="@+id/circleProgress"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="24dp"
-        app:apsv_animated="true"
-        app:apsv_animation_duration="1000"
-        app:apsv_dragged="true"
-        app:apsv_draw_width="50%"
-        app:apsv_indicator_orientation="vertical"
-        app:apsv_interpolator="@android:anim/bounce_interpolator"
-        app:apsv_leveled="true"
-        app:apsv_model_bg_enabled="true"
-        app:apsv_model_offset="0dp"
-        app:apsv_preview_bg="#ccc"
-        app:apsv_preview_colors="@array/default_preview"
-        app:apsv_rounded="true"
-        app:apsv_shadow_angle="90"
-        app:apsv_shadow_color="@color/colorPrimaryLightExtra"
-        app:apsv_shadow_distance="5dp"
-        app:apsv_shadow_radius="10dp"
-        app:apsv_shadowed="true"
-        app:apsv_start_angle="270"
-        app:apsv_sweep_angle="360"
-        app:apsv_text_color="#fff"
-        app:apsv_typeface="fonts/agency.ttf"
-        app:layout_constraintEnd_toStartOf="@+id/guideline10"
-        app:layout_constraintStart_toStartOf="@+id/guideline9"
-        app:layout_constraintTop_toBottomOf="@+id/editText3" />
-
-
     <android.support.constraint.Guideline
         android:id="@+id/guideline9"
         android:layout_width="wrap_content"
@@ -121,4 +90,40 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_end="16dp" />
 
+    <TextView
+        android:id="@+id/tvProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="@string/completed"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        app:layout_constraintStart_toStartOf="@+id/guideline9"
+        app:layout_constraintTop_toBottomOf="@+id/editText3" />
+
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:max="100"
+        android:progress="0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvProgress" />
+
+    <NumberPicker
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="@+id/guideline9"
+        app:layout_constraintTop_toBottomOf="@+id/textView7" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/eta"
+        app:layout_constraintStart_toStartOf="@+id/guideline9"
+        app:layout_constraintTop_toBottomOf="@+id/seekBar" />
 </android.support.constraint.ConstraintLayout>
