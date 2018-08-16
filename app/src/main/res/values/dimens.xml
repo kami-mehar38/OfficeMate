@@ -10,4 +10,5 @@
     <dimen name="radius_corner_edittext_transparent">50dp</dimen>
     <dimen name="padding_recycler_view">12dp</dimen>
     <dimen name="padding_edittext">12dp</dimen>
+    <dimen name="radius_corner_edittext_project_edit">8dp</dimen>
 </resources>

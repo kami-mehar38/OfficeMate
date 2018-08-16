@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorGrayLightExtra"
+    tools:context=".WorkstationProjectEditActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        tools:targetApi="lollipop">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginStart="12dp"
+                android:text="Ingizly"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/ivBack"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.517" />
+
+            <ImageView
+                android:id="@+id/ivBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_action_back"
+                tools:ignore="ContentDescription" />
+        </android.support.constraint.ConstraintLayout>
+    </android.support.v7.widget.Toolbar>
+
+    <EditText
+        android:id="@+id/editText3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/background_edittext_rounded_project_edit"
+        android:ems="10"
+        android:gravity="top"
+        android:hint="@string/enter_project_description"
+        android:inputType="textMultiLine"
+        android:lines="6"
+        android:maxLines="9"
+        app:layout_constraintEnd_toStartOf="@+id/guideline10"
+        app:layout_constraintStart_toStartOf="@+id/guideline9"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+
+    <devlight.io.library.ArcProgressStackView
+        android:id="@+id/circleProgress"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="24dp"
+        app:apsv_animated="true"
+        app:apsv_animation_duration="1000"
+        app:apsv_dragged="true"
+        app:apsv_draw_width="50%"
+        app:apsv_indicator_orientation="vertical"
+        app:apsv_interpolator="@android:anim/bounce_interpolator"
+        app:apsv_leveled="true"
+        app:apsv_model_bg_enabled="true"
+        app:apsv_model_offset="0dp"
+        app:apsv_preview_bg="#ccc"
+        app:apsv_preview_colors="@array/default_preview"
+        app:apsv_rounded="true"
+        app:apsv_shadow_angle="90"
+        app:apsv_shadow_color="@color/colorPrimaryLightExtra"
+        app:apsv_shadow_distance="5dp"
+        app:apsv_shadow_radius="10dp"
+        app:apsv_shadowed="true"
+        app:apsv_start_angle="270"
+        app:apsv_sweep_angle="360"
+        app:apsv_text_color="#fff"
+        app:apsv_typeface="fonts/agency.ttf"
+        app:layout_constraintEnd_toStartOf="@+id/guideline10"
+        app:layout_constraintStart_toStartOf="@+id/guideline9"
+        app:layout_constraintTop_toBottomOf="@+id/editText3" />
+
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="16dp" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="16dp" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="16dp" />
+
+</android.support.constraint.ConstraintLayout>
