@@ -68,7 +68,10 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
-        outState?.putInt(KEY_CURRENT_INDEX_OF_BOTTOM_NAVIGATION, currentIndex)
+        outState?.run {
+            putInt(KEY_CURRENT_INDEX_OF_BOTTOM_NAVIGATION, currentIndex)
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -128,8 +131,10 @@ class HomeActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (currentIndex == 0)
-                    newsFeedFragment?.filterNewsFeed(p0.toString())
+                when (currentIndex) {
+                    0 -> newsFeedFragment?.filterNewsFeed(p0.toString())
+                    1 -> workstationFragment?.filterWorkstationProject(p0.toString())
+                }
             }
 
         })
@@ -203,24 +208,27 @@ class HomeActivity : AppCompatActivity() {
 
             val fragment = getFragment()
 
-            if (fragment.isAdded) {
-                fragmentTransaction.show(fragment)
-            } else {
-                fragmentTransaction.add(R.id.frame, fragment, fragment.tag)
-            }
+            if (supportFragmentManager.findFragmentByTag(fragment.tag) == null) {
 
-            when (currentIndex) {
-                0 -> {
-                    if (workstationFragment?.isVisible!!)
-                        fragmentTransaction.hide(workstationFragment)
+                if (fragment.isAdded) {
+                    fragmentTransaction.show(fragment)
+                } else {
+                    fragmentTransaction.add(R.id.frame, fragment, fragment.tag)
                 }
-                1 -> {
-                    if (newsFeedFragment?.isVisible!!)
-                        fragmentTransaction.hide(newsFeedFragment)
-                }
-            }
 
-            fragmentTransaction.commit()
+                when (currentIndex) {
+                    0 -> {
+                        if (workstationFragment?.isVisible!!)
+                            fragmentTransaction.hide(workstationFragment)
+                    }
+                    1 -> {
+                        if (newsFeedFragment?.isVisible!!)
+                            fragmentTransaction.hide(newsFeedFragment)
+                    }
+                }
+
+                fragmentTransaction.commit()
+            }
         }
     }
 

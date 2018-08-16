@@ -73,10 +73,10 @@ class SignUpActivity : AppCompatActivity() {
             startActivity(Intent(this, LoginActivity::class.java))
         }
 
-        etName.setOnFocusChangeListener { view, b -> if (b) Helper.getInstance().changeToAccent(etName.compoundDrawables[0]) else Helper.getInstance().changeToPrimary(etName.compoundDrawables[0]) }
-        etEmail.setOnFocusChangeListener { view, b -> if (b) Helper.getInstance().changeToAccent(etEmail.compoundDrawables[0]) else Helper.getInstance().changeToPrimary(etEmail.compoundDrawables[0]) }
-        etOrganizationName.setOnFocusChangeListener { view, b -> if (b) Helper.getInstance().changeToAccent(etOrganizationName.compoundDrawables[0]) else Helper.getInstance().changeToPrimary(etOrganizationName.compoundDrawables[0]) }
-        etDesignation.setOnFocusChangeListener { view, b -> if (b) Helper.getInstance().changeToAccent(etDesignation.compoundDrawables[0]) else Helper.getInstance().changeToPrimary(etDesignation.compoundDrawables[0]) }
+        etName.setOnFocusChangeListener { _, b -> if (b) Helper.getInstance().changeToAccent(etName.compoundDrawables[0]) else Helper.getInstance().changeToPrimary(etName.compoundDrawables[0]) }
+        etEmail.setOnFocusChangeListener { _, b -> if (b) Helper.getInstance().changeToAccent(etEmail.compoundDrawables[0]) else Helper.getInstance().changeToPrimary(etEmail.compoundDrawables[0]) }
+        etOrganizationName.setOnFocusChangeListener { _, b -> if (b) Helper.getInstance().changeToAccent(etOrganizationName.compoundDrawables[0]) else Helper.getInstance().changeToPrimary(etOrganizationName.compoundDrawables[0]) }
+        etDesignation.setOnFocusChangeListener { _, b -> if (b) Helper.getInstance().changeToAccent(etDesignation.compoundDrawables[0]) else Helper.getInstance().changeToPrimary(etDesignation.compoundDrawables[0]) }
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)

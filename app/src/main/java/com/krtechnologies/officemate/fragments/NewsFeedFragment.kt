@@ -1,5 +1,6 @@
 package com.krtechnologies.officemate.fragments
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -10,14 +11,18 @@ import android.view.ViewGroup
 import com.krtechnologies.officemate.R
 import com.krtechnologies.officemate.adapters.NewsFeedAdapter
 import com.krtechnologies.officemate.models.NewsFeed
+import com.krtechnologies.officemate.models.NewsFeedViewModel
 import kotlinx.android.synthetic.main.fragment_news_feed.*
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 
 
-class NewsFeedFragment : Fragment() {
+class NewsFeedFragment : Fragment(), AnkoLogger {
 
     private var newsFeedAdapter: NewsFeedAdapter? = null
     private var listNewsFeed: MutableList<NewsFeed>? = null
     private var newListNewsFeed: MutableList<NewsFeed>? = null
+    private var newsFeedViewModel: NewsFeedViewModel? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,14 +49,13 @@ class NewsFeedFragment : Fragment() {
             rvNewsFeed.adapter = it
         }
 
-        listNewsFeed?.apply {
-            add(NewsFeed("0", "Kamran Ramzan"))
-            add(NewsFeed("1", "Kamran Ramzan"))
-            add(NewsFeed("2", "Kamran Ramzan"))
-            add(NewsFeed("3", "Bhai"))
-        }
+        newsFeedViewModel = ViewModelProviders.of(this).get(NewsFeedViewModel::class.java)
+        newsFeedViewModel?.getData()?.observe(this, Observer<MutableList<NewsFeed>> {
+            newsFeedAdapter?.updateList(it!!)
+        })
 
-        newsFeedAdapter?.updateList(listNewsFeed!!)
+        listNewsFeed = newsFeedViewModel?.getData()?.value
+
     }
 
     companion object {
@@ -79,12 +83,14 @@ class NewsFeedFragment : Fragment() {
         if (searchText.isNotEmpty()) {
             listNewsFeed?.let {
                 it.forEach { newsFeed: NewsFeed ->
-                    if (newsFeed.name.contains(searchText, true))
+                    if (newsFeed.name.contains(searchText, true)) {
                         newListNewsFeed?.add(newsFeed)
+                        info { true }
+                    }
                 }
             }
-            newsFeedAdapter?.updateList(newListNewsFeed!!)
-        } else newsFeedAdapter?.updateList(listNewsFeed!!)
+            newsFeedViewModel?.updateData(newListNewsFeed!!)
+        } else newsFeedViewModel?.updateData(listNewsFeed!!)
 
         newListNewsFeed?.clear()
     }
