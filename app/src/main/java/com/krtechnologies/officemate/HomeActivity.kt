@@ -292,7 +292,7 @@ class HomeActivity : AppCompatActivity() {
                     override fun onAnimationStart(animation: Animator?) {
                         changeStatusBarColorToPrimaryDark()
                         if (toolbar.visibility != View.VISIBLE)
-                        toolbar.visibility = View.VISIBLE
+                            toolbar.visibility = View.VISIBLE
                     }
 
                 })
