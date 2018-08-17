@@ -2,16 +2,16 @@ package com.krtechnologies.officemate
 
 import android.animation.ValueAnimator
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.animation.AccelerateDecelerateInterpolator
-import android.view.animation.OvershootInterpolator
 import android.widget.SeekBar
 import com.krtechnologies.officemate.models.WorkstationProject
 import kotlinx.android.synthetic.main.activity_workstation_project_edit.*
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 
 
-class WorkstationProjectEditActivity : AppCompatActivity() {
+class WorkstationProjectEditActivity : AppCompatActivity(), AnkoLogger {
 
     companion object {
         const val KEY_EXTRA_PROJECT = "EXTRA_PROJECT"
@@ -48,10 +48,18 @@ class WorkstationProjectEditActivity : AppCompatActivity() {
             }
 
             override fun onStartTrackingTouch(p0: SeekBar?) {}
-
             override fun onStopTrackingTouch(p0: SeekBar?) {}
-
         })
+
+        numberPicker.minValue = 0
+        numberPicker.maxValue = 60
+        numberPicker.setOnScrollListener { numberPicker, _ ->
+            tvETA.text = resources.getString(R.string.eta).run {
+                if (numberPicker.value > 1)
+                    plus(" ${numberPicker.value}days")
+                else plus(" ${numberPicker.value}day")
+            }
+        }
     }
 
     private fun animateProgress(progress: Int) {

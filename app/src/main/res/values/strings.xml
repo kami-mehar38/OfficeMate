@@ -26,6 +26,7 @@
     <string name="enter_project_description">Enter project description...</string>
     <string name="completed">Completed:</string>
     <string name="eta">ETA:</string>
+    <string name="update">UPDATE</string>
 
 
 </resources>
