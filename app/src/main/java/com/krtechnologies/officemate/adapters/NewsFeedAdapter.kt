@@ -50,7 +50,7 @@ class NewsFeedAdapter(val context: Context) : RecyclerView.Adapter<NewsFeedAdapt
         Glide.with(context)
                 .asBitmap()
                 .load(R.drawable.kamran)
-                .apply(RequestOptions().override(100, 100).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).fallback(R.drawable.person).error(R.drawable.person))
+                .apply(RequestOptions().override(Helper.getInstance().convertDpToPixel(50f).toInt(), Helper.getInstance().convertDpToPixel(50f).toInt()).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).fallback(R.drawable.person).error(R.drawable.person))
                 .into(object : Target<Bitmap> {
                     override fun onLoadStarted(placeholder: Drawable?) {
                     }

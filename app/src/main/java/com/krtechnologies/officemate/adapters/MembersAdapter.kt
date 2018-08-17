@@ -19,6 +19,7 @@ import com.bumptech.glide.request.target.SizeReadyCallback
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
 import com.krtechnologies.officemate.R
+import com.krtechnologies.officemate.helpers.Helper
 import com.krtechnologies.officemate.helpers.MembersDiffUtils
 import com.krtechnologies.officemate.models.Member
 
@@ -46,7 +47,7 @@ class MembersAdapter(val context: Context) : RecyclerView.Adapter<MembersAdapter
         Glide.with(context)
                 .asBitmap()
                 .load(R.drawable.kamran)
-                .apply(RequestOptions().override(100, 100).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).fallback(R.drawable.person).error(R.drawable.person))
+                .apply(RequestOptions().override(Helper.getInstance().convertDpToPixel(60f).toInt(), Helper.getInstance().convertDpToPixel(60f).toInt()).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).fallback(R.drawable.person).error(R.drawable.person))
                 .into(object : Target<Bitmap> {
                     override fun onLoadStarted(placeholder: Drawable?) {
                     }
