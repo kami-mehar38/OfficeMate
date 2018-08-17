@@ -11,4 +11,5 @@
     <dimen name="padding_recycler_view">12dp</dimen>
     <dimen name="padding_edittext">12dp</dimen>
     <dimen name="radius_corner_edittext_project_edit">8dp</dimen>
+    <dimen name="text_size_name">16sp</dimen>
 </resources>

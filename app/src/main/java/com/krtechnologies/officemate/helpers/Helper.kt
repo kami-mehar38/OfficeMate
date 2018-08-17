@@ -19,6 +19,7 @@ import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
+import android.util.DisplayMetrics
 
 
 /**
@@ -194,11 +195,17 @@ class Helper {
         return "com.google.android.apps.photos.content" == uri.authority
     }
 
-    public fun getSpannableFactory(): Spannable.Factory {
+    fun getSpannableFactory(): Spannable.Factory {
         return object : Spannable.Factory() {
             override fun newSpannable(source: CharSequence?): Spannable {
                 return source as Spannable
             }
         }
+    }
+
+    fun convertDpToPixel(dp: Float): Float {
+        val resources = context!!.resources
+        val metrics = resources.displayMetrics
+        return dp * (metrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
     }
 }

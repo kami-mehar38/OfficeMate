@@ -115,7 +115,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:clickable="true"
-            android:drawableTop="@drawable/ic_action_email"
+            android:drawableTop="@drawable/ic_action_designation"
             android:focusable="true"
             android:foreground="?selectableItemBackgroundBorderless"
             android:gravity="center_vertical|center_horizontal"
@@ -140,18 +140,18 @@
             android:textColor="@color/colorPrimary" />
 
         <TextView
-            android:id="@+id/menuProfile"
+            android:id="@+id/menuSettings"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:clickable="true"
-            android:drawableTop="@drawable/ic_action_designation"
+            android:drawableTop="@drawable/ic_action_settings"
             android:focusable="true"
             android:foreground="?selectableItemBackgroundBorderless"
             android:gravity="center_vertical|center_horizontal"
             android:maxWidth="60dp"
             android:padding="@dimen/padding_drawable"
-            android:text="@string/profile"
+            android:text="@string/settings"
             android:textColor="@color/colorPrimary" />
     </LinearLayout>
 
