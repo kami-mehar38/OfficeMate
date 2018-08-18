@@ -8,7 +8,6 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.os.PersistableBundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
@@ -19,20 +18,29 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import com.krtechnologies.officemate.fragments.MembersFragment
 import com.krtechnologies.officemate.fragments.NewsFeedFragment
+import com.krtechnologies.officemate.fragments.SettingsFragment
 import com.krtechnologies.officemate.fragments.WorkstationFragment
 import com.krtechnologies.officemate.helpers.Helper
 import kotlinx.android.synthetic.main.activity_home.*
 import org.jetbrains.anko.doFromSdk
+import org.jetbrains.anko.find
 
 
 class HomeActivity : AppCompatActivity() {
 
     private var currentIndex: Int = 0
     private var previousIndex: Int = 0
+
+    //fragments
     private var newsFeedFragment: NewsFeedFragment? = null
     private var workstationFragment: WorkstationFragment? = null
+    private var membersFragment: MembersFragment? = null
+    private var settingsFragment: SettingsFragment? = null
+
     private var isSearchExpanded = false
     private var inputMethodManager: InputMethodManager? = null
 
@@ -79,6 +87,17 @@ class HomeActivity : AppCompatActivity() {
         return true
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        menu?.run {
+            when (currentIndex) {
+                3 -> findItem(R.id.action_search).isVisible = false
+                else -> findItem(R.id.action_search).isVisible = true
+            }
+
+        }
+        return true
+    }
+
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
 
         return when (item!!.itemId) {
@@ -94,6 +113,8 @@ class HomeActivity : AppCompatActivity() {
     private fun initFragment() {
         newsFeedFragment = NewsFeedFragment()
         workstationFragment = WorkstationFragment()
+        membersFragment = MembersFragment()
+        settingsFragment = SettingsFragment()
     }
 
     private fun initViews() {
@@ -112,7 +133,7 @@ class HomeActivity : AppCompatActivity() {
             selectBottomNavigationItem()
         }
 
-        menuProfile.setOnClickListener {
+        menuSettings.setOnClickListener {
             currentIndex = 3
             selectBottomNavigationItem()
         }
@@ -124,7 +145,6 @@ class HomeActivity : AppCompatActivity() {
 
         etSearch.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
-
             }
 
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -134,10 +154,19 @@ class HomeActivity : AppCompatActivity() {
                 when (currentIndex) {
                     0 -> newsFeedFragment?.filterNewsFeed(p0.toString())
                     1 -> workstationFragment?.filterWorkstationProject(p0.toString())
+                    2 -> membersFragment?.filterMembers(p0.toString())
                 }
             }
-
         })
+        etSearch.setOnEditorActionListener { _, action, _ ->
+            when (action) {
+                EditorInfo.IME_ACTION_SEARCH -> {
+                    hideKeyboard()
+                    true
+                }
+                else -> false
+            }
+        }
     }
 
     private fun selectBottomNavigationItem() {
@@ -162,13 +191,15 @@ class HomeActivity : AppCompatActivity() {
                 Helper.getInstance().changeToSecondary(menuMembers.compoundDrawables[1])
                 menuMembers.setTextColor(ContextCompat.getColor(this, R.color.colorSecondary))
                 tvTitle.text = resources.getString(R.string.members)
+                loadFragment()
                 ivBack.performClick()
             }
 
             3 -> {
-                Helper.getInstance().changeToSecondary(menuProfile.compoundDrawables[1])
-                menuProfile.setTextColor(ContextCompat.getColor(this, R.color.colorSecondary))
-                tvTitle.text = resources.getString(R.string.profile)
+                Helper.getInstance().changeToSecondary(menuSettings.compoundDrawables[1])
+                menuSettings.setTextColor(ContextCompat.getColor(this, R.color.colorSecondary))
+                tvTitle.text = resources.getString(R.string.settings)
+                loadFragment()
                 ivBack.performClick()
             }
         }
@@ -191,8 +222,8 @@ class HomeActivity : AppCompatActivity() {
                 }
 
                 3 -> {
-                    Helper.getInstance().changeToPrimary(menuProfile.compoundDrawables[1])
-                    menuProfile.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary))
+                    Helper.getInstance().changeToPrimary(menuSettings.compoundDrawables[1])
+                    menuSettings.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary))
                 }
             }
         }
@@ -216,18 +247,22 @@ class HomeActivity : AppCompatActivity() {
                     fragmentTransaction.add(R.id.frame, fragment, fragment.tag)
                 }
 
-                when (currentIndex) {
-                    0 -> {
-                        if (workstationFragment?.isVisible!!)
-                            fragmentTransaction.hide(workstationFragment)
-                    }
-                    1 -> {
-                        if (newsFeedFragment?.isVisible!!)
-                            fragmentTransaction.hide(newsFeedFragment)
-                    }
-                }
+
+                if (workstationFragment?.isVisible!!)
+                    fragmentTransaction.hide(workstationFragment)
+
+                if (newsFeedFragment?.isVisible!!)
+                    fragmentTransaction.hide(newsFeedFragment)
+
+                if (membersFragment?.isVisible!!)
+                    fragmentTransaction.hide(membersFragment)
+
+                if (settingsFragment?.isVisible!!)
+                    fragmentTransaction.hide(settingsFragment)
 
                 fragmentTransaction.commit()
+
+                invalidateOptionsMenu()
             }
         }
     }
@@ -235,6 +270,8 @@ class HomeActivity : AppCompatActivity() {
     private fun getFragment(): Fragment = when (currentIndex) {
         0 -> newsFeedFragment as Fragment
         1 -> workstationFragment as Fragment
+        2 -> membersFragment as Fragment
+        3 -> settingsFragment as Fragment
         else -> newsFeedFragment as Fragment
     }
 
@@ -253,7 +290,7 @@ class HomeActivity : AppCompatActivity() {
                         if (toolbar.visibility != View.INVISIBLE)
                             toolbar.visibility = View.INVISIBLE
                         etSearch.requestFocus()
-                        inputMethodManager?.showSoftInput(etSearch, InputMethodManager.SHOW_IMPLICIT)
+                        showKeyboard()
 
                     }
 
@@ -276,6 +313,10 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    fun showKeyboard() {
+        inputMethodManager?.showSoftInput(etSearch, InputMethodManager.SHOW_IMPLICIT)
+    }
+
     @SuppressLint("NewApi")
     private fun hideSearchEditText() {
 
@@ -291,7 +332,13 @@ class HomeActivity : AppCompatActivity() {
                         if (searchContainer.visibility != View.INVISIBLE)
                             searchContainer.visibility = View.INVISIBLE
                         isSearchExpanded = false
-                        inputMethodManager?.hideSoftInputFromWindow(etSearch.windowToken, InputMethodManager.HIDE_IMPLICIT_ONLY)
+                        when (currentIndex) {
+                            0 -> newsFeedFragment?.resetData()
+                            1 -> workstationFragment?.resetData()
+                            2 -> membersFragment?.resetData()
+                        }
+                        hideKeyboard()
+                        etSearch.text.clear()
                     }
 
                     override fun onAnimationCancel(animation: Animator?) {
@@ -302,7 +349,6 @@ class HomeActivity : AppCompatActivity() {
                         if (toolbar.visibility != View.VISIBLE)
                             toolbar.visibility = View.VISIBLE
                     }
-
                 })
                 animView.duration = 300
                 animView.interpolator = AccelerateDecelerateInterpolator()
@@ -311,6 +357,10 @@ class HomeActivity : AppCompatActivity() {
             }, 1)
         }
 
+    }
+
+    fun hideKeyboard() {
+        inputMethodManager?.hideSoftInputFromWindow(etSearch.windowToken, InputMethodManager.HIDE_IMPLICIT_ONLY)
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)

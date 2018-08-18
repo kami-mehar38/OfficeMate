@@ -54,29 +54,16 @@ class WorkstationFragment : Fragment(), AnkoLogger {
         workstationProjectsViewModel = ViewModelProviders.of(this).get(WorkstationProjectsViewModel::class.java)
         workstationProjectsViewModel?.getData()?.observe(this, Observer<MutableList<WorkstationProject>> {
             workstationsProjectAdapter?.updateList(it!!)
+            rvWorkstation?.smoothScrollToPosition(0)
         })
 
         listWorkstationProject = workstationProjectsViewModel?.getData()?.value
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment WorkstationFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-                WorkstationFragment().apply {
-                    arguments = Bundle().apply {
-                        //putString(ARG_PARAM1, param1)
-                        //putString(ARG_PARAM2, param2)
-                    }
-                }
+    override fun onHiddenChanged(hidden: Boolean) {
+        if (!hidden) {
+            resetData()
+        }
     }
 
     fun filterWorkstationProject(searchText: String) {
@@ -93,5 +80,9 @@ class WorkstationFragment : Fragment(), AnkoLogger {
         } else workstationProjectsViewModel?.updateData(listWorkstationProject!!)
 
         newListWorkstationProject?.clear()
+    }
+
+    fun resetData() {
+        workstationProjectsViewModel?.updateData(listWorkstationProject!!)
     }
 }

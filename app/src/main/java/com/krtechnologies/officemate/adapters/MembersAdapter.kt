@@ -5,7 +5,6 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
-import android.text.SpannableString
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,36 +20,34 @@ import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
 import com.krtechnologies.officemate.R
 import com.krtechnologies.officemate.helpers.Helper
-import com.krtechnologies.officemate.helpers.NewsFeedDiffUtils
-import com.krtechnologies.officemate.models.NewsFeed
-
+import com.krtechnologies.officemate.helpers.MembersDiffUtils
+import com.krtechnologies.officemate.models.Member
 
 /**
- * This project is created by Kamran Ramzan on 13-Aug-18.
+ * This project is created by Kamran Ramzan on 17-Aug-18.
  */
+class MembersAdapter(val context: Context) : RecyclerView.Adapter<MembersAdapter.ViewHolder>() {
 
-class NewsFeedAdapter(val context: Context) : RecyclerView.Adapter<NewsFeedAdapter.ViewHolder>() {
+    private var membersList: MutableList<Member> = ArrayList()
 
-    private var newsFeedList: MutableList<NewsFeed> = ArrayList()
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(LayoutInflater.from(context).inflate(R.layout.row_news_feed, parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(LayoutInflater.from(context).inflate(R.layout.row_members, parent, false))
 
 
     override fun getItemCount(): Int {
-        return newsFeedList.size
+        return membersList.size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.progressBar.setProgress(50.0, 100.0)
-        holder.progressBar.setProgressTextAdapter { progress -> "$progress%" }
 
-        val spannableString = SpannableString(newsFeedList[position].name)
-        holder.tvName.setText(spannableString, TextView.BufferType.SPANNABLE)
+        val member = membersList[position]
+
+        holder.tvName.text = member.name
+        holder.tvDesignation.text = member.designation
 
         Glide.with(context)
                 .asBitmap()
                 .load(R.drawable.kamran)
-                .apply(RequestOptions().override(Helper.getInstance().convertDpToPixel(50f).toInt(), Helper.getInstance().convertDpToPixel(50f).toInt()).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).fallback(R.drawable.person).error(R.drawable.person))
+                .apply(RequestOptions().override(Helper.getInstance().convertDpToPixel(60f).toInt(), Helper.getInstance().convertDpToPixel(60f).toInt()).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).fallback(R.drawable.person).error(R.drawable.person))
                 .into(object : Target<Bitmap> {
                     override fun onLoadStarted(placeholder: Drawable?) {
                     }
@@ -100,20 +97,17 @@ class NewsFeedAdapter(val context: Context) : RecyclerView.Adapter<NewsFeedAdapt
 
     }
 
-    fun updateList(newList: MutableList<NewsFeed>) {
-        val diffResult = DiffUtil.calculateDiff(NewsFeedDiffUtils(newList, this.newsFeedList), true)
+    fun updateList(newList: MutableList<Member>) {
+        val diffResult = DiffUtil.calculateDiff(MembersDiffUtils(newList, this.membersList), true)
         diffResult.dispatchUpdatesTo(this)
-        this.newsFeedList.clear()
-        this.newsFeedList.addAll(newList)
+        this.membersList.clear()
+        this.membersList.addAll(newList)
     }
 
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        val progressBar = view.findViewById<CircularProgressIndicator>(R.id.ProgressBar)!!
         val ivProfilePicture = view.findViewById<ImageView>(R.id.ivProfilePicture)!!
         val tvName = view.findViewById<TextView>(R.id.tvName)!!
+        val tvDesignation = view.findViewById<TextView>(R.id.tvDesignation)!!
 
-        init {
-            tvName.setSpannableFactory(Helper.getInstance().getSpannableFactory())
-        }
     }
 }
