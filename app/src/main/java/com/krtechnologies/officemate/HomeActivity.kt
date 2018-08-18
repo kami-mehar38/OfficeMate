@@ -20,10 +20,7 @@ import android.view.ViewAnimationUtils
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import com.krtechnologies.officemate.fragments.MembersFragment
-import com.krtechnologies.officemate.fragments.NewsFeedFragment
-import com.krtechnologies.officemate.fragments.SettingsFragment
-import com.krtechnologies.officemate.fragments.WorkstationFragment
+import com.krtechnologies.officemate.fragments.*
 import com.krtechnologies.officemate.helpers.Helper
 import kotlinx.android.synthetic.main.activity_home.*
 import org.jetbrains.anko.doFromSdk
@@ -45,7 +42,6 @@ class HomeActivity : AppCompatActivity() {
     private var inputMethodManager: InputMethodManager? = null
 
     private val KEY_CURRENT_INDEX_OF_BOTTOM_NAVIGATION: String = "CURRENT_INDEX"
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -235,7 +231,8 @@ class HomeActivity : AppCompatActivity() {
 
         Handler().post {
             val fragmentTransaction = supportFragmentManager.beginTransaction()
-            fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+            if (currentIndex != 4)
+                fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
 
             val fragment = getFragment()
 
@@ -247,18 +244,40 @@ class HomeActivity : AppCompatActivity() {
                     fragmentTransaction.add(R.id.frame, fragment, fragment.tag)
                 }
 
-
-                if (workstationFragment?.isVisible!!)
-                    fragmentTransaction.hide(workstationFragment)
-
-                if (newsFeedFragment?.isVisible!!)
-                    fragmentTransaction.hide(newsFeedFragment)
-
-                if (membersFragment?.isVisible!!)
-                    fragmentTransaction.hide(membersFragment)
-
-                if (settingsFragment?.isVisible!!)
-                    fragmentTransaction.hide(settingsFragment)
+                when (currentIndex) {
+                    0 -> {
+                        if (workstationFragment?.isVisible!!)
+                            fragmentTransaction.hide(workstationFragment)
+                        if (membersFragment?.isVisible!!)
+                            fragmentTransaction.hide(membersFragment)
+                        if (settingsFragment?.isVisible!!)
+                            fragmentTransaction.hide(settingsFragment)
+                    }
+                    1 -> {
+                        if (newsFeedFragment?.isVisible!!)
+                            fragmentTransaction.hide(newsFeedFragment)
+                        if (membersFragment?.isVisible!!)
+                            fragmentTransaction.hide(membersFragment)
+                        if (settingsFragment?.isVisible!!)
+                            fragmentTransaction.hide(settingsFragment)
+                    }
+                    2 -> {
+                        if (workstationFragment?.isVisible!!)
+                            fragmentTransaction.hide(workstationFragment)
+                        if (newsFeedFragment?.isVisible!!)
+                            fragmentTransaction.hide(newsFeedFragment)
+                        if (settingsFragment?.isVisible!!)
+                            fragmentTransaction.hide(settingsFragment)
+                    }
+                    3 -> {
+                        if (workstationFragment?.isVisible!!)
+                            fragmentTransaction.hide(workstationFragment)
+                        if (newsFeedFragment?.isVisible!!)
+                            fragmentTransaction.hide(newsFeedFragment)
+                        if (membersFragment?.isVisible!!)
+                            fragmentTransaction.hide(membersFragment)
+                    }
+                }
 
                 fragmentTransaction.commit()
 
