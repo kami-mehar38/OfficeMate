@@ -33,6 +33,7 @@ import com.krtechnologies.officemate.helpers.Helper
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.activity_sign_up.*
+import org.jetbrains.anko.selector
 import java.io.File
 import java.io.IOException
 
@@ -191,9 +192,13 @@ class SignUpActivity : AppCompatActivity() {
 
     // this function show the options of Camera or Gallery to the user
     private fun showImageOptions() {
-        val alertDialogBuilder = AlertDialog.Builder(this)
-        alertDialogBuilder.setItems(R.array.image_pick_options) { _: DialogInterface, position: Int -> if (position == 0) dispatchTakePictureIntent() else dispatchSelectImageIntent() }
-        alertDialogBuilder.create().show()
+        selector(null, listOf("Camera", "Gallery")
+        ) { _, position ->
+            when (position) {
+                0 -> dispatchTakePictureIntent()
+                1 -> dispatchSelectImageIntent()
+            }
+        }
     }
 
     private var photoFile: File? = null
