@@ -277,9 +277,7 @@ class HomeActivity : AppCompatActivity() {
                             fragmentTransaction.hide(membersFragment)
                     }
                 }
-
                 fragmentTransaction.commit()
-
                 invalidateOptionsMenu()
             }
         }
