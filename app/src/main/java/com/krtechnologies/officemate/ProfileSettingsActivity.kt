@@ -158,7 +158,7 @@ class ProfileSettingsActivity : AppCompatActivity() {
             Glide.with(this)
                     .asBitmap()
                     .load(resultUri)
-                    .apply(RequestOptions().override(250, 250).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).fallback(R.drawable.person).error(R.drawable.person))
+                    .apply(RequestOptions().override(Helper.getInstance().convertDpToPixel(150f).toInt(), Helper.getInstance().convertDpToPixel(150f).toInt()).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).fallback(R.drawable.person).error(R.drawable.person))
                     .into(object : Target<Bitmap> {
                         override fun onLoadStarted(placeholder: Drawable?) {
                         }
