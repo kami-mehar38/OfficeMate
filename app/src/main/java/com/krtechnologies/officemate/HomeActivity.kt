@@ -231,8 +231,7 @@ class HomeActivity : AppCompatActivity() {
 
         Handler().post {
             val fragmentTransaction = supportFragmentManager.beginTransaction()
-            if (currentIndex != 4)
-                fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+            fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
 
             val fragment = getFragment()
 
