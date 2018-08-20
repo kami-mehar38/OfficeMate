@@ -1,8 +1,10 @@
 package com.krtechnologies.officemate
 
+import android.Manifest
 import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.Activity
 import android.content.DialogInterface
@@ -33,7 +35,10 @@ import com.krtechnologies.officemate.helpers.Helper
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.activity_sign_up.*
+import org.jetbrains.anko.doBeforeSdk
+import org.jetbrains.anko.doFromSdk
 import org.jetbrains.anko.selector
+import org.jetbrains.anko.toast
 import java.io.File
 import java.io.IOException
 
@@ -94,10 +99,8 @@ class SignUpActivity : AppCompatActivity() {
                     .setAspectRatio(1, 1)
                     .setCropShape(CropImageView.CropShape.OVAL)
                     .start(this)
-
             galleryAddPic()
         } else if (requestCode == REQUEST_IMAGE_SELECT && resultCode == Activity.RESULT_OK && data != null && data.data != null) {
-            toast(Helper.getInstance().getPath(data.data!!)!!)
             // start cropping activity for pre-acquired image saved on the device
             CropImage.activity(data.data)
                     .setAspectRatio(1, 1)
@@ -164,13 +167,14 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     // this function checks for the permissions and then shows the image options
+    @SuppressLint("InlinedApi")
     private fun checkPermissionFirst() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-            if (Aira.checkPermission(this, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.CAMERA))) {
+        doFromSdk(Build.VERSION_CODES.M) {
+            if (Aira.checkPermission(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA))) {
                 showImageOptions()
             } else {
-                Aira.requestPermission(this, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.CAMERA),
-                        PERMISION_CONSTANT, "Need Permission", "Office Mate Needs Camera and Storage Permission to perform the intended task.",
+                Aira.requestPermission(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA),
+                        10, "Need Permission", "Office Mate Needs Camera and Storage Permission to perform the intended task.",
                         object : Aira.OnPermissionResultListener {
                             override fun onPermissionGranted(p0: MutableList<String>?) {
                                 if (p0?.size!! > 0)
@@ -184,10 +188,11 @@ class SignUpActivity : AppCompatActivity() {
 
                         })
             }
-        else {
-            showImageOptions()
         }
 
+        doBeforeSdk(Build.VERSION_CODES.M) {
+            showImageOptions()
+        }
     }
 
     // this function show the options of Camera or Gallery to the user

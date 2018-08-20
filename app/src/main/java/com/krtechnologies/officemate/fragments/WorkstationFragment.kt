@@ -20,7 +20,7 @@ import org.jetbrains.anko.info
 import java.io.Serializable
 
 
-class WorkstationFragment : Fragment(), AnkoLogger {
+class WorkstationFragment : Fragment(), Serializable, AnkoLogger {
 
     private var workstationsProjectAdapter: WorkstationsProjectAdapter? = null
     private var listWorkstationProject: MutableList<WorkstationProject>? = null

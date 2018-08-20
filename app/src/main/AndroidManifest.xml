@@ -47,7 +47,7 @@
             android:name=".HomeActivity"
             android:configChanges="screenSize|orientation" />
         <activity android:name=".WorkstationProjectEditActivity" />
-        <activity android:name=".ProfileSettingsActivity"></activity>
+        <activity android:name=".ProfileSettingsActivity" />
     </application>
 
 </manifest>

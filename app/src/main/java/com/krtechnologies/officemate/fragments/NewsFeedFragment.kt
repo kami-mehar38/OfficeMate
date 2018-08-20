@@ -15,9 +15,10 @@ import com.krtechnologies.officemate.models.NewsFeedViewModel
 import kotlinx.android.synthetic.main.fragment_news_feed.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
+import java.io.Serializable
 
 
-class NewsFeedFragment : Fragment(), AnkoLogger {
+class NewsFeedFragment : Fragment(), Serializable, AnkoLogger {
 
     private var newsFeedAdapter: NewsFeedAdapter? = null
     private var listNewsFeed: MutableList<NewsFeed>? = null

@@ -1,5 +1,6 @@
 package com.krtechnologies.officemate
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
@@ -22,6 +23,8 @@ import com.krtechnologies.officemate.helpers.Helper
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.activity_profile_settings.*
+import org.jetbrains.anko.doBeforeSdk
+import org.jetbrains.anko.doFromSdk
 import org.jetbrains.anko.selector
 import org.jetbrains.anko.toast
 import java.io.File
@@ -51,8 +54,9 @@ class ProfileSettingsActivity : AppCompatActivity() {
     }
 
     // this function checks for the permissions and then shows the image options
+    @SuppressLint("InlinedApi")
     private fun checkPermissionFirst() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        doFromSdk(Build.VERSION_CODES.M) {
             if (Aira.checkPermission(this, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.CAMERA))) {
                 showImageOptions()
             } else {
@@ -71,10 +75,11 @@ class ProfileSettingsActivity : AppCompatActivity() {
 
                         })
             }
-        else {
-            showImageOptions()
         }
 
+        doBeforeSdk(Build.VERSION_CODES.M) {
+            showImageOptions()
+        }
     }
 
     // this function show the options of Camera or Gallery to the user

@@ -14,8 +14,9 @@ import com.krtechnologies.officemate.adapters.MembersAdapter
 import com.krtechnologies.officemate.models.Member
 import com.krtechnologies.officemate.models.MembersViewModel
 import kotlinx.android.synthetic.main.fragment_members.*
+import java.io.Serializable
 
-class MembersFragment : Fragment() {
+class MembersFragment : Fragment(), Serializable {
 
     private var membersAdapter: MembersAdapter? = null
     private var listMembers: MutableList<Member>? = null
@@ -59,6 +60,7 @@ class MembersFragment : Fragment() {
             resetData()
         }
     }
+
     fun filterMembers(searchText: String) {
 
         if (searchText.isNotEmpty()) {

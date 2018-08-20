@@ -20,11 +20,13 @@ import android.view.ViewAnimationUtils
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import com.krtechnologies.officemate.fragments.*
+import com.krtechnologies.officemate.fragments.MembersFragment
+import com.krtechnologies.officemate.fragments.NewsFeedFragment
+import com.krtechnologies.officemate.fragments.SettingsFragment
+import com.krtechnologies.officemate.fragments.WorkstationFragment
 import com.krtechnologies.officemate.helpers.Helper
 import kotlinx.android.synthetic.main.activity_home.*
 import org.jetbrains.anko.doFromSdk
-import org.jetbrains.anko.find
 
 
 class HomeActivity : AppCompatActivity() {
@@ -41,7 +43,8 @@ class HomeActivity : AppCompatActivity() {
     private var isSearchExpanded = false
     private var inputMethodManager: InputMethodManager? = null
 
-    private val KEY_CURRENT_INDEX_OF_BOTTOM_NAVIGATION: String = "CURRENT_INDEX"
+    // keys
+    private val KEY_CURRENT_INDEX_OF_BOTTOM_NAVIGATION = "CURRENT_INDEX"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +55,6 @@ class HomeActivity : AppCompatActivity() {
 
         // initializing the views
         initViews()
-        initFragment()
 
         savedInstanceState?.let {
             if (it.containsKey(KEY_CURRENT_INDEX_OF_BOTTOM_NAVIGATION)) {
@@ -63,6 +65,7 @@ class HomeActivity : AppCompatActivity() {
 
         // loading the first menu from bottom navigation when application starts for the first time
         if (savedInstanceState == null) {
+            initFragment()
             selectBottomNavigationItem()
         }
 
