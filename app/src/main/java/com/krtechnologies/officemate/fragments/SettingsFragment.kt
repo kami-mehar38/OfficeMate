@@ -31,7 +31,6 @@ class SettingsFragment : Fragment(), Serializable {
         ivProfilePicture.setOnClickListener {
             val options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity!!, ivProfilePicture as View, "ivProfilePicture")
             val intent = Intent(context!!, ProfileSettingsActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             startActivity(intent, options.toBundle())
         }
     }

@@ -7,7 +7,6 @@ import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.Activity
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -17,12 +16,15 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v4.content.FileProvider
-import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.OvershootInterpolator
 import android.widget.Toast
+import com.androidnetworking.AndroidNetworking
+import com.androidnetworking.common.Priority
+import com.androidnetworking.error.ANError
+import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.Request
@@ -35,20 +37,18 @@ import com.krtechnologies.officemate.helpers.Helper
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.activity_sign_up.*
-import org.jetbrains.anko.doBeforeSdk
-import org.jetbrains.anko.doFromSdk
-import org.jetbrains.anko.selector
-import org.jetbrains.anko.toast
+import org.jetbrains.anko.*
+import org.json.JSONObject
 import java.io.File
 import java.io.IOException
+import kotlin.math.log
 
 
-class SignUpActivity : AppCompatActivity() {
+class SignUpActivity : AppCompatActivity(), AnkoLogger {
 
     // properties
     private var mCurrentPhotoPath: String? = null
     private var profileImage: Bitmap? = null
-    private val PERMISION_CONSTANT: Int = 101
     private val REQUEST_IMAGE_CAPTURE = 1
     private val REQUEST_IMAGE_SELECT = 2
 
@@ -76,7 +76,8 @@ class SignUpActivity : AppCompatActivity() {
         }
 
         btnSignUp.setOnClickListener {
-            startActivity(Intent(this, LoginActivity::class.java))
+            startActivity<LoginActivity>()
+            //signUp()
         }
 
         etName.setOnFocusChangeListener { _, b -> if (b) Helper.getInstance().changeToAccent(etName.compoundDrawables[0]) else Helper.getInstance().changeToPrimary(etName.compoundDrawables[0]) }
@@ -311,5 +312,27 @@ class SignUpActivity : AppCompatActivity() {
         })
         animatorSet.start()
 
+    }
+
+    private fun signUp() {
+        AndroidNetworking.upload("http://192.168.1.113:8000/api/admin")
+                .addMultipartFile("profile_picture", File(mCurrentPhotoPath))
+                .addMultipartParameter("email", "kamranramzan123@gmail.com")
+                .setTag("uploadTest")
+                .setPriority(Priority.HIGH)
+                .build()
+                .setUploadProgressListener { bytesUploaded, totalBytes ->
+                    info("Percentage ${((totalBytes / bytesUploaded) * 100).toInt()}")
+                }
+                .getAsJSONObject(object : JSONObjectRequestListener {
+                    override fun onResponse(response: JSONObject?) {
+                        info { response }
+                    }
+
+                    override fun onError(anError: ANError?) {
+                        info { anError }
+                    }
+
+                })
     }
 }
