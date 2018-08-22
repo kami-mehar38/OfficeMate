@@ -21,10 +21,6 @@ import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.OvershootInterpolator
 import android.widget.Toast
-import com.androidnetworking.AndroidNetworking
-import com.androidnetworking.common.Priority
-import com.androidnetworking.error.ANError
-import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.Request
@@ -34,14 +30,16 @@ import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
 import com.krprojects.aira.Aira
 import com.krtechnologies.officemate.helpers.Helper
+import com.krtechnologies.officemate.models.Admin
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.activity_sign_up.*
 import org.jetbrains.anko.*
-import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.File
 import java.io.IOException
-import kotlin.math.log
 
 
 class SignUpActivity : AppCompatActivity(), AnkoLogger {
@@ -76,8 +74,8 @@ class SignUpActivity : AppCompatActivity(), AnkoLogger {
         }
 
         btnSignUp.setOnClickListener {
-            startActivity<LoginActivity>()
-            //signUp()
+            //startActivity<LoginActivity>()
+            signUp()
         }
 
         etName.setOnFocusChangeListener { _, b -> if (b) Helper.getInstance().changeToAccent(etName.compoundDrawables[0]) else Helper.getInstance().changeToPrimary(etName.compoundDrawables[0]) }
@@ -315,24 +313,29 @@ class SignUpActivity : AppCompatActivity(), AnkoLogger {
     }
 
     private fun signUp() {
-        AndroidNetworking.upload("http://192.168.1.113:8000/api/admin")
-                .addMultipartFile("profile_picture", File(mCurrentPhotoPath))
-                .addMultipartParameter("email", "kamranramzan123@gmail.com")
-                .setTag("uploadTest")
+        /*
+        AndroidNetworking.post("http://10.0.2.2:8000/api/admin")
+                .addBodyParameter("name", "Kamran Ramzan")
+                .addBodyParameter("profile_picture", "kdslajvslkdfnhgdslf")
+                .addBodyParameter("email", "kamranramzan098@gmail.com")
+                .addBodyParameter("password", "jskf@gmail.com")
+                .addBodyParameter("organization", "jskf@gmail.com")
+                .addBodyParameter("designation", "jskf@gmail.com")
+                .addBodyParameter("joining_date", "jskf@gmail.com")
+                .addBodyParameter("subscription", "jskf@gmail.com")
+                .addBodyParameter("token", "jskf@gmail.com")
+                .ad(File(mCurrentPhotoPath))
+                .setTag("tag")
                 .setPriority(Priority.HIGH)
                 .build()
-                .setUploadProgressListener { bytesUploaded, totalBytes ->
-                    info("Percentage ${((totalBytes / bytesUploaded) * 100).toInt()}")
-                }
                 .getAsJSONObject(object : JSONObjectRequestListener {
                     override fun onResponse(response: JSONObject?) {
-                        info { response }
+                        info { "Response $response" }
                     }
 
                     override fun onError(anError: ANError?) {
-                        info { anError }
+                        info { "${anError?.errorBody }"}
                     }
-
-                })
+                })*/
     }
 }

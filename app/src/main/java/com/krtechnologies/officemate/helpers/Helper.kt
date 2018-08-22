@@ -20,6 +20,7 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import android.util.DisplayMetrics
+import com.krtechnologies.officemate.interfaces.APIService
 
 
 /**
@@ -41,10 +42,17 @@ class Helper {
                 return helper!!
             }
         }
+
     }
 
     fun init(context: Context) {
         this.context = context
+    }
+
+    private val BASE_URL = "http://10.0.2.2:8000"
+
+    fun getAPIService(): APIService {
+        return RetrofitClient.getInstance().getClient(BASE_URL).create(APIService::class.java)
     }
 
     // changes the color filter of drawable to accent color

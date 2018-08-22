@@ -1,5 +1,8 @@
 package com.krtechnologies.officemate.models
 
+import com.google.gson.annotations.SerializedName
+
+
 /**
  * This project is created by Kamran Ramzan on 17-Aug-18.
  */
@@ -9,3 +12,4 @@ data class Member(val id: String, val name: String, val designation: String) : C
     override fun compareTo(other: Member): Int = if (other.id == this.id) 0 else 1
 
 }
+
