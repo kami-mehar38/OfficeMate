@@ -49,6 +49,7 @@ class SignUpActivity : AppCompatActivity(), AnkoLogger {
 
     // properties
     private var mCurrentPhotoPath: String? = null
+    private var profilePicture: String? = null
     private var profileImage: Bitmap? = null
     private val REQUEST_IMAGE_CAPTURE = 1
     private val REQUEST_IMAGE_SELECT = 2
@@ -143,6 +144,7 @@ class SignUpActivity : AppCompatActivity(), AnkoLogger {
         } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
             val result: CropImage.ActivityResult = CropImage.getActivityResult(data)
             val resultUri: Uri = result.uri
+            profilePicture = Helper.getInstance().getPath(resultUri)
             Glide.with(this)
                     .asBitmap()
                     .load(resultUri)
@@ -357,7 +359,7 @@ class SignUpActivity : AppCompatActivity(), AnkoLogger {
                 .addMultipartParameter("joining_date", "jskf@gmail.com")
                 .addMultipartParameter("subscription", "jskf@gmail.com")
                 .addMultipartParameter("token", "jskf@gmail.com")
-                .addMultipartFile("image", File(mCurrentPhotoPath))
+                .addMultipartFile("image", File(profilePicture))
                 .setTag("tag")
                 .setPriority(Priority.HIGH)
                 .build()
