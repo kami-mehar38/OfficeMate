@@ -1,6 +1,7 @@
 package com.krtechnologies.officemate
 
 import android.app.Application
+import com.androidnetworking.AndroidNetworking
 import com.krtechnologies.officemate.helpers.Helper
 
 /**
@@ -12,5 +13,8 @@ class App: Application() {
         super.onCreate()
         // initializing the helper
         Helper.getInstance().init(applicationContext)
+
+        // initializing the networking library
+        AndroidNetworking.initialize(applicationContext)
     }
 }

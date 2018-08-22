@@ -21,9 +21,9 @@
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_gravity="center"
-            android:src="@drawable/person"
             app:civ_border_color="@android:color/white"
-            app:civ_border_width="1dp" />
+            app:civ_border_width="1dp"
+            app:srcCompat="@drawable/person" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/btnCancelProfilePicture"
@@ -123,6 +123,23 @@
         app:layout_constraintTop_toBottomOf="@+id/etName" />
 
     <EditText
+        android:id="@+id/etPassword"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/background_edittext_transparent"
+        android:drawableLeft="@drawable/ic_action_email"
+        android:drawablePadding="@dimen/padding_drawable"
+        android:drawableStart="@drawable/ic_action_email"
+        android:ems="10"
+        android:hint="@string/enter_email"
+        android:inputType="textPassword"
+        android:singleLine="true"
+        app:layout_constraintEnd_toStartOf="@+id/guideline3"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/etEmail" />
+
+    <EditText
         android:id="@+id/etOrganizationName"
         android:layout_width="0dp"
         android:layout_height="50dp"
@@ -138,7 +155,7 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toBottomOf="@+id/etEmail" />
+        app:layout_constraintTop_toBottomOf="@+id/etPassword" />
 
     <EditText
         android:id="@+id/etDesignation"
@@ -174,7 +191,6 @@
         app:layout_constraintTop_toBottomOf="@+id/etDesignation" />
 
 
-
     <ImageView
         android:id="@+id/ivBack"
         android:layout_width="wrap_content"
@@ -200,15 +216,16 @@
         app:layout_constraintTop_toBottomOf="@+id/textView">
 
         <CheckBox
-            android:id="@+id/checkBox"
+            android:id="@+id/cbAdmin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:checked="true"
             android:text="@string/admin"
             android:textColor="@android:color/white"
             android:theme="@style/MyCheckBox" />
 
         <CheckBox
-            android:id="@+id/checkBox2"
+            android:id="@+id/cbEmployee"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 

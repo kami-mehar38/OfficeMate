@@ -14,7 +14,6 @@ data class Admin(
         @SerializedName("subscription") @Expose val subscription: String,
         @SerializedName("token") @Expose val token: String
 
-
 ) {
     override fun toString(): String {
         return "Admin(name='$name', profilePicture='$profilePicture', email='$email', password='$password', organization='$organization', designation='$designation', joiningDate='$joiningDate', subscription='$subscription', token='$token')"

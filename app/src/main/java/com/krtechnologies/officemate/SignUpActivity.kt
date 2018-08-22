@@ -15,12 +15,17 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.support.v4.content.ContextCompat
 import android.support.v4.content.FileProvider
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.OvershootInterpolator
 import android.widget.Toast
+import com.androidnetworking.AndroidNetworking
+import com.androidnetworking.common.Priority
+import com.androidnetworking.error.ANError
+import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.Request
@@ -35,9 +40,7 @@ import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.activity_sign_up.*
 import org.jetbrains.anko.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import org.json.JSONObject
 import java.io.File
 import java.io.IOException
 
@@ -49,6 +52,7 @@ class SignUpActivity : AppCompatActivity(), AnkoLogger {
     private var profileImage: Bitmap? = null
     private val REQUEST_IMAGE_CAPTURE = 1
     private val REQUEST_IMAGE_SELECT = 2
+    private var isAdmin: Boolean = true
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,6 +65,10 @@ class SignUpActivity : AppCompatActivity(), AnkoLogger {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        initViews()
+    }
+
+    private fun initViews() {
         ivProfilePicture.setOnClickListener {
             checkPermissionFirst()
         }
@@ -68,7 +76,7 @@ class SignUpActivity : AppCompatActivity(), AnkoLogger {
         btnCancelProfilePicture.setOnClickListener {
             if (profileImage != null) {
                 profileImage = null
-                ivProfilePicture.setImageDrawable(resources.getDrawable(R.drawable.person))
+                ivProfilePicture.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.person))
                 popDown()
             }
         }
@@ -82,6 +90,32 @@ class SignUpActivity : AppCompatActivity(), AnkoLogger {
         etEmail.setOnFocusChangeListener { _, b -> if (b) Helper.getInstance().changeToAccent(etEmail.compoundDrawables[0]) else Helper.getInstance().changeToPrimary(etEmail.compoundDrawables[0]) }
         etOrganizationName.setOnFocusChangeListener { _, b -> if (b) Helper.getInstance().changeToAccent(etOrganizationName.compoundDrawables[0]) else Helper.getInstance().changeToPrimary(etOrganizationName.compoundDrawables[0]) }
         etDesignation.setOnFocusChangeListener { _, b -> if (b) Helper.getInstance().changeToAccent(etDesignation.compoundDrawables[0]) else Helper.getInstance().changeToPrimary(etDesignation.compoundDrawables[0]) }
+
+        cbAdmin.setOnCheckedChangeListener { _, isChecked ->
+            isAdmin = when (isChecked) {
+                true -> true
+                false -> false
+            }
+        }
+
+        cbEmployee.setOnCheckedChangeListener { _, isChecked ->
+            isAdmin = when (isChecked) {
+                true -> false
+                false -> true
+            }
+        }
+
+        cbAdmin.setOnClickListener {
+            if (cbAdmin.isChecked)
+                if (cbEmployee.isChecked)
+                    cbEmployee.isChecked = false
+        }
+
+        cbEmployee.setOnClickListener {
+            if (cbEmployee.isChecked)
+                if (cbAdmin.isChecked)
+                    cbEmployee.isChecked = false
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -313,29 +347,36 @@ class SignUpActivity : AppCompatActivity(), AnkoLogger {
     }
 
     private fun signUp() {
-        /*
-        AndroidNetworking.post("http://10.0.2.2:8000/api/admin")
-                .addBodyParameter("name", "Kamran Ramzan")
-                .addBodyParameter("profile_picture", "kdslajvslkdfnhgdslf")
-                .addBodyParameter("email", "kamranramzan098@gmail.com")
-                .addBodyParameter("password", "jskf@gmail.com")
-                .addBodyParameter("organization", "jskf@gmail.com")
-                .addBodyParameter("designation", "jskf@gmail.com")
-                .addBodyParameter("joining_date", "jskf@gmail.com")
-                .addBodyParameter("subscription", "jskf@gmail.com")
-                .addBodyParameter("token", "jskf@gmail.com")
-                .ad(File(mCurrentPhotoPath))
+        AndroidNetworking.upload("http://10.0.2.2:8000/api/admin")
+                .addMultipartParameter("name", "Kamran Ramzan")
+                .addMultipartParameter("profile_picture", "kdslajvslkdfnhgdslf")
+                .addMultipartParameter("email", "kamranramzan008@gmail.com")
+                .addMultipartParameter("password", "jskf@gmail.com")
+                .addMultipartParameter("organization", "jskf@gmail.com")
+                .addMultipartParameter("designation", "jskf@gmail.com")
+                .addMultipartParameter("joining_date", "jskf@gmail.com")
+                .addMultipartParameter("subscription", "jskf@gmail.com")
+                .addMultipartParameter("token", "jskf@gmail.com")
+                .addMultipartFile("image", File(mCurrentPhotoPath))
                 .setTag("tag")
                 .setPriority(Priority.HIGH)
                 .build()
                 .getAsJSONObject(object : JSONObjectRequestListener {
                     override fun onResponse(response: JSONObject?) {
-                        info { "Response $response" }
+                        when (response?.getInt("status")) {
+                            201 -> {
+                                val admin = Helper.getInstance().getGson().fromJson(response.getJSONObject("admin").toString(), Admin::class.java)
+                                info { admin.toString() }
+                            }
+                            202 -> toast(response.getString("message"))
+                            203 -> toast(response.getString("message"))
+                        }
+
                     }
 
                     override fun onError(anError: ANError?) {
-                        info { "${anError?.errorBody }"}
                     }
-                })*/
+
+                })
     }
 }

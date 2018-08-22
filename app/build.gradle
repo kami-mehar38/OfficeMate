@@ -65,12 +65,11 @@ dependencies {
     // ViewModel and LiveData
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
 
-    // Retrofit
-    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    // Android Networking Library
+    implementation 'com.amitshekhar.android:android-networking:1.0.2'
 
-    // JSON Parsing
+    // gson
     implementation 'com.google.code.gson:gson:2.8.2'
-    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
 
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
