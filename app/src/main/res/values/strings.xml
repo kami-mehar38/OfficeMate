@@ -4,6 +4,7 @@
     <string name="sign_up">Sign Up</string>
     <string name="enter_email">Enter email</string>
     <string name="enter_your_organization_name">Enter your organization name</string>
+    <string name="enter_admin_email">Enter admin\'s email</string>
     <string name="enter_your_designation">Enter your designation</string>
     <string name="log_in">LOG IN</string>
     <string name="email">Email</string>
@@ -32,5 +33,6 @@
     <string name="profile_settings">Profile Settings</string>
     <string name="designation">Designation</string>
     <string name="name">Name</string>
+    <string name="enter_password">Enter password</string>
 
 </resources>

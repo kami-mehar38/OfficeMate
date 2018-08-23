@@ -15,8 +15,10 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.LinearLayout
 import com.krtechnologies.officemate.adapters.SlidesViewPagerAdapter
+import com.krtechnologies.officemate.helpers.PreferencesManager
 import com.krtechnologies.officemate.helpers.ZoomOutPageTransformer
 import kotlinx.android.synthetic.main.activity_main.*
+import org.jetbrains.anko.startActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -32,6 +34,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        if (PreferencesManager.getInstance().isLoggedIn())
+            startActivity<SignUpActivity>()
+        else startActivity<LoginActivity>()
         // hiding the status bar
         hideStatusBar()
 

@@ -20,6 +20,7 @@ import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
 import com.krprojects.aira.Aira
 import com.krtechnologies.officemate.helpers.Helper
+import com.krtechnologies.officemate.helpers.PreferencesManager
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.activity_profile_settings.*
@@ -41,8 +42,15 @@ class ProfileSettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_profile_settings)
+        initViews()
+
+    }
+
+    private fun initViews() {
+
+        tvName.text = PreferencesManager.getInstance().getUserName()
+        tvDesignation.text = PreferencesManager.getInstance().getUserDesignation()
 
         ivBack.setOnClickListener {
             onBackPressed()
@@ -51,7 +59,6 @@ class ProfileSettingsActivity : AppCompatActivity() {
         ivProfilePicture.setOnClickListener {
             checkPermissionFirst()
         }
-
     }
 
     // this function checks for the permissions and then shows the image options

@@ -62,16 +62,19 @@ class Helper {
 
     // changes the color filter of drawable to accent color
     fun changeToAccent(drawable: Drawable) {
+        drawable.mutate()
         drawable.setColorFilter(context!!.resources.getColor(R.color.colorAccentDark), PorterDuff.Mode.SRC_ATOP)
     }
 
     // changes the color filter of drawable to red color
     fun changeToSecondary(drawable: Drawable) {
+        drawable.mutate()
         drawable.setColorFilter(context!!.resources.getColor(R.color.colorSecondary), PorterDuff.Mode.SRC_ATOP)
     }
 
     // changes the color filter of drawable to primary color
     fun changeToPrimary(drawable: Drawable) {
+        drawable.mutate()
         drawable.setColorFilter(context!!.resources.getColor(R.color.colorPrimaryLight), PorterDuff.Mode.SRC_ATOP)
     }
 
