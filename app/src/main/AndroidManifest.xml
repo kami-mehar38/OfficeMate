@@ -46,9 +46,12 @@
         <activity android:name=".LoginActivity" />
         <activity
             android:name=".HomeActivity"
-            android:configChanges="screenSize|orientation" />
+            android:configChanges="screenSize|orientation"
+            android:theme="@style/AppTheme.NoFade" />
         <activity android:name=".WorkstationProjectEditActivity" />
-        <activity android:name=".ProfileSettingsActivity" />
+        <activity
+            android:name=".ProfileSettingsActivity"
+            android:theme="@style/AppTheme.NoFade" />
     </application>
 
 </manifest>

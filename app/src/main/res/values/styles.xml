@@ -14,4 +14,13 @@
         <item name="colorControlActivated">@android:color/white</item>
     </style>
 
+    <style name="AppTheme.NoFade" parent="AppTheme">
+        <item name="android:windowEnterTransition" tools:targetApi="lollipop">
+            @transition/default_window_fade
+        </item>
+        <item name="android:windowExitTransition" tools:targetApi="lollipop">
+            @transition/default_window_fade
+        </item>
+    </style>
+
 </resources>
