@@ -20,11 +20,9 @@ import android.view.ViewAnimationUtils
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import com.krtechnologies.officemate.fragments.MembersFragment
-import com.krtechnologies.officemate.fragments.NewsFeedFragment
-import com.krtechnologies.officemate.fragments.SettingsFragment
-import com.krtechnologies.officemate.fragments.WorkstationFragment
+import com.krtechnologies.officemate.fragments.*
 import com.krtechnologies.officemate.helpers.Helper
+import com.krtechnologies.officemate.helpers.PreferencesManager
 import kotlinx.android.synthetic.main.activity_home.*
 import org.jetbrains.anko.doFromSdk
 
@@ -37,6 +35,7 @@ class HomeActivity : AppCompatActivity() {
     //fragments
     private var newsFeedFragment: NewsFeedFragment? = null
     private var workstationFragment: WorkstationFragment? = null
+    private var workstationFragmentForAdmin: WorkstationFragmentForAdmin? = null
     private var membersFragment: MembersFragment? = null
     private var settingsFragment: SettingsFragment? = null
 
@@ -92,7 +91,6 @@ class HomeActivity : AppCompatActivity() {
                 3 -> findItem(R.id.action_search).isVisible = false
                 else -> findItem(R.id.action_search).isVisible = true
             }
-
         }
         return true
     }
@@ -112,6 +110,7 @@ class HomeActivity : AppCompatActivity() {
     private fun initFragment() {
         newsFeedFragment = NewsFeedFragment()
         workstationFragment = WorkstationFragment()
+        workstationFragmentForAdmin = WorkstationFragmentForAdmin()
         membersFragment = MembersFragment()
         settingsFragment = SettingsFragment()
     }
@@ -250,6 +249,8 @@ class HomeActivity : AppCompatActivity() {
                     0 -> {
                         if (workstationFragment?.isVisible!!)
                             fragmentTransaction.hide(workstationFragment)
+                        if (workstationFragmentForAdmin?.isVisible!!)
+                            fragmentTransaction.hide(workstationFragmentForAdmin)
                         if (membersFragment?.isVisible!!)
                             fragmentTransaction.hide(membersFragment)
                         if (settingsFragment?.isVisible!!)
@@ -266,6 +267,8 @@ class HomeActivity : AppCompatActivity() {
                     2 -> {
                         if (workstationFragment?.isVisible!!)
                             fragmentTransaction.hide(workstationFragment)
+                        if (workstationFragmentForAdmin?.isVisible!!)
+                            fragmentTransaction.hide(workstationFragmentForAdmin)
                         if (newsFeedFragment?.isVisible!!)
                             fragmentTransaction.hide(newsFeedFragment)
                         if (settingsFragment?.isVisible!!)
@@ -274,6 +277,8 @@ class HomeActivity : AppCompatActivity() {
                     3 -> {
                         if (workstationFragment?.isVisible!!)
                             fragmentTransaction.hide(workstationFragment)
+                        if (workstationFragmentForAdmin?.isVisible!!)
+                            fragmentTransaction.hide(workstationFragmentForAdmin)
                         if (newsFeedFragment?.isVisible!!)
                             fragmentTransaction.hide(newsFeedFragment)
                         if (membersFragment?.isVisible!!)
@@ -288,7 +293,11 @@ class HomeActivity : AppCompatActivity() {
 
     private fun getFragment(): Fragment = when (currentIndex) {
         0 -> newsFeedFragment as Fragment
-        1 -> workstationFragment as Fragment
+        1 -> {
+            if (PreferencesManager.getInstance().getIsAdmin() == "0")
+                workstationFragment as Fragment
+            else workstationFragmentForAdmin as Fragment
+        }
         2 -> membersFragment as Fragment
         3 -> settingsFragment as Fragment
         else -> newsFeedFragment as Fragment

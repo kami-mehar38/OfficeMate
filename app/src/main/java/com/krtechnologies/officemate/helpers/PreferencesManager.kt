@@ -94,4 +94,10 @@ class PreferencesManager {
             return getString(KEY_DESIGNATION, "")
         }
     }
+
+    fun getIsAdmin(): String {
+        sharedPreferences!!.run {
+            return getString(KEY_IS_ADMIN, "1")
+        }
+    }
 }
