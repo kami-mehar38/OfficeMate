@@ -78,6 +78,11 @@ class Helper {
         drawable.setColorFilter(context!!.resources.getColor(R.color.colorPrimaryLight), PorterDuff.Mode.SRC_ATOP)
     }
 
+    fun changeToBlack(drawable: Drawable) {
+        drawable.mutate()
+        drawable.setColorFilter(context!!.resources.getColor(android.R.color.black), PorterDuff.Mode.SRC_ATOP)
+    }
+
     @Throws(IOException::class)
     fun createImageFile(): File {
         // Create an image file name

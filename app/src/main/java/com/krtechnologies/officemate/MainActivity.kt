@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
 
         if (PreferencesManager.getInstance().isLoggedIn())
             startActivity<SignUpActivity>()
-        else startActivity<LoginActivity>()
+        else startActivity<HomeActivity>()
         // hiding the status bar
         hideStatusBar()
 

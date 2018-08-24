@@ -53,8 +53,20 @@ class WorkstationFragment : Fragment(), Serializable, AnkoLogger {
 
         workstationProjectsViewModel = ViewModelProviders.of(this).get(WorkstationProjectsViewModel::class.java)
         workstationProjectsViewModel?.getData()?.observe(this, Observer<MutableList<WorkstationProject>> {
-            workstationsProjectAdapter?.updateList(it!!)
-            rvWorkstation?.smoothScrollToPosition(0)
+            if (!it!!.isEmpty()) {
+                if (rvWorkstation.visibility != View.VISIBLE)
+                    rvWorkstation.visibility = View.VISIBLE
+                if (tvNoProjects.visibility != View.GONE)
+                    tvNoProjects.visibility = View.GONE
+                workstationsProjectAdapter?.updateList(it)
+                rvWorkstation?.smoothScrollToPosition(0)
+            } else {
+                if (rvWorkstation.visibility != View.GONE)
+                    rvWorkstation.visibility = View.GONE
+                if (tvNoProjects.visibility != View.VISIBLE)
+                    tvNoProjects.visibility = View.VISIBLE
+
+            }
         })
 
         listWorkstationProject = workstationProjectsViewModel?.getData()?.value

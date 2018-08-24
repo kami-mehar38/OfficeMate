@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.krtechnologies.officemate.R
 import com.krtechnologies.officemate.adapters.MembersAdapter
+import com.krtechnologies.officemate.helpers.SimpleDividerItemDecoration
 import com.krtechnologies.officemate.models.Member
 import com.krtechnologies.officemate.models.MembersViewModel
 import kotlinx.android.synthetic.main.fragment_members.*
@@ -40,6 +41,7 @@ class MembersFragment : Fragment(), Serializable {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         rvMembers.layoutManager = LinearLayoutManager(context)
+        rvMembers.addItemDecoration(SimpleDividerItemDecoration(context!!))
         rvMembers.hasFixedSize()
 
         membersAdapter?.let {
@@ -48,8 +50,20 @@ class MembersFragment : Fragment(), Serializable {
 
         membersViewModel = ViewModelProviders.of(this).get(MembersViewModel::class.java)
         membersViewModel?.getData()?.observe(this, Observer<MutableList<Member>> {
-            membersAdapter?.updateList(it!!)
-            rvMembers?.smoothScrollToPosition(0)
+            if (!it!!.isEmpty()) {
+                if (rvMembers.visibility != View.VISIBLE)
+                    rvMembers.visibility = View.VISIBLE
+                if (tvNoMembers.visibility != View.GONE)
+                    tvNoMembers.visibility = View.GONE
+                membersAdapter?.updateList(it)
+                rvMembers?.smoothScrollToPosition(0)
+            } else {
+                if (rvMembers.visibility != View.GONE)
+                    rvMembers.visibility = View.GONE
+                if (tvNoMembers.visibility != View.VISIBLE)
+                    tvNoMembers.visibility = View.VISIBLE
+
+            }
         })
 
         listMembers = membersViewModel?.getData()?.value

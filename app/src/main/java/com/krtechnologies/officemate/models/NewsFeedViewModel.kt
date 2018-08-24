@@ -25,13 +25,7 @@ class NewsFeedViewModel(application: Application) : AndroidViewModel(application
     private fun loadData() {
         if (data == null) {
             data = MutableLiveData()
-            data?.value = ArrayList<NewsFeed>().apply {
-                add(NewsFeed("0", "Kamran Ramzan"))
-                add(NewsFeed("1", "Kamran Ramzan"))
-                add(NewsFeed("2", "Kamran Ramzan"))
-                add(NewsFeed("3", "Bhai"))
-            }
-
+            data?.value = ArrayList<NewsFeed>()
         }
     }
 

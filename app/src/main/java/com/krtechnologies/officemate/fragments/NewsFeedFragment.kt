@@ -25,7 +25,6 @@ class NewsFeedFragment : Fragment(), Serializable, AnkoLogger {
     private var newListNewsFeed: MutableList<NewsFeed>? = null
     private var newsFeedViewModel: NewsFeedViewModel? = null
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         context?.let {
@@ -52,8 +51,20 @@ class NewsFeedFragment : Fragment(), Serializable, AnkoLogger {
 
         newsFeedViewModel = ViewModelProviders.of(this).get(NewsFeedViewModel::class.java)
         newsFeedViewModel?.getData()?.observe(this, Observer<MutableList<NewsFeed>> {
-            newsFeedAdapter?.updateList(it!!)
-            rvNewsFeed?.smoothScrollToPosition(0)
+            if (!it!!.isEmpty()) {
+                if (rvNewsFeed.visibility != View.VISIBLE)
+                    rvNewsFeed.visibility = View.VISIBLE
+                if (tvNoNewsFeed.visibility != View.GONE)
+                    tvNoNewsFeed.visibility = View.GONE
+                newsFeedAdapter?.updateList(it)
+                rvNewsFeed?.smoothScrollToPosition(0)
+            } else {
+                if (rvNewsFeed.visibility != View.GONE)
+                    rvNewsFeed.visibility = View.GONE
+                if (tvNoNewsFeed.visibility != View.VISIBLE)
+                    tvNoNewsFeed.visibility = View.VISIBLE
+
+            }
         })
 
         listNewsFeed = newsFeedViewModel?.getData()?.value

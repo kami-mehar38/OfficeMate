@@ -21,18 +21,7 @@ class MembersViewModel(application: Application) : AndroidViewModel(application)
     private fun loadData() {
         if (data == null) {
             data = MutableLiveData()
-            data?.value = ArrayList<Member>().apply {
-                add(Member("0", "Kamran Ramzan", "Software Engineer"))
-                add(Member("1", "Shaban Arshad", "Software Engineer"))
-                add(Member("2", "Zeeshan", "Software Engineer"))
-                add(Member("3", "Nadeem Arshad", "Software Engineer"))
-                add(Member("4", "Tufail Shah", "Software Engineer"))
-                add(Member("5", "Tipu Khan", "Software Engineer"))
-                add(Member("6", "Anees Aslam", "Software Engineer"))
-                add(Member("7", "Mahed ALi", "Software Engineer"))
-                add(Member("8", "Kamran Ramzan", "Software Engineer"))
-                add(Member("9", "Kamran Ramzan", "Software Engineer"))
-            }
+            data?.value = ArrayList<Member>()
         }
     }
 

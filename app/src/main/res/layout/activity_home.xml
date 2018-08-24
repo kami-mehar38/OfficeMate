@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorGrayLightExtra"
+    android:background="@android:color/white"
     tools:context=".HomeActivity">
 
     <android.support.v7.widget.Toolbar
@@ -100,14 +100,15 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:clickable="true"
-            android:drawableTop="@drawable/ic_action_name"
+            android:drawableTop="@drawable/ic_menu_newsfeed"
             android:focusable="true"
             android:foreground="?selectableItemBackgroundBorderless"
             android:gravity="center_vertical|center_horizontal"
             android:maxWidth="60dp"
             android:padding="@dimen/padding_drawable"
             android:text="@string/news_feed"
-            android:textColor="@color/colorPrimary" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            android:textColor="@android:color/black" />
 
         <TextView
             android:id="@+id/menuWorkstation"
@@ -115,14 +116,15 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:clickable="true"
-            android:drawableTop="@drawable/ic_action_designation"
+            android:drawableTop="@drawable/ic_menu_workstation"
             android:focusable="true"
             android:foreground="?selectableItemBackgroundBorderless"
             android:gravity="center_vertical|center_horizontal"
             android:maxWidth="60dp"
             android:padding="@dimen/padding_drawable"
             android:text="@string/workstation"
-            android:textColor="@color/colorPrimary" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            android:textColor="@android:color/black" />
 
         <TextView
             android:id="@+id/menuMembers"
@@ -130,14 +132,15 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:clickable="true"
-            android:drawableTop="@drawable/ic_action_organization"
+            android:drawableTop="@drawable/ic_menu_members"
             android:focusable="true"
             android:foreground="?selectableItemBackgroundBorderless"
             android:gravity="center_vertical|center_horizontal"
             android:maxWidth="60dp"
             android:padding="@dimen/padding_drawable"
             android:text="@string/members"
-            android:textColor="@color/colorPrimary" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            android:textColor="@android:color/black" />
 
         <TextView
             android:id="@+id/menuSettings"
@@ -145,14 +148,15 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:clickable="true"
-            android:drawableTop="@drawable/ic_action_settings"
+            android:drawableTop="@drawable/ic_menu_settings"
             android:focusable="true"
             android:foreground="?selectableItemBackgroundBorderless"
             android:gravity="center_vertical|center_horizontal"
             android:maxWidth="60dp"
             android:padding="@dimen/padding_drawable"
             android:text="@string/settings"
-            android:textColor="@color/colorPrimary" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            android:textColor="@android:color/black" />
     </LinearLayout>
 
     <FrameLayout

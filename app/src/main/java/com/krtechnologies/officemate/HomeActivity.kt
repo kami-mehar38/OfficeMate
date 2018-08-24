@@ -206,23 +206,23 @@ class HomeActivity : AppCompatActivity() {
         if (currentIndex != previousIndex) {
             when (previousIndex) {
                 0 -> {
-                    Helper.getInstance().changeToPrimary(menuNewsfeed.compoundDrawables[1])
-                    menuNewsfeed.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary))
+                    Helper.getInstance().changeToBlack(menuNewsfeed.compoundDrawables[1])
+                    menuNewsfeed.setTextColor(ContextCompat.getColor(this, android.R.color.black))
                 }
 
                 1 -> {
-                    Helper.getInstance().changeToPrimary(menuWorkstation.compoundDrawables[1])
-                    menuWorkstation.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary))
+                    Helper.getInstance().changeToBlack(menuWorkstation.compoundDrawables[1])
+                    menuWorkstation.setTextColor(ContextCompat.getColor(this, android.R.color.black))
                 }
 
                 2 -> {
-                    Helper.getInstance().changeToPrimary(menuMembers.compoundDrawables[1])
-                    menuMembers.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary))
+                    Helper.getInstance().changeToBlack(menuMembers.compoundDrawables[1])
+                    menuMembers.setTextColor(ContextCompat.getColor(this, android.R.color.black))
                 }
 
                 3 -> {
-                    Helper.getInstance().changeToPrimary(menuSettings.compoundDrawables[1])
-                    menuSettings.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary))
+                    Helper.getInstance().changeToBlack(menuSettings.compoundDrawables[1])
+                    menuSettings.setTextColor(ContextCompat.getColor(this, android.R.color.black))
                 }
             }
         }
