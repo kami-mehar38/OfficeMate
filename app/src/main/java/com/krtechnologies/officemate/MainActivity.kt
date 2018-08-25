@@ -14,7 +14,9 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.WindowManager
 import android.widget.LinearLayout
+import com.google.firebase.FirebaseApp
 import com.krtechnologies.officemate.adapters.SlidesViewPagerAdapter
+import com.krtechnologies.officemate.helpers.Helper
 import com.krtechnologies.officemate.helpers.PreferencesManager
 import com.krtechnologies.officemate.helpers.ZoomOutPageTransformer
 import kotlinx.android.synthetic.main.activity_main.*
@@ -34,9 +36,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (PreferencesManager.getInstance().isLoggedIn())
-            startActivity<SignUpActivity>()
-        else startActivity<HomeActivity>()
+        if (Helper.getInstance().getFirebaseAuthInstance().currentUser != null)
+            startActivity<HomeActivity>()
+        else startActivity<LoginActivity>()
         // hiding the status bar
         hideStatusBar()
 

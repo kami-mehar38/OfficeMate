@@ -39,14 +39,16 @@
         android:id="@+id/btnLogin"
         android:layout_width="0dp"
         android:layout_height="60dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/background_button_login_white"
         android:clickable="true"
         android:focusable="true"
         android:stateListAnimator="@animator/elevation_button_login"
         android:text="@string/log_in"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline8"
+        app:layout_constraintBottom_toTopOf="@+id/tvSignUp"
         app:layout_constraintEnd_toStartOf="@+id/guideline5"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guideline7"
         tools:targetApi="lollipop" />
 
@@ -96,4 +98,13 @@
             app:layout_constraintTop_toBottomOf="@+id/etEmail"
             app:layout_constraintVertical_bias="1.0" />
     </android.support.constraint.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/tvSignUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sign_up"
+        app:layout_constraintBottom_toTopOf="@+id/guideline8"
+        app:layout_constraintEnd_toStartOf="@+id/guideline5"
+        app:layout_constraintStart_toStartOf="@+id/guideline7" />
 </android.support.constraint.ConstraintLayout>

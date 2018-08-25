@@ -25,6 +25,13 @@ import org.jetbrains.anko.startActivity
 import org.json.JSONObject
 import java.io.File
 import java.util.*
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.AuthResult
+import com.google.android.gms.tasks.Task
+import android.support.annotation.NonNull
+import com.google.android.gms.tasks.OnCompleteListener
+import com.krtechnologies.officemate.R.string.email
+import org.jetbrains.anko.toast
 
 
 class LoginActivity : AppCompatActivity() {
@@ -39,6 +46,10 @@ class LoginActivity : AppCompatActivity() {
 
         btnLogin.setOnClickListener {
             logIn()
+        }
+
+        tvSignUp.setOnClickListener {
+            startActivity<SignUpActivity>()
         }
 
     }
@@ -56,7 +67,7 @@ class LoginActivity : AppCompatActivity() {
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
         dialog.setCancelable(false)
         dialog.setMessage("Logging in...")
-        if (Validator.getInstance().validateEmail(etEmail.text.toString().trim())) {
+        /*if (Validator.getInstance().validateEmail(etEmail.text.toString().trim())) {
             if (Validator.getInstance().validatePassword(etPassword.text.toString().trim())) {
                 dialog.show()
                 AndroidNetworking.get("http://10.0.2.2:8000/api/login/${etEmail.text.toString().trim()}/${etPassword.text.toString().trim()}")
@@ -86,5 +97,18 @@ class LoginActivity : AppCompatActivity() {
                         })
             } else Toasty.error(this, "Password must be at least 6 characters long", Toast.LENGTH_SHORT, true).show();
         } else Toasty.error(this, "Invalid email", Toast.LENGTH_SHORT, true).show();
+    */
+        Helper.getInstance().getFirebaseAuthInstance().signInWithEmailAndPassword(etEmail.text.toString().trim(), etPassword.text.toString().trim())
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        // Sign in success, update UI with the signed-in user's information
+                        val user = Helper.getInstance().getFirebaseAuthInstance().currentUser
+                        toast(user?.email!!)
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Toast.makeText(this@LoginActivity, "Authentication failed.",
+                                Toast.LENGTH_SHORT).show()
+                    }
+                }
     }
 }
