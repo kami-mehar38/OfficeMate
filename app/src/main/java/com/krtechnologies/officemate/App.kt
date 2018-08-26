@@ -2,7 +2,6 @@ package com.krtechnologies.officemate
 
 import android.app.Application
 import com.androidnetworking.AndroidNetworking
-import com.google.firebase.FirebaseApp
 import com.krtechnologies.officemate.helpers.Helper
 import com.krtechnologies.officemate.helpers.PreferencesManager
 
@@ -23,7 +22,5 @@ class App : Application() {
         // initializing the networking library
         AndroidNetworking.initialize(applicationContext)
 
-        // initializing the Firebase App
-        FirebaseApp.initializeApp(applicationContext)
     }
 }

@@ -20,11 +20,8 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import android.util.DisplayMetrics
-import com.google.firebase.FirebaseApp
-import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.google.firebase.storage.FirebaseStorage
 
 
 /**
@@ -47,6 +44,7 @@ class Helper {
             }
         }
 
+        const val BASE_URL = "https://kamranramzan098.000webhostapp.com"
     }
 
     fun init(context: Context) {
@@ -233,11 +231,4 @@ class Helper {
         return dp * (metrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
     }
 
-    fun getFirebaseStorageInstance(): FirebaseStorage {
-        return FirebaseStorage.getInstance()
-    }
-
-    fun getFirebaseAuthInstance(): FirebaseAuth {
-        return FirebaseAuth.getInstance()
-    }
 }

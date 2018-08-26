@@ -1,9 +1,7 @@
 package com.krtechnologies.officemate
 
 import android.annotation.TargetApi
-import android.app.Dialog
 import android.app.ProgressDialog
-import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -20,21 +18,13 @@ import com.krtechnologies.officemate.helpers.Validator
 import com.krtechnologies.officemate.models.Admin
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_login.*
+import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import org.jetbrains.anko.startActivity
 import org.json.JSONObject
-import java.io.File
-import java.util.*
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.AuthResult
-import com.google.android.gms.tasks.Task
-import android.support.annotation.NonNull
-import com.google.android.gms.tasks.OnCompleteListener
-import com.krtechnologies.officemate.R.string.email
-import org.jetbrains.anko.toast
 
 
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity(), AnkoLogger {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,23 +57,26 @@ class LoginActivity : AppCompatActivity() {
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
         dialog.setCancelable(false)
         dialog.setMessage("Logging in...")
-        /*if (Validator.getInstance().validateEmail(etEmail.text.toString().trim())) {
+        if (Validator.getInstance().validateEmail(etEmail.text.toString().trim())) {
             if (Validator.getInstance().validatePassword(etPassword.text.toString().trim())) {
                 dialog.show()
-                AndroidNetworking.get("http://10.0.2.2:8000/api/login/${etEmail.text.toString().trim()}/${etPassword.text.toString().trim()}")
+                AndroidNetworking.get("${Helper.BASE_URL}/login/${etEmail.text.toString().trim()}/${etPassword.text.toString().trim()}")
                         .setTag("login")
+
                         .setPriority(Priority.HIGH)
                         .build()
                         .getAsJSONObject(object : JSONObjectRequestListener {
                             override fun onResponse(response: JSONObject?) {
                                 dialog.dismiss()
+                                info { response }
                                 when (response?.getInt("status")) {
                                     201 -> {
-                                        val admin = Helper.getInstance().getGson().fromJson(response.getJSONObject("admin").toString(), Admin::class.java)
+                                        /*val admin = Helper.getInstance().getGson().fromJson(response.getJSONObject("admin").toString(), Admin::class.java)
                                         PreferencesManager.getInstance().saveUser(admin)
                                         PreferencesManager.getInstance().setLogInStatus(true)
                                         Toasty.success(this@LoginActivity, response.getString("message"), Toast.LENGTH_SHORT, true).show();
-                                        startActivity<HomeActivity>()
+                                        startActivity<HomeActivity>()*/
+                                        Toasty.success(this@LoginActivity, response.getString("message"), Toast.LENGTH_SHORT, true).show();
                                     }
                                     202 -> Toasty.error(this@LoginActivity, response.getString("message"), Toast.LENGTH_SHORT, true).show();
                                 }
@@ -97,18 +90,6 @@ class LoginActivity : AppCompatActivity() {
                         })
             } else Toasty.error(this, "Password must be at least 6 characters long", Toast.LENGTH_SHORT, true).show();
         } else Toasty.error(this, "Invalid email", Toast.LENGTH_SHORT, true).show();
-    */
-        Helper.getInstance().getFirebaseAuthInstance().signInWithEmailAndPassword(etEmail.text.toString().trim(), etPassword.text.toString().trim())
-                .addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-                        // Sign in success, update UI with the signed-in user's information
-                        val user = Helper.getInstance().getFirebaseAuthInstance().currentUser
-                        toast(user?.email!!)
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Toast.makeText(this@LoginActivity, "Authentication failed.",
-                                Toast.LENGTH_SHORT).show()
-                    }
-                }
+
     }
 }

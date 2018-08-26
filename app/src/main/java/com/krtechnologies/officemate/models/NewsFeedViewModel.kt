@@ -2,12 +2,9 @@ package com.krtechnologies.officemate.models
 
 import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.info
-import org.jetbrains.anko.uiThread
 
 /**
  * Created by ingizly on 8/16/18
