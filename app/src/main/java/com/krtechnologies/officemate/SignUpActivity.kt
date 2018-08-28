@@ -7,7 +7,6 @@ import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.Activity
-import android.app.Dialog
 import android.app.ProgressDialog
 import android.content.DialogInterface
 import android.content.Intent
@@ -18,7 +17,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.support.annotation.NonNull
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.FileProvider
 import android.support.v7.app.AppCompatActivity
@@ -42,6 +40,7 @@ import com.krtechnologies.officemate.helpers.Helper
 import com.krtechnologies.officemate.helpers.PreferencesManager
 import com.krtechnologies.officemate.helpers.Validator
 import com.krtechnologies.officemate.models.Admin
+import com.krtechnologies.officemate.models.Employee
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import es.dmoral.toasty.Toasty
@@ -50,7 +49,6 @@ import org.jetbrains.anko.*
 import org.json.JSONObject
 import java.io.File
 import java.io.IOException
-import java.util.*
 
 
 class SignUpActivity : AppCompatActivity(), AnkoLogger {
@@ -92,7 +90,10 @@ class SignUpActivity : AppCompatActivity(), AnkoLogger {
 
         btnSignUp.setOnClickListener {
             //startActivity<LoginActivity>()
-            signUp()
+            when (isAdmin) {
+                true -> signUpAdmin()
+                false -> signUpEmployee()
+            }
         }
 
         etName.setOnFocusChangeListener { _, b -> if (b) Helper.getInstance().changeToAccent(etName.compoundDrawables[0]) else Helper.getInstance().changeToPrimary(etName.compoundDrawables[0]) }
@@ -368,7 +369,7 @@ class SignUpActivity : AppCompatActivity(), AnkoLogger {
 
     }
 
-    private fun signUp() {
+    private fun signUpAdmin() {
 
         val dialog = ProgressDialog(this)
         dialog.isIndeterminate = true
@@ -376,7 +377,6 @@ class SignUpActivity : AppCompatActivity(), AnkoLogger {
         dialog.setCancelable(false)
         dialog.setTitle("Sign Up")
         dialog.setMessage("Please wait until we sign you up...")
-        dialog.show()
         dialog.setButton(DialogInterface.BUTTON_POSITIVE, "Cancel") { _, button ->
             if (button == DialogInterface.BUTTON_POSITIVE)
                 AndroidNetworking.cancel("signup")
@@ -388,86 +388,113 @@ class SignUpActivity : AppCompatActivity(), AnkoLogger {
                     if (Validator.getInstance().validatePassword(etPassword.text.toString().trim())) {
                         if (Validator.getInstance().validateText(etOrganizationName.text.toString().trim())) {
                             if (Validator.getInstance().validateText(etDesignation.text.toString().trim())) {
-                                if (isAdmin) {
-                                    dialog.show()
-                                    AndroidNetworking.upload("http://10.0.2.2:8000/api/admin")
-                                            .addMultipartParameter("name", etName.text.toString().trim())
-                                            .addMultipartParameter("email", etEmail.text.toString().trim())
-                                            .addMultipartParameter("password", etPassword.text.toString().trim())
-                                            .addMultipartParameter("organization", etOrganizationName.text.toString().trim())
-                                            .addMultipartParameter("designation", etDesignation.text.toString().trim())
-                                            .addMultipartParameter("subscription", "0")
-                                            .addMultipartParameter("isAdmin", "1")
-                                            .addMultipartFile("image", File(profilePicture))
-                                            .setTag("signup")
-                                            .setPriority(Priority.HIGH)
-                                            .build()
-                                            .getAsJSONObject(object : JSONObjectRequestListener {
-                                                override fun onResponse(response: JSONObject?) {
-                                                    dialog.dismiss()
-                                                    when (response?.getInt("status")) {
-                                                        201 -> {
-                                                            val admin = Helper.getInstance().getGson().fromJson(response.getJSONObject("admin").toString(), Admin::class.java)
-                                                            info { admin.toString() }
-                                                            PreferencesManager.getInstance().saveUser(admin)
-                                                            PreferencesManager.getInstance().setLogInStatus(true)
-                                                            startActivity<HomeActivity>()
-                                                            Toasty.success(this@SignUpActivity, response.getString("message"), Toast.LENGTH_SHORT, true).show();
-                                                        }
-                                                        202 -> Toasty.error(this@SignUpActivity, response.getString("message"), Toast.LENGTH_SHORT, true).show();
-                                                        203 -> Toasty.info(this@SignUpActivity, response.getString("message"), Toast.LENGTH_SHORT, true).show();
+
+                                dialog.show()
+                                AndroidNetworking.upload("${Helper.BASE_URL}/signup/admin")
+                                        .addMultipartParameter("name", etName.text.toString().trim())
+                                        .addMultipartParameter("email", etEmail.text.toString().trim())
+                                        .addMultipartParameter("password", etPassword.text.toString().trim())
+                                        .addMultipartParameter("organization", etOrganizationName.text.toString().trim())
+                                        .addMultipartParameter("designation", etDesignation.text.toString().trim())
+                                        .addMultipartParameter("subscription", "0")
+                                        .addMultipartParameter("isAdmin", "1")
+                                        .addMultipartFile("image", File(profilePicture))
+                                        .setTag("signup")
+                                        .setPriority(Priority.HIGH)
+                                        .build()
+                                        .getAsJSONObject(object : JSONObjectRequestListener {
+                                            override fun onResponse(response: JSONObject?) {
+                                                dialog.dismiss()
+                                                when (response?.getInt("status")) {
+                                                    201 -> {
+                                                        val admin = Helper.getInstance().getGson().fromJson(response.getJSONObject("admin").toString(), Admin::class.java)
+                                                        info { admin.toString() }
+                                                        PreferencesManager.getInstance().saveUser(admin)
+                                                        PreferencesManager.getInstance().setLogInStatus(true)
+                                                        startActivity<HomeActivity>()
+                                                        Toasty.success(this@SignUpActivity, response.getString("message"), Toast.LENGTH_SHORT, true).show();
                                                     }
+                                                    202 -> Toasty.error(this@SignUpActivity, response.getString("message"), Toast.LENGTH_SHORT, true).show();
+                                                    203 -> Toasty.info(this@SignUpActivity, response.getString("message"), Toast.LENGTH_SHORT, true).show();
                                                 }
+                                            }
 
-                                                override fun onError(anError: ANError?) {
-                                                    dialog.dismiss()
-                                                    Toasty.error(this@SignUpActivity, "Sign up failed", Toast.LENGTH_SHORT, true).show();
-                                                }
+                                            override fun onError(anError: ANError?) {
+                                                dialog.dismiss()
+                                                Toasty.error(this@SignUpActivity, "Sign up failed", Toast.LENGTH_SHORT, true).show();
+                                            }
 
-                                            })
-                                } else {
-                                    dialog.show()
-                                    AndroidNetworking.upload("http://10.0.2.2:8000/api/employee")
-                                            .addMultipartParameter("name", etName.text.toString().trim())
-                                            .addMultipartParameter("email", etEmail.text.toString().trim())
-                                            .addMultipartParameter("password", etPassword.text.toString().trim())
-                                            .addMultipartParameter("admin_email", etOrganizationName.text.toString().trim())
-                                            .addMultipartParameter("designation", etDesignation.text.toString().trim())
-                                            .addMultipartParameter("isAdmin", "0")
-                                            .addMultipartFile("image", File(profilePicture))
-                                            .setTag("signup")
-                                            .setPriority(Priority.HIGH)
-                                            .build()
-                                            .getAsJSONObject(object : JSONObjectRequestListener {
-                                                override fun onResponse(response: JSONObject?) {
-                                                    dialog.dismiss()
-                                                    when (response?.getInt("status")) {
-                                                        201 -> {
-                                                            val employee = Helper.getInstance().getGson().fromJson(response.getJSONObject("employee").toString(), Admin::class.java)
-                                                            info { employee.toString() }
-                                                            PreferencesManager.getInstance().saveUser(employee)
-                                                            PreferencesManager.getInstance().setLogInStatus(true)
-                                                            startActivity<HomeActivity>()
-                                                            Toasty.success(this@SignUpActivity, response.getString("message"), Toast.LENGTH_SHORT, true).show();
-                                                        }
-                                                        202 -> Toasty.error(this@SignUpActivity, response.getString("message"), Toast.LENGTH_SHORT, true).show();
-                                                        203 -> Toasty.info(this@SignUpActivity, response.getString("message"), Toast.LENGTH_SHORT, true).show();
-                                                    }
-                                                }
+                                        })
 
-                                                override fun onError(anError: ANError?) {
-                                                    dialog.dismiss()
-                                                    Toasty.error(this@SignUpActivity, "Sign up failed", Toast.LENGTH_SHORT, true).show();
-                                                }
-
-                                            })
-                                }
                             } else Toasty.error(this, "Enter your designation", Toast.LENGTH_SHORT, true).show();
                         } else Toasty.error(this, "Enter organization name", Toast.LENGTH_SHORT, true).show();
                     } else Toasty.error(this, "Password must be at least 6 characters long", Toast.LENGTH_SHORT, true).show();
                 } else Toasty.error(this, "Invalid email", Toast.LENGTH_SHORT, true).show();
             } else Toasty.error(this, "Name must be at least 6 characters long", Toast.LENGTH_SHORT, true).show();
         } else Toasty.error(this, "Select profile picture", Toast.LENGTH_SHORT, true).show();
+    }
 
+    private fun signUpEmployee() {
+        val dialog = ProgressDialog(this)
+        dialog.isIndeterminate = true
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
+        dialog.setCancelable(false)
+        dialog.setTitle("Sign Up")
+        dialog.setMessage("Please wait until we sign you up...")
+        dialog.setButton(DialogInterface.BUTTON_POSITIVE, "Cancel") { _, button ->
+            if (button == DialogInterface.BUTTON_POSITIVE)
+                AndroidNetworking.cancel("signup")
+        }
+
+        if (profileImage != null) {
+            if (Validator.getInstance().validateName(etName.text.toString().trim())) {
+                if (Validator.getInstance().validateEmail(etEmail.text.toString().trim())) {
+                    if (Validator.getInstance().validatePassword(etPassword.text.toString().trim())) {
+                        if (Validator.getInstance().validateText(etOrganizationName.text.toString().trim())) {
+                            if (Validator.getInstance().validateText(etDesignation.text.toString().trim())) {
+
+                                dialog.show()
+                                AndroidNetworking.upload("${Helper.BASE_URL}/signup/employee")
+                                        .addMultipartParameter("name", etName.text.toString().trim())
+                                        .addMultipartParameter("email", etEmail.text.toString().trim())
+                                        .addMultipartParameter("password", etPassword.text.toString().trim())
+                                        .addMultipartParameter("admin_email", etOrganizationName.text.toString().trim())
+                                        .addMultipartParameter("designation", etDesignation.text.toString().trim())
+                                        .addMultipartParameter("subscription", "0")
+                                        .addMultipartParameter("isAdmin", "1")
+                                        .addMultipartFile("image", File(profilePicture))
+                                        .setTag("signup")
+                                        .setPriority(Priority.HIGH)
+                                        .build()
+                                        .getAsJSONObject(object : JSONObjectRequestListener {
+                                            override fun onResponse(response: JSONObject?) {
+                                                dialog.dismiss()
+                                                when (response?.getInt("status")) {
+                                                    201 -> {
+                                                        val employee = Helper.getInstance().getGson().fromJson(response.getJSONObject("employee").toString(), Employee::class.java)
+                                                        info { employee.toString() }
+                                                        PreferencesManager.getInstance().saveUser(employee)
+                                                        PreferencesManager.getInstance().setLogInStatus(true)
+                                                        startActivity<HomeActivity>()
+                                                        Toasty.success(this@SignUpActivity, response.getString("message"), Toast.LENGTH_SHORT, true).show();
+                                                    }
+                                                    202 -> Toasty.error(this@SignUpActivity, response.getString("message"), Toast.LENGTH_SHORT, true).show();
+                                                    203 -> Toasty.info(this@SignUpActivity, response.getString("message"), Toast.LENGTH_SHORT, true).show();
+                                                }
+                                            }
+
+                                            override fun onError(anError: ANError?) {
+                                                dialog.dismiss()
+                                                Toasty.error(this@SignUpActivity, "Sign up failed", Toast.LENGTH_SHORT, true).show();
+                                            }
+
+                                        })
+
+                            } else Toasty.error(this, "Enter your designation", Toast.LENGTH_SHORT, true).show();
+                        } else Toasty.error(this, "Invalid admin's email", Toast.LENGTH_SHORT, true).show();
+                    } else Toasty.error(this, "Password must be at least 6 characters long", Toast.LENGTH_SHORT, true).show();
+                } else Toasty.error(this, "Invalid email", Toast.LENGTH_SHORT, true).show();
+            } else Toasty.error(this, "Name must be at least 6 characters long", Toast.LENGTH_SHORT, true).show();
+        } else Toasty.error(this, "Select profile picture", Toast.LENGTH_SHORT, true).show();
     }
 }

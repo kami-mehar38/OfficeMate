@@ -37,6 +37,7 @@
     <string name="there_is_no_news_feed_yet">There is no news feed yet…</string>
     <string name="there_is_no_project_yet">There is no project yet…</string>
     <string name="threre_are_no_other_members_yet">There are no other members yet…</string>
+    <string name="sign_out">Sign Out</string>
 
 
 </resources>

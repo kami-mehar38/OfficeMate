@@ -3,7 +3,7 @@ package com.krtechnologies.officemate.helpers
 import android.content.Context
 import android.content.SharedPreferences
 import com.krtechnologies.officemate.models.Admin
-import java.util.*
+import com.krtechnologies.officemate.models.Employee
 
 /**
  * This project is created by Kamran Ramzan on 20-Aug-18.
@@ -16,12 +16,12 @@ class PreferencesManager {
     private val KEY_NAME = "NAME"
     private val KEY_PROFILE_PICTURE = "PROFILE_PICTURE"
     private val KEY_EMAIL = "EMAIL"
+    private val KEY_EMAIL_ADMIN = "EMAIL_ADMIN"
     private val KEY_PASSWORD = "PASSWORD"
     private val KEY_ORGANIZATION = "ORGANIZATION"
     private val KEY_DESIGNATION = "DESIGNATION"
     private val KEY_JOINING_DATE = "JOINING_DATE"
     private val KEY_SUBSCRIPTION = "SUBSCRIPTION"
-    private val KEY_TOKEN = "TOKEN"
     private val KEY_IS_ADMIN = "IS_ADMIN"
     private val KEY_IS_LOGGED_IN = "IS_LOGGED_IN"
 
@@ -62,8 +62,24 @@ class PreferencesManager {
                     putString(KEY_DESIGNATION, designation)
                     putString(KEY_JOINING_DATE, joiningDate)
                     putString(KEY_SUBSCRIPTION, subscription)
-                    putString(KEY_TOKEN, token)
                     putString(KEY_IS_ADMIN, isAdmin)
+                    apply()
+                }
+            }
+        } else if (any is Employee) {
+            with(any) {
+                getEditor().run {
+                    putString(KEY_ID, id)
+                    putString(KEY_NAME, name)
+                    putString(KEY_PROFILE_PICTURE, profilePicture)
+                    putString(KEY_EMAIL, email)
+                    putString(KEY_PASSWORD, password)
+                    putString(KEY_ORGANIZATION, organization)
+                    putString(KEY_DESIGNATION, designation)
+                    putString(KEY_JOINING_DATE, joiningDate)
+                    putString(KEY_SUBSCRIPTION, subscription)
+                    putString(KEY_IS_ADMIN, isAdmin)
+                    putString(KEY_EMAIL_ADMIN, adminEmail)
                     apply()
                 }
             }
@@ -97,7 +113,13 @@ class PreferencesManager {
 
     fun getIsAdmin(): String {
         sharedPreferences!!.run {
-            return getString(KEY_IS_ADMIN, "1")
+            return getString(KEY_IS_ADMIN, "")
+        }
+    }
+
+    fun getProfilePicture(): String {
+        sharedPreferences!!.run {
+            return getString(KEY_PROFILE_PICTURE, "")
         }
     }
 }

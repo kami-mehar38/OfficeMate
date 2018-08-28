@@ -13,9 +13,7 @@ import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.krtechnologies.officemate.helpers.Helper
-import com.krtechnologies.officemate.helpers.PreferencesManager
 import com.krtechnologies.officemate.helpers.Validator
-import com.krtechnologies.officemate.models.Admin
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_login.*
 import org.jetbrains.anko.AnkoLogger

@@ -59,6 +59,48 @@ class ProfileSettingsActivity : AppCompatActivity() {
         ivProfilePicture.setOnClickListener {
             checkPermissionFirst()
         }
+
+        Glide.with(this)
+                .asBitmap()
+                .load(PreferencesManager.getInstance().getProfilePicture())
+                .apply(RequestOptions().override(Helper.getInstance().convertDpToPixel(150f).toInt(), Helper.getInstance().convertDpToPixel(150f).toInt()).fallback(R.drawable.person).error(R.drawable.person))
+                .into(object : Target<Bitmap> {
+                    override fun onLoadStarted(placeholder: Drawable?) {
+                    }
+
+                    override fun onLoadFailed(errorDrawable: Drawable?) {
+                    }
+
+                    override fun getSize(cb: SizeReadyCallback) {
+                    }
+
+                    override fun getRequest(): Request? {
+                        return null
+                    }
+
+                    override fun onStop() {
+                    }
+
+                    override fun setRequest(request: Request?) {
+                    }
+
+                    override fun removeCallback(cb: SizeReadyCallback) {
+                    }
+
+                    override fun onLoadCleared(placeholder: Drawable?) {
+                    }
+
+                    override fun onStart() {
+                    }
+
+                    override fun onDestroy() {
+                    }
+
+                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                        ivProfilePicture.setImageBitmap(resource)
+                    }
+
+                })
     }
 
     // this function checks for the permissions and then shows the image options

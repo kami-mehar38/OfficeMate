@@ -64,13 +64,14 @@
         android:layout_height="150dp"
         android:layout_gravity="center"
         android:layout_marginTop="32dp"
-        android:src="@drawable/kamran"
+        android:src="@drawable/person"
         android:transitionName="ivProfilePicture"
         app:civ_fill_color="@android:color/white"
         app:layout_constraintEnd_toStartOf="@+id/guideline13"
         app:layout_constraintStart_toStartOf="@+id/guideline12"
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
-        tools:targetApi="lollipop" />
+        tools:targetApi="lollipop"
+        tools:ignore="VectorDrawableCompat" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline12"
