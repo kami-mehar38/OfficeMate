@@ -18,7 +18,7 @@ import org.jetbrains.anko.info
 class WorkstationFragmentForAdmin : Fragment(), AnkoLogger {
 
     companion object {
-        val REQUEST_CODE_MEMBER_SELECT = 1
+        const val REQUEST_CODE_MEMBER_SELECT = 1
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
