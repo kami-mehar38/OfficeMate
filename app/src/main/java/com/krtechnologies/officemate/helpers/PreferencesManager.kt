@@ -122,4 +122,16 @@ class PreferencesManager {
             return getString(KEY_PROFILE_PICTURE, "")
         }
     }
+
+    fun getUserEmail(): String {
+        sharedPreferences!!.run {
+            return getString(KEY_EMAIL, "")
+        }
+    }
+
+    fun getUserAdminEmail(): String {
+        sharedPreferences!!.run {
+            return getString(KEY_EMAIL_ADMIN, "")
+        }
+    }
 }

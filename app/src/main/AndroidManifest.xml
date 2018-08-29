@@ -52,6 +52,7 @@
         <activity
             android:name=".ProfileSettingsActivity"
             android:theme="@style/AppTheme.NoFade" />
+        <activity android:name=".MemberSelectingActivity"></activity>
     </application>
 
 </manifest>

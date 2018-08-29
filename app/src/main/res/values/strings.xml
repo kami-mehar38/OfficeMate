@@ -38,6 +38,11 @@
     <string name="there_is_no_project_yet">There is no project yet…</string>
     <string name="threre_are_no_other_members_yet">There are no other members yet…</string>
     <string name="sign_out">Sign Out</string>
+    <string name="enter_the_project_title">Enter the project title</string>
+    <string name="project_title">Project Title</string>
+    <string name="project_description">Project Description</string>
+    <string name="enter_the_project_description">Enter the project description</string>
+    <string name="assign_to">Assign To</string>
 
 
 </resources>

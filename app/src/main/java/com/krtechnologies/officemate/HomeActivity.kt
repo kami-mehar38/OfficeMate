@@ -3,7 +3,9 @@ package com.krtechnologies.officemate
 import android.animation.Animator
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -23,11 +25,14 @@ import android.view.inputmethod.InputMethodManager
 import com.krtechnologies.officemate.fragments.*
 import com.krtechnologies.officemate.helpers.Helper
 import com.krtechnologies.officemate.helpers.PreferencesManager
+import com.krtechnologies.officemate.models.Employee
 import kotlinx.android.synthetic.main.activity_home.*
+import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.doFromSdk
+import org.jetbrains.anko.info
 
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity(), AnkoLogger {
 
     private var currentIndex: Int = 0
     private var previousIndex: Int = 0
@@ -405,4 +410,6 @@ class HomeActivity : AppCompatActivity() {
         else
             super.onBackPressed()
     }
+
+
 }

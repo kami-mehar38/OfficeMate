@@ -13,4 +13,5 @@
     <dimen name="radius_corner_edittext_project_edit">8dp</dimen>
     <dimen name="text_size_name">16sp</dimen>
     <dimen name="text_size_name_big">18sp</dimen>
+    <dimen name="text_size_edit_text">14sp</dimen>
 </resources>

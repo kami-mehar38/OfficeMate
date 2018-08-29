@@ -13,7 +13,9 @@ import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.krtechnologies.officemate.helpers.Helper
+import com.krtechnologies.officemate.helpers.PreferencesManager
 import com.krtechnologies.officemate.helpers.Validator
+import com.krtechnologies.officemate.models.Admin
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_login.*
 import org.jetbrains.anko.AnkoLogger
@@ -69,12 +71,17 @@ class LoginActivity : AppCompatActivity(), AnkoLogger {
                                 info { response }
                                 when (response?.getInt("status")) {
                                     201 -> {
-                                        /*val admin = Helper.getInstance().getGson().fromJson(response.getJSONObject("admin").toString(), Admin::class.java)
-                                        PreferencesManager.getInstance().saveUser(admin)
-                                        PreferencesManager.getInstance().setLogInStatus(true)
+                                        if (response.has("admin")) {
+                                            val admin = Helper.getInstance().getGson().fromJson(response.getJSONObject("admin").toString(), Admin::class.java)
+                                            PreferencesManager.getInstance().saveUser(admin)
+                                            PreferencesManager.getInstance().setLogInStatus(true)
+                                        } else if (response.has("employee")) {
+                                            val employee = Helper.getInstance().getGson().fromJson(response.getJSONObject("employee").toString(), Admin::class.java)
+                                            PreferencesManager.getInstance().saveUser(employee)
+                                            PreferencesManager.getInstance().setLogInStatus(true)
+                                        }
                                         Toasty.success(this@LoginActivity, response.getString("message"), Toast.LENGTH_SHORT, true).show();
-                                        startActivity<HomeActivity>()*/
-                                        Toasty.success(this@LoginActivity, response.getString("message"), Toast.LENGTH_SHORT, true).show();
+                                        startActivity<HomeActivity>()
                                     }
                                     202 -> Toasty.error(this@LoginActivity, response.getString("message"), Toast.LENGTH_SHORT, true).show();
                                 }

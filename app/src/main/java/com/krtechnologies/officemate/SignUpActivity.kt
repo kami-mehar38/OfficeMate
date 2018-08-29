@@ -461,7 +461,7 @@ class SignUpActivity : AppCompatActivity(), AnkoLogger {
                                         .addMultipartParameter("admin_email", etOrganizationName.text.toString().trim())
                                         .addMultipartParameter("designation", etDesignation.text.toString().trim())
                                         .addMultipartParameter("subscription", "0")
-                                        .addMultipartParameter("isAdmin", "1")
+                                        .addMultipartParameter("isAdmin", "0")
                                         .addMultipartFile("image", File(profilePicture))
                                         .setTag("signup")
                                         .setPriority(Priority.HIGH)
@@ -487,9 +487,7 @@ class SignUpActivity : AppCompatActivity(), AnkoLogger {
                                                 dialog.dismiss()
                                                 Toasty.error(this@SignUpActivity, "Sign up failed", Toast.LENGTH_SHORT, true).show();
                                             }
-
                                         })
-
                             } else Toasty.error(this, "Enter your designation", Toast.LENGTH_SHORT, true).show();
                         } else Toasty.error(this, "Invalid admin's email", Toast.LENGTH_SHORT, true).show();
                     } else Toasty.error(this, "Password must be at least 6 characters long", Toast.LENGTH_SHORT, true).show();

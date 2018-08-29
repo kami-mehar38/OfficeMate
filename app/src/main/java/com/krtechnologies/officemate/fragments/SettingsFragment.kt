@@ -41,7 +41,7 @@ class SettingsFragment : Fragment(), Serializable {
             startActivity(intent, options.toBundle())
         }
 
-        tvSignOut.setOnClickListener {
+        btnSignOut.setOnClickListener {
             startActivity(Intent(context, LoginActivity::class.java))
             PreferencesManager.getInstance().setLogInStatus(false)
         }

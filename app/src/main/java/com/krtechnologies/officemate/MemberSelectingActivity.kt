@@ -1,49 +1,62 @@
-package com.krtechnologies.officemate.fragments
-
+package com.krtechnologies.officemate
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
+import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.view.LayoutInflater
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
-import android.view.ViewGroup
-import com.krtechnologies.officemate.R
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import com.krtechnologies.officemate.adapters.MembersAdapter
 import com.krtechnologies.officemate.helpers.SimpleDividerItemDecoration
 import com.krtechnologies.officemate.models.Employee
-import com.krtechnologies.officemate.models.Member
 import com.krtechnologies.officemate.models.MembersViewModel
-import kotlinx.android.synthetic.main.fragment_members.*
-import java.io.Serializable
+import kotlinx.android.synthetic.main.activity_member_selecting.*
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
+import android.app.Activity
+import android.content.Intent
 
-class MembersFragment : Fragment(), Serializable {
 
-    private var isFirstLoad = true;
+class MemberSelectingActivity : AppCompatActivity(), AnkoLogger {
+
+    companion object {
+        val EXTRA_EMPLOYEE = "EMPLOYEE"
+    }
+
+    private var isFirstLoad = true
     private var membersAdapter: MembersAdapter? = null
     private var listEmployees: MutableList<Employee>? = null
     private var newListEmployees: MutableList<Employee>? = null
     private var membersViewModel: MembersViewModel? = null
+    private var inputMethodManager: InputMethodManager? = null
+    private var employee: Employee? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        context?.let {
-            membersAdapter = MembersAdapter(it)
-        }
+    override fun onStart() {
+        super.onStart()
         listEmployees = ArrayList()
         newListEmployees = ArrayList()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_members, container, false)
-    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_member_selecting)
+        inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        rvMembers.layoutManager = LinearLayoutManager(context)
-        rvMembers.addItemDecoration(SimpleDividerItemDecoration(context!!))
+        membersAdapter = MembersAdapter(this)
+        membersAdapter?.run {
+            setItemClickListener {
+                info { it.toString() }
+                employee = it
+            }
+        }
+
+        rvMembers.layoutManager = LinearLayoutManager(this)
+        rvMembers.addItemDecoration(SimpleDividerItemDecoration(this))
         rvMembers.hasFixedSize()
 
         membersAdapter?.let {
@@ -65,6 +78,7 @@ class MembersFragment : Fragment(), Serializable {
                     tvNoMembers.visibility = View.GONE
                 membersAdapter?.updateList(it)
                 rvMembers?.smoothScrollToPosition(0)
+                info { it }
             } else {
                 if (rvMembers.visibility != View.GONE)
                     rvMembers.visibility = View.GONE
@@ -78,11 +92,37 @@ class MembersFragment : Fragment(), Serializable {
             }
         })
 
-    }
+        etSearch.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+                filterMembers(p0.toString())
+            }
 
-    override fun onHiddenChanged(hidden: Boolean) {
-        if (!hidden) {
-            resetData()
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+        })
+        etSearch.setOnEditorActionListener { _, action, _ ->
+            when (action) {
+                EditorInfo.IME_ACTION_SEARCH -> {
+                    hideKeyboard()
+                    true
+                }
+                else -> false
+            }
+        }
+
+        ivBack.setOnClickListener {
+            hideKeyboard()
+        }
+
+        btnDone.setOnClickListener {
+            val returnIntent = Intent()
+            returnIntent.putExtra(EXTRA_EMPLOYEE, employee)
+            setResult(Activity.RESULT_OK, returnIntent)
+            finish()
         }
     }
 
@@ -106,5 +146,9 @@ class MembersFragment : Fragment(), Serializable {
         listEmployees?.run {
             membersViewModel?.updateData(this)
         }
+    }
+
+    fun hideKeyboard() {
+        inputMethodManager?.hideSoftInputFromWindow(etSearch.windowToken, InputMethodManager.HIDE_IMPLICIT_ONLY)
     }
 }

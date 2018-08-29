@@ -3,6 +3,7 @@ package com.krtechnologies.officemate.adapters
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.support.constraint.ConstraintLayout
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -21,33 +22,40 @@ import com.bumptech.glide.request.transition.Transition
 import com.krtechnologies.officemate.R
 import com.krtechnologies.officemate.helpers.Helper
 import com.krtechnologies.officemate.helpers.MembersDiffUtils
+import com.krtechnologies.officemate.models.Employee
 import com.krtechnologies.officemate.models.Member
+import org.jetbrains.anko.toast
 
 /**
  * This project is created by Kamran Ramzan on 17-Aug-18.
  */
 class MembersAdapter(val context: Context) : RecyclerView.Adapter<MembersAdapter.ViewHolder>() {
 
-    private var membersList: MutableList<Member> = ArrayList()
+    private var employeesList: MutableList<Employee> = ArrayList()
+    private var listener: ((employee: Employee) -> Unit)? = null
+
+    fun setItemClickListener(listener: (employee: Employee) -> Unit) {
+        this.listener = listener
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(LayoutInflater.from(context).inflate(R.layout.row_members, parent, false))
 
 
     override fun getItemCount(): Int {
-        return membersList.size
+        return employeesList.size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        val member = membersList[position]
+        val employee = employeesList[position]
 
-        holder.tvName.text = member.name
-        holder.tvDesignation.text = member.designation
+        holder.tvName.text = employee.name
+        holder.tvDesignation.text = employee.designation
 
         Glide.with(context)
                 .asBitmap()
-                .load(R.drawable.kamran)
-                .apply(RequestOptions().override(Helper.getInstance().convertDpToPixel(60f).toInt(), Helper.getInstance().convertDpToPixel(60f).toInt()).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).fallback(R.drawable.person).error(R.drawable.person))
+                .load(employee.profilePicture)
+                .apply(RequestOptions().override(Helper.getInstance().convertDpToPixel(60f).toInt(), Helper.getInstance().convertDpToPixel(60f).toInt()).fallback(R.drawable.person).error(R.drawable.person))
                 .into(object : Target<Bitmap> {
                     override fun onLoadStarted(placeholder: Drawable?) {
                     }
@@ -86,6 +94,9 @@ class MembersAdapter(val context: Context) : RecyclerView.Adapter<MembersAdapter
 
                 })
 
+        holder.item.setOnClickListener {
+            listener!!(employee)
+        }
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
@@ -97,17 +108,18 @@ class MembersAdapter(val context: Context) : RecyclerView.Adapter<MembersAdapter
 
     }
 
-    fun updateList(newList: MutableList<Member>) {
-        val diffResult = DiffUtil.calculateDiff(MembersDiffUtils(newList, this.membersList), true)
+    fun updateList(newList: MutableList<Employee>) {
+        val diffResult = DiffUtil.calculateDiff(MembersDiffUtils(newList, this.employeesList), true)
         diffResult.dispatchUpdatesTo(this)
-        this.membersList.clear()
-        this.membersList.addAll(newList)
+        this.employeesList.clear()
+        this.employeesList.addAll(newList)
     }
 
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         val ivProfilePicture = view.findViewById<ImageView>(R.id.ivProfilePicture)!!
         val tvName = view.findViewById<TextView>(R.id.tvName)!!
         val tvDesignation = view.findViewById<TextView>(R.id.tvDesignation)!!
+        val item = view.findViewById<ConstraintLayout>(R.id.item)!!
 
     }
 }
