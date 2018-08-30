@@ -1,10 +1,14 @@
 package com.krtechnologies.officemate
 
+import android.app.Activity
+import android.app.ProgressDialog
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
-import android.support.v7.app.AppCompatActivity
+import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.text.Editable
 import android.text.TextWatcher
@@ -18,8 +22,13 @@ import com.krtechnologies.officemate.models.MembersViewModel
 import kotlinx.android.synthetic.main.activity_member_selecting.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
-import android.app.Activity
-import android.content.Intent
+import com.androidnetworking.error.ANError
+import org.json.JSONObject
+import com.androidnetworking.interfaces.JSONObjectRequestListener
+import com.androidnetworking.AndroidNetworking
+import com.androidnetworking.common.Priority
+import com.krtechnologies.officemate.helpers.Helper
+import es.dmoral.toasty.Toasty
 
 
 class MemberSelectingActivity : AppCompatActivity(), AnkoLogger {
@@ -47,7 +56,7 @@ class MemberSelectingActivity : AppCompatActivity(), AnkoLogger {
         setContentView(R.layout.activity_member_selecting)
         inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
-        membersAdapter = MembersAdapter(this)
+        membersAdapter = MembersAdapter(this, true)
         membersAdapter?.run {
             setItemClickListener {
                 info { it.toString() }
@@ -104,24 +113,19 @@ class MemberSelectingActivity : AppCompatActivity(), AnkoLogger {
 
             }
         })
-        etSearch.setOnEditorActionListener { _, action, _ ->
-            when (action) {
-                EditorInfo.IME_ACTION_SEARCH -> {
-                    hideKeyboard()
-                    true
-                }
-                else -> false
-            }
-        }
 
-        ivBack.setOnClickListener {
-            hideKeyboard()
+        ivCancel.setOnClickListener {
+            etSearch.text.clear()
+            showKeyboard()
         }
 
         btnDone.setOnClickListener {
             val returnIntent = Intent()
+
             returnIntent.putExtra(EXTRA_EMPLOYEE, employee)
-            setResult(Activity.RESULT_OK, returnIntent)
+            if (employee != null)
+                setResult(Activity.RESULT_OK, returnIntent)
+            else setResult(Activity.RESULT_CANCELED, returnIntent)
             finish()
         }
     }
@@ -148,7 +152,8 @@ class MemberSelectingActivity : AppCompatActivity(), AnkoLogger {
         }
     }
 
-    fun hideKeyboard() {
-        inputMethodManager?.hideSoftInputFromWindow(etSearch.windowToken, InputMethodManager.HIDE_IMPLICIT_ONLY)
+    private fun showKeyboard() {
+        inputMethodManager?.showSoftInputFromInputMethod(etSearch.windowToken, InputMethodManager.SHOW_IMPLICIT)
     }
+
 }

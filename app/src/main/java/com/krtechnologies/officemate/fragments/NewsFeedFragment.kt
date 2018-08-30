@@ -10,8 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.krtechnologies.officemate.R
 import com.krtechnologies.officemate.adapters.NewsFeedAdapter
-import com.krtechnologies.officemate.models.NewsFeed
 import com.krtechnologies.officemate.models.NewsFeedViewModel
+import com.krtechnologies.officemate.models.Project
 import kotlinx.android.synthetic.main.fragment_news_feed.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
@@ -20,9 +20,10 @@ import java.io.Serializable
 
 class NewsFeedFragment : Fragment(), Serializable, AnkoLogger {
 
+    private var isFirstLoad = true
     private var newsFeedAdapter: NewsFeedAdapter? = null
-    private var listNewsFeed: MutableList<NewsFeed>? = null
-    private var newListNewsFeed: MutableList<NewsFeed>? = null
+    private var listProjects: MutableList<Project>? = null
+    private var newListProjects: MutableList<Project>? = null
     private var newsFeedViewModel: NewsFeedViewModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,8 +31,8 @@ class NewsFeedFragment : Fragment(), Serializable, AnkoLogger {
         context?.let {
             newsFeedAdapter = NewsFeedAdapter(it)
         }
-        listNewsFeed = ArrayList()
-        newListNewsFeed = ArrayList()
+        listProjects = ArrayList()
+        newListProjects = ArrayList()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -49,8 +50,15 @@ class NewsFeedFragment : Fragment(), Serializable, AnkoLogger {
             rvNewsFeed.adapter = it
         }
 
+        swipeRefreshLayout.setOnRefreshListener {
+            newsFeedViewModel?.loadDataFromServer()
+        }
+
+        swipeRefreshLayout.isRefreshing = true
+
         newsFeedViewModel = ViewModelProviders.of(this).get(NewsFeedViewModel::class.java)
-        newsFeedViewModel?.getData()?.observe(this, Observer<MutableList<NewsFeed>> {
+        newsFeedViewModel?.getData()?.observe(this, Observer<MutableList<Project>> {
+            swipeRefreshLayout.isRefreshing = false
             if (!it!!.isEmpty()) {
                 if (rvNewsFeed.visibility != View.VISIBLE)
                     rvNewsFeed.visibility = View.VISIBLE
@@ -58,6 +66,10 @@ class NewsFeedFragment : Fragment(), Serializable, AnkoLogger {
                     tvNoNewsFeed.visibility = View.GONE
                 newsFeedAdapter?.updateList(it)
                 rvNewsFeed?.smoothScrollToPosition(0)
+                if (isFirstLoad) {
+                    listProjects = it
+                    isFirstLoad = false
+                }
             } else {
                 if (rvNewsFeed.visibility != View.GONE)
                     rvNewsFeed.visibility = View.GONE
@@ -66,8 +78,6 @@ class NewsFeedFragment : Fragment(), Serializable, AnkoLogger {
 
             }
         })
-
-        listNewsFeed = newsFeedViewModel?.getData()?.value
 
     }
 
@@ -80,21 +90,21 @@ class NewsFeedFragment : Fragment(), Serializable, AnkoLogger {
     fun filterNewsFeed(searchText: String) {
 
         if (searchText.isNotEmpty()) {
-            listNewsFeed?.let {
-                it.forEach { newsFeed: NewsFeed ->
-                    if (newsFeed.name.contains(searchText, true)) {
-                        newListNewsFeed?.add(newsFeed)
+            listProjects?.let {
+                it.forEach { project: Project ->
+                    if (project.assignedTo.contains(searchText, true)) {
+                        newListProjects?.add(project)
                         info { true }
                     }
                 }
             }
-            newsFeedViewModel?.updateData(newListNewsFeed!!)
-        } else newsFeedViewModel?.updateData(listNewsFeed!!)
+            newsFeedViewModel?.updateData(newListProjects!!)
+        } else newsFeedViewModel?.updateData(listProjects!!)
 
-        newListNewsFeed?.clear()
+        newListProjects?.clear()
     }
 
     fun resetData() {
-        newsFeedViewModel?.updateData(listNewsFeed!!)
+        newsFeedViewModel?.updateData(listProjects!!)
     }
 }

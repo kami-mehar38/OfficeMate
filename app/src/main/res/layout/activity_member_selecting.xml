@@ -19,35 +19,36 @@
         tools:targetApi="lollipop">
 
         <ImageView
-            android:id="@+id/ivBack"
+            android:id="@+id/ivCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             android:background="?selectableItemBackgroundBorderless"
             android:clickable="true"
             android:focusable="true"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_action_back_dark"
+            app:srcCompat="@drawable/ic_action_cancel"
             tools:ignore="ContentDescription" />
 
         <EditText
             android:id="@+id/etSearch"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="16dp"
             android:background="@drawable/background_edittext_white_search"
             android:ems="10"
-            android:textSize="@dimen/text_size_edit_text"
             android:hint="@string/search"
-            android:imeOptions="actionSearch"
             android:inputType="text"
+            android:textSize="@dimen/text_size_edit_text"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/ivBack"
+            app:layout_constraintEnd_toStartOf="@+id/ivCancel"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="LabelFor" />
 
@@ -67,6 +68,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
+            android:paddingBottom="@dimen/padding_recyclerview_bottom_80dp"
             android:scrollbarStyle="outsideOverlay"
             android:scrollbars="vertical" />
 
@@ -89,6 +91,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:clickable="true"
+        android:focusable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_action_check" />

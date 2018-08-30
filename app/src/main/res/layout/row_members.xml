@@ -2,29 +2,45 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:color/white"
-    android:id="@+id/item"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?selectableItemBackground">
 
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/ivProfilePicture"
+    <FrameLayout
+        android:id="@+id/profilePictureLayout"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:src="@drawable/person"
-        app:civ_fill_color="@color/colorGrayLightExtra"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="VectorDrawableCompat" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/ivProfilePicture"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/person"
+            app:civ_fill_color="@color/colorGrayLightExtra"
+            tools:ignore="VectorDrawableCompat" />
+
+        <ImageView
+            android:id="@+id/ivChecked"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_check_circle_green"
+            tools:ignore="ContentDescription" />
+    </FrameLayout>
+
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -33,7 +49,7 @@
         android:layout_marginStart="16dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/ivProfilePicture"
+        app:layout_constraintStart_toEndOf="@+id/profilePictureLayout"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
@@ -41,10 +57,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:textSize="@dimen/text_size_name"
             android:maxLines="1"
             android:text="Kamran Ramzan"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textSize="@dimen/text_size_name" />
 
         <TextView
             android:id="@+id/tvDesignation"

@@ -23,7 +23,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="url" value="jar:file:/Applications/Android%20Studio.app/Contents/plugins/android/lib/android.jar!/images/material_design_icons/navigation/ic_check_black_24dp.xml" />
+                                                <entry key="url" value="jar:file:/Applications/Android%20Studio.app/Contents/plugins/android/lib/android.jar!/images/material_design_icons/content/ic_clear_black_24dp.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -33,9 +33,9 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="outputName" value="ic_action_check" />
+                                      <entry key="outputName" value="ic_action_cancel" />
                                       <entry key="theme" value="CUSTOM" />
-                                      <entry key="themeColor" value="ffffff" />
+                                      <entry key="themeColor" value="cddc39" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -127,7 +127,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_lock_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/Applications/Android%20Studio.app/Contents/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_check_circle_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -138,12 +138,12 @@
                         <option name="values">
                           <map>
                             <entry key="autoMirrored" value="true" />
-                            <entry key="color" value="8e8e8e" />
-                            <entry key="height" value="20" />
-                            <entry key="outputName" value="ic_action_password" />
+                            <entry key="color" value="028e00" />
+                            <entry key="height" value="16" />
+                            <entry key="outputName" value="ic_check_circle_green" />
                             <entry key="overrideSize" value="true" />
-                            <entry key="sourceFile" value="C:\Program Files\Android\Android Studio\bin\C:\Users\kamra" />
-                            <entry key="width" value="20" />
+                            <entry key="sourceFile" value="$APPLICATION_HOME_DIR$/bin/C:\Program Files\Android\Android Studio\bin\C:\Users\kamra" />
+                            <entry key="width" value="16" />
                           </map>
                         </option>
                       </PersistentState>

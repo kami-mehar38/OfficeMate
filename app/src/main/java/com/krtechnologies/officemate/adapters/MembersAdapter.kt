@@ -29,8 +29,9 @@ import org.jetbrains.anko.toast
 /**
  * This project is created by Kamran Ramzan on 17-Aug-18.
  */
-class MembersAdapter(val context: Context) : RecyclerView.Adapter<MembersAdapter.ViewHolder>() {
+class MembersAdapter(val context: Context, private val isContextual: Boolean) : RecyclerView.Adapter<MembersAdapter.ViewHolder>() {
 
+    private var previousPosition: Int = 0
     private var employeesList: MutableList<Employee> = ArrayList()
     private var listener: ((employee: Employee) -> Unit)? = null
 
@@ -94,8 +95,29 @@ class MembersAdapter(val context: Context) : RecyclerView.Adapter<MembersAdapter
 
                 })
 
+        if (employee.isChecked) {
+            if (holder.ivChecked.visibility != View.VISIBLE)
+                holder.ivChecked.visibility = View.VISIBLE
+        } else {
+            if (holder.ivChecked.visibility != View.GONE)
+                holder.ivChecked.visibility = View.GONE
+        }
+
         holder.item.setOnClickListener {
-            listener!!(employee)
+            if (listener != null) {
+                listener!!(employee)
+            }
+            if (isContextual) {
+                employee.isChecked = true
+                if (holder.ivChecked.visibility != View.VISIBLE)
+                    holder.ivChecked.visibility = View.VISIBLE
+                if (previousPosition != holder.adapterPosition) {
+                    val previousEmployee = employeesList[previousPosition]
+                    previousEmployee.isChecked = false
+                    notifyItemChanged(previousPosition)
+                }
+                previousPosition = holder.adapterPosition
+            }
         }
     }
 
@@ -120,6 +142,7 @@ class MembersAdapter(val context: Context) : RecyclerView.Adapter<MembersAdapter
         val tvName = view.findViewById<TextView>(R.id.tvName)!!
         val tvDesignation = view.findViewById<TextView>(R.id.tvDesignation)!!
         val item = view.findViewById<ConstraintLayout>(R.id.item)!!
+        val ivChecked = view.findViewById<ImageView>(R.id.ivChecked)!!
 
     }
 }

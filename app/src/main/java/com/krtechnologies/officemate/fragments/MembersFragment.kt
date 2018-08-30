@@ -20,7 +20,7 @@ import java.io.Serializable
 
 class MembersFragment : Fragment(), Serializable {
 
-    private var isFirstLoad = true;
+    private var isFirstLoad = true
     private var membersAdapter: MembersAdapter? = null
     private var listEmployees: MutableList<Employee>? = null
     private var newListEmployees: MutableList<Employee>? = null
@@ -29,7 +29,7 @@ class MembersFragment : Fragment(), Serializable {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         context?.let {
-            membersAdapter = MembersAdapter(it)
+            membersAdapter = MembersAdapter(it, false)
         }
         listEmployees = ArrayList()
         newListEmployees = ArrayList()
@@ -65,6 +65,10 @@ class MembersFragment : Fragment(), Serializable {
                     tvNoMembers.visibility = View.GONE
                 membersAdapter?.updateList(it)
                 rvMembers?.smoothScrollToPosition(0)
+                if (isFirstLoad) {
+                    listEmployees = it
+                    isFirstLoad = false
+                }
             } else {
                 if (rvMembers.visibility != View.GONE)
                     rvMembers.visibility = View.GONE
@@ -72,10 +76,7 @@ class MembersFragment : Fragment(), Serializable {
                     tvNoMembers.visibility = View.VISIBLE
             }
 
-            if (isFirstLoad) {
-                listEmployees = it
-                isFirstLoad = false
-            }
+
         })
 
     }
