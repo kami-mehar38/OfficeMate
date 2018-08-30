@@ -34,7 +34,7 @@ import es.dmoral.toasty.Toasty
 class MemberSelectingActivity : AppCompatActivity(), AnkoLogger {
 
     companion object {
-        val EXTRA_EMPLOYEE = "EMPLOYEE"
+        const val EXTRA_EMPLOYEE = "EMPLOYEE"
     }
 
     private var isFirstLoad = true
@@ -153,7 +153,8 @@ class MemberSelectingActivity : AppCompatActivity(), AnkoLogger {
     }
 
     private fun showKeyboard() {
-        inputMethodManager?.showSoftInputFromInputMethod(etSearch.windowToken, InputMethodManager.SHOW_IMPLICIT)
+        if (etSearch.requestFocus())
+            inputMethodManager?.showSoftInputFromInputMethod(etSearch.windowToken, InputMethodManager.SHOW_IMPLICIT)
     }
 
 }

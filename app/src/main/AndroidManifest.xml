@@ -52,7 +52,9 @@
         <activity
             android:name=".ProfileSettingsActivity"
             android:theme="@style/AppTheme.NoFade" />
-        <activity android:name=".MemberSelectingActivity"></activity>
+        <activity
+            android:name=".MemberSelectingActivity"
+            android:windowSoftInputMode="stateAlwaysHidden" />
     </application>
 
 </manifest>

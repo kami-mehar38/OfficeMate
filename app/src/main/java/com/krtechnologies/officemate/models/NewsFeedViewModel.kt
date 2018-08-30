@@ -21,6 +21,7 @@ class NewsFeedViewModel(application: Application) : AndroidViewModel(application
 
     private var data: MutableLiveData<MutableList<Project>>? = null
     private var list = ArrayList<Project>()
+    private var previousList = ArrayList<Project>()
 
     init {
         loadData()
@@ -64,13 +65,14 @@ class NewsFeedViewModel(application: Application) : AndroidViewModel(application
                                         list.add(project)
                                     }
                                     data?.value = list
+                                    previousList.addAll(list)
                                 }
                             }
                         }
                     }
 
                     override fun onError(anError: ANError?) {
-                        data?.value = list
+                        data?.value = previousList
                     }
 
                 })

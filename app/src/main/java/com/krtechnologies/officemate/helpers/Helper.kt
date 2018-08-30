@@ -217,14 +217,6 @@ class Helper {
         return "com.google.android.apps.photos.content" == uri.authority
     }
 
-    fun getSpannableFactory(): Spannable.Factory {
-        return object : Spannable.Factory() {
-            override fun newSpannable(source: CharSequence?): Spannable {
-                return source as Spannable
-            }
-        }
-    }
-
     fun convertDpToPixel(dp: Float): Float {
         val resources = context!!.resources
         val metrics = resources.displayMetrics

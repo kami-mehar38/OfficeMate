@@ -3,6 +3,7 @@ package com.krtechnologies.officemate.adapters
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.support.v4.content.ContextCompat
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -41,9 +42,9 @@ class NewsFeedAdapter(val context: Context) : RecyclerView.Adapter<NewsFeedAdapt
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val project = projectsList[position]
-        holder.progressBar.setProgress(50.0, 100.0)
-        holder.progressBar.setProgressTextAdapter { progress -> "$progress%" }
-
+        holder.tvCompletion.text = context.resources.getString(R.string.completed) + project.completion
+        holder.tvEta.text = context.resources.getString(R.string.eta) + project.eta
+        holder.tvDescription.text = project.projectDescription
         holder.tvName.text = project.assignedTo
 
         Glide.with(context)
@@ -96,7 +97,6 @@ class NewsFeedAdapter(val context: Context) : RecyclerView.Adapter<NewsFeedAdapt
         else {
             TODO("Not implemented yet")
         }
-
     }
 
     fun updateList(newList: MutableList<Project>) {
@@ -107,9 +107,11 @@ class NewsFeedAdapter(val context: Context) : RecyclerView.Adapter<NewsFeedAdapt
     }
 
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        val progressBar = view.findViewById<CircularProgressIndicator>(R.id.ProgressBar)!!
         val ivProfilePicture = view.findViewById<ImageView>(R.id.ivProfilePicture)!!
         val tvName = view.findViewById<TextView>(R.id.tvName)!!
+        val tvCompletion = view.findViewById<TextView>(R.id.tvCompletion)!!
+        val tvEta = view.findViewById<TextView>(R.id.tvEta)!!
+        val tvDescription = view.findViewById<TextView>(R.id.tvDescription)!!
 
     }
 }

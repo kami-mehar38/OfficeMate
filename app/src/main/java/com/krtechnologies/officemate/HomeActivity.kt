@@ -93,6 +93,7 @@ class HomeActivity : AppCompatActivity(), AnkoLogger {
         menu?.run {
             when (currentIndex) {
                 3 -> findItem(R.id.action_search).isVisible = false
+                1 -> if (PreferencesManager.getInstance().getIsAdmin() == "1") findItem(R.id.action_search).isVisible = false
                 else -> findItem(R.id.action_search).isVisible = true
             }
         }
@@ -108,7 +109,6 @@ class HomeActivity : AppCompatActivity(), AnkoLogger {
             }
             else -> false
         }
-
     }
 
     private fun initFragment() {

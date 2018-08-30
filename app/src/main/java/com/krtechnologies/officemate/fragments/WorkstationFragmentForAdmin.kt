@@ -176,21 +176,21 @@ class WorkstationFragmentForAdmin : Fragment(), AnkoLogger {
                                         if (response.has("status")) {
                                             val status = response.getInt("status")
                                             when (status) {
-                                                201 -> Toasty.success(App.getAppContext(), response.getString("message"))
-                                                202 -> Toasty.success(App.getAppContext(), response.getString("message"))
+                                                201 -> Toasty.success(App.getAppContext(), response.getString("message")).show()
+                                                202 -> Toasty.success(App.getAppContext(), response.getString("message")).show()
                                             }
                                         }
                                     }
 
                                     override fun onError(error: ANError) {
                                         dialog.dismiss()
-                                        Toasty.error(App.getAppContext(), "Error occurred while assigning project")
+                                        Toasty.error(App.getAppContext(), "Error occurred while assigning project").show()
                                     }
                                 })
                     }
-                } else Toasty.error(App.getAppContext(), "Select employee to assign project")
-            } else Toasty.error(App.getAppContext(), "Enter project description")
-        } else Toasty.error(App.getAppContext(), "Enter project title")
+                } else Toasty.error(App.getAppContext(), "Select employee to assign project").show()
+            } else Toasty.error(App.getAppContext(), "Enter project description").show()
+        } else Toasty.error(App.getAppContext(), "Enter project title").show()
     }
 
 }

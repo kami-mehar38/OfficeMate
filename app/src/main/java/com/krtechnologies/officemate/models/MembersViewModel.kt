@@ -17,6 +17,7 @@ import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import org.jetbrains.anko.startActivity
 import org.json.JSONObject
+import java.util.*
 
 /**
  * This project is created by Kamran Ramzan on 17-Aug-18.
@@ -26,6 +27,7 @@ class MembersViewModel(application: Application) : AndroidViewModel(application)
 
     private var data: MutableLiveData<MutableList<Employee>>? = null
     val list = ArrayList<Employee>()
+    private var previousList = ArrayList<Employee>()
 
     init {
         loadData()
@@ -69,13 +71,14 @@ class MembersViewModel(application: Application) : AndroidViewModel(application)
                                         list.add(employee)
                                     }
                                     data?.value = list
+                                    previousList.addAll(list)
                                 }
                             }
                         }
                     }
 
                     override fun onError(anError: ANError?) {
-                        data?.value = list
+                        data?.value = previousList
                     }
 
                 })
