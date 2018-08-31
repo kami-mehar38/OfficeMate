@@ -20,7 +20,6 @@ import java.io.Serializable
 
 class NewsFeedFragment : Fragment(), Serializable, AnkoLogger {
 
-    private var isFirstLoad = true
     private var newsFeedAdapter: NewsFeedAdapter? = null
     private var listProjects: MutableList<Project>? = null
     private var newListProjects: MutableList<Project>? = null
@@ -66,10 +65,7 @@ class NewsFeedFragment : Fragment(), Serializable, AnkoLogger {
                     tvNoNewsFeed.visibility = View.GONE
                 newsFeedAdapter?.updateList(it)
                 rvNewsFeed?.smoothScrollToPosition(0)
-                if (isFirstLoad) {
-                    listProjects = it
-                    isFirstLoad = false
-                }
+                listProjects = it
             } else {
                 if (rvNewsFeed.visibility != View.GONE)
                     rvNewsFeed.visibility = View.GONE

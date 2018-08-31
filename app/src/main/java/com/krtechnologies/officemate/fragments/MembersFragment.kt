@@ -20,7 +20,6 @@ import java.io.Serializable
 
 class MembersFragment : Fragment(), Serializable {
 
-    private var isFirstLoad = true
     private var membersAdapter: MembersAdapter? = null
     private var listEmployees: MutableList<Employee>? = null
     private var newListEmployees: MutableList<Employee>? = null
@@ -65,10 +64,7 @@ class MembersFragment : Fragment(), Serializable {
                     tvNoMembers.visibility = View.GONE
                 membersAdapter?.updateList(it)
                 rvMembers?.smoothScrollToPosition(0)
-                if (isFirstLoad) {
-                    listEmployees = it
-                    isFirstLoad = false
-                }
+                listEmployees = it
             } else {
                 if (rvMembers.visibility != View.GONE)
                     rvMembers.visibility = View.GONE

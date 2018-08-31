@@ -11,6 +11,7 @@ import android.widget.TextView
 import com.krtechnologies.officemate.R
 import com.krtechnologies.officemate.WorkstationProjectEditActivity
 import com.krtechnologies.officemate.helpers.WorkstationProjectsDiffUtils
+import com.krtechnologies.officemate.models.Project
 import com.krtechnologies.officemate.models.WorkstationProject
 import org.jetbrains.anko.startActivity
 
@@ -20,7 +21,7 @@ import org.jetbrains.anko.startActivity
 
 class WorkstationsProjectAdapter(val context: Context) : RecyclerView.Adapter<WorkstationsProjectAdapter.ViewHolder>() {
 
-    private var workstationProjectList: MutableList<WorkstationProject> = ArrayList()
+    private var workstationProjectList: MutableList<Project> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(LayoutInflater.from(context).inflate(R.layout.row_workstation_projects, parent, false))
 
@@ -30,12 +31,14 @@ class WorkstationsProjectAdapter(val context: Context) : RecyclerView.Adapter<Wo
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val workstationProject = workstationProjectList[position]
-        holder.tvProjectName.text = workstationProject.projectName
-        holder.tvProjectDescription.text = workstationProject.projectDescription
+        val project = workstationProjectList[position]
+        holder.tvProjectName.text = project.projectName
+        holder.tvProjectDescription.text = project.projectDescription
+        holder.tvCompletion.text = context.getString(R.string.completed) + " ${project.completion}"
+        holder.tvEta.text = context.getString(R.string.eta) + " ${project.eta}"
 
         holder.workstationProject.setOnClickListener {
-            context.startActivity<WorkstationProjectEditActivity>(WorkstationProjectEditActivity.KEY_EXTRA_PROJECT to workstationProject)
+            context.startActivity<WorkstationProjectEditActivity>(WorkstationProjectEditActivity.KEY_EXTRA_PROJECT to project)
         }
     }
 
@@ -45,10 +48,9 @@ class WorkstationsProjectAdapter(val context: Context) : RecyclerView.Adapter<Wo
         else {
             TODO("Not implemented yet")
         }
-
     }
 
-    fun updateList(newList: MutableList<WorkstationProject>) {
+    fun updateList(newList: MutableList<Project>) {
         val diffResult = DiffUtil.calculateDiff(WorkstationProjectsDiffUtils(newList, this.workstationProjectList), true)
         diffResult.dispatchUpdatesTo(this)
         this.workstationProjectList.clear()
@@ -58,6 +60,8 @@ class WorkstationsProjectAdapter(val context: Context) : RecyclerView.Adapter<Wo
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         val tvProjectName = view.findViewById<TextView>(R.id.tvProjectName)!!
         val tvProjectDescription = view.findViewById<TextView>(R.id.tvProjectDescription)!!
+        val tvEta = view.findViewById<TextView>(R.id.tvEta)!!
+        val tvCompletion = view.findViewById<TextView>(R.id.tvCompletion)!!
         val workstationProject = view.findViewById<ConstraintLayout>(R.id.workstationProject)!!
     }
 }

@@ -1,13 +1,14 @@
 package com.krtechnologies.officemate.helpers
 
 import android.support.v7.util.DiffUtil
+import com.krtechnologies.officemate.models.Project
 import com.krtechnologies.officemate.models.WorkstationProject
 
 /**
  * Created by ingizly on 8/15/18
  **/
 
-class WorkstationProjectsDiffUtils(private val newList: MutableList<WorkstationProject>, private val oldList: MutableList<WorkstationProject>) : DiffUtil.Callback() {
+class WorkstationProjectsDiffUtils(private val newList: MutableList<Project>, private val oldList: MutableList<Project>) : DiffUtil.Callback() {
 
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean = when (oldList[oldItemPosition].compareTo(newList[newItemPosition])) {

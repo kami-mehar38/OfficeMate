@@ -16,6 +16,7 @@ import com.krtechnologies.officemate.helpers.Helper
 import com.krtechnologies.officemate.helpers.PreferencesManager
 import com.krtechnologies.officemate.helpers.Validator
 import com.krtechnologies.officemate.models.Admin
+import com.krtechnologies.officemate.models.Employee
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_login.*
 import org.jetbrains.anko.AnkoLogger
@@ -76,7 +77,8 @@ class LoginActivity : AppCompatActivity(), AnkoLogger {
                                             PreferencesManager.getInstance().saveUser(admin)
                                             PreferencesManager.getInstance().setLogInStatus(true)
                                         } else if (response.has("employee")) {
-                                            val employee = Helper.getInstance().getGson().fromJson(response.getJSONObject("employee").toString(), Admin::class.java)
+                                            val employee = Helper.getInstance().getGson().fromJson(response.getJSONObject("employee").toString(), Employee::class.java)
+                                            info { employee.toString() }
                                             PreferencesManager.getInstance().saveUser(employee)
                                             PreferencesManager.getInstance().setLogInStatus(true)
                                         }

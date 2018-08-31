@@ -1,6 +1,7 @@
 package com.krtechnologies.officemate.models
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class Project(
         @SerializedName("id") val id: String = "",
@@ -13,7 +14,7 @@ data class Project(
         @SerializedName("admin_email") val adminEmail: String = "",
         @SerializedName("timestamp") val timestamp: String = "",
         @SerializedName("profile_picture") val profilePicture: String = ""
-) : Comparable<Project> {
+) : Comparable<Project>, Serializable {
 
     override fun compareTo(other: Project): Int = if (other.id == this.id) 0 else 1
 }

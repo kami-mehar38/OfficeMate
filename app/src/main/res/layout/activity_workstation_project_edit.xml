@@ -52,7 +52,7 @@
     </android.support.v7.widget.Toolbar>
 
     <EditText
-        android:id="@+id/editText3"
+        android:id="@+id/etProjectDescription"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
@@ -97,7 +97,7 @@
         android:text="@string/completed"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         app:layout_constraintStart_toStartOf="@+id/guideline9"
-        app:layout_constraintTop_toBottomOf="@+id/editText3" />
+        app:layout_constraintTop_toBottomOf="@+id/etProjectDescription" />
 
     <SeekBar
         android:id="@+id/seekBar"
@@ -129,7 +129,7 @@
         app:layout_constraintTop_toBottomOf="@+id/seekBar" />
 
     <Button
-        android:id="@+id/btnSignUp"
+        android:id="@+id/btnUpdate"
         android:layout_width="0dp"
         android:layout_height="60dp"
         android:background="@drawable/background_button_login_white_opaque"
