@@ -64,7 +64,7 @@ class WorkstationFragmentForAdmin : Fragment(), AnkoLogger {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == WorkstationFragmentForAdmin.REQUEST_CODE_MEMBER_SELECT && resultCode == Activity.RESULT_OK) {
+        if (requestCode == REQUEST_CODE_MEMBER_SELECT && resultCode == Activity.RESULT_OK) {
             data?.let {
                 employee = it.getSerializableExtra(MemberSelectingActivity.EXTRA_EMPLOYEE) as Employee
                 info { employee }

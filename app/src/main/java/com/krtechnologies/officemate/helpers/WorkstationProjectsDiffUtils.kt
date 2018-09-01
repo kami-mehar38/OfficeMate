@@ -1,5 +1,6 @@
 package com.krtechnologies.officemate.helpers
 
+import android.os.Bundle
 import android.support.v7.util.DiffUtil
 import com.krtechnologies.officemate.models.Project
 import com.krtechnologies.officemate.models.WorkstationProject
@@ -22,6 +23,24 @@ class WorkstationProjectsDiffUtils(private val newList: MutableList<Project>, pr
     override fun getNewListSize(): Int = newList.size
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return true
+        val oldProject = oldList[oldItemPosition]
+        val newProject = newList[newItemPosition]
+        return oldProject.projectDescription == newProject.projectDescription &&
+                oldProject.eta == newProject.eta &&
+                oldProject.completion == newProject.completion
+    }
+
+    override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
+        val oldProject = oldList[oldItemPosition]
+        val newProject = newList[newItemPosition]
+
+        val bundle = Bundle()
+        if (oldProject.projectDescription != newProject.projectDescription)
+            bundle.putString("project_description", newProject.projectDescription)
+        if (oldProject.completion != newProject.completion)
+            bundle.putString("completion", newProject.completion)
+        if (oldProject.eta != newProject.eta)
+            bundle.putString("eta", newProject.eta)
+        return bundle
     }
 }

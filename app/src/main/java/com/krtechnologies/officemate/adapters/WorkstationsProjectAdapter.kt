@@ -1,6 +1,8 @@
 package com.krtechnologies.officemate.adapters
 
+import android.app.Activity
 import android.content.Context
+import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
@@ -10,18 +12,25 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.krtechnologies.officemate.R
 import com.krtechnologies.officemate.WorkstationProjectEditActivity
+import com.krtechnologies.officemate.fragments.WorkstationFragment
 import com.krtechnologies.officemate.helpers.WorkstationProjectsDiffUtils
 import com.krtechnologies.officemate.models.Project
-import com.krtechnologies.officemate.models.WorkstationProject
-import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
+import org.jetbrains.anko.startActivityForResult
 
 /**
  * Created by ingizly on 8/15/18
  **/
 
-class WorkstationsProjectAdapter(val context: Context) : RecyclerView.Adapter<WorkstationsProjectAdapter.ViewHolder>() {
+class WorkstationsProjectAdapter(val context: Context) : RecyclerView.Adapter<WorkstationsProjectAdapter.ViewHolder>(), AnkoLogger {
 
     private var workstationProjectList: MutableList<Project> = ArrayList()
+    private var listener: ((Project) -> Unit)? = null
+
+    fun setItemClickListener(listener: (Project) -> Unit) {
+        this.listener = listener
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(LayoutInflater.from(context).inflate(R.layout.row_workstation_projects, parent, false))
 
@@ -30,6 +39,8 @@ class WorkstationsProjectAdapter(val context: Context) : RecyclerView.Adapter<Wo
         return workstationProjectList.size
     }
 
+    fun getList(): MutableList<Project> = workstationProjectList
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val project = workstationProjectList[position]
         holder.tvProjectName.text = project.projectName
@@ -37,8 +48,10 @@ class WorkstationsProjectAdapter(val context: Context) : RecyclerView.Adapter<Wo
         holder.tvCompletion.text = context.getString(R.string.completed) + " ${project.completion}"
         holder.tvEta.text = context.getString(R.string.eta) + " ${project.eta}"
 
-        holder.workstationProject.setOnClickListener {
-            context.startActivity<WorkstationProjectEditActivity>(WorkstationProjectEditActivity.KEY_EXTRA_PROJECT to project)
+        holder.workstationProject.setOnClickListener { _ ->
+            listener?.let {
+                it(project)
+            }
         }
     }
 
@@ -46,7 +59,25 @@ class WorkstationsProjectAdapter(val context: Context) : RecyclerView.Adapter<Wo
         if (payloads.isEmpty())
             super.onBindViewHolder(holder, position, payloads)
         else {
-            TODO("Not implemented yet")
+            val project = workstationProjectList[position]
+            payloads.forEach {
+                it as Bundle
+                if (it.containsKey("project_description")) {
+                    holder.tvProjectDescription.text = it["project_description"].toString()
+                }
+                if (it.containsKey("completion")) {
+                    holder.tvCompletion.text = it["completion"].toString()
+                }
+                if (it.containsKey("eta")) {
+                    holder.tvEta.text = it["eta"].toString()
+                }
+            }
+
+            holder.workstationProject.setOnClickListener { _ ->
+                listener?.let {
+                    it(project)
+                }
+            }
         }
     }
 

@@ -1,7 +1,9 @@
 package com.krtechnologies.officemate.fragments
 
+import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -9,21 +11,28 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.krtechnologies.officemate.R
+import com.krtechnologies.officemate.WorkstationProjectEditActivity
 import com.krtechnologies.officemate.adapters.WorkstationsProjectAdapter
 import com.krtechnologies.officemate.models.Project
 import com.krtechnologies.officemate.models.WorkstationProjectsViewModel
 import kotlinx.android.synthetic.main.fragment_workstation.*
 import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 import java.io.Serializable
 
 
 class WorkstationFragment : Fragment(), Serializable, AnkoLogger {
 
+    companion object {
+        const val REQUEST_CODE_EDIT_PROJECT = 3
+        const val KEY_EXTRA_PROJECT = "EXTRA_PROJECT"
+    }
+
     private var workstationsProjectAdapter: WorkstationsProjectAdapter? = null
     private var listWorkstationProject: MutableList<Project>? = null
     private var newListWorkstationProject: MutableList<Project>? = null
     private var workstationProjectsViewModel: WorkstationProjectsViewModel? = null
-
+    private var projectUpdated: Project? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +55,11 @@ class WorkstationFragment : Fragment(), Serializable, AnkoLogger {
 
         workstationsProjectAdapter?.let {
             rvWorkstation.adapter = it
+        }
+
+        workstationsProjectAdapter?.setItemClickListener {
+            startActivityForResult(Intent(context, WorkstationProjectEditActivity::class.java).putExtra(KEY_EXTRA_PROJECT, it), REQUEST_CODE_EDIT_PROJECT)
+            info { it }
         }
 
         swipeRefreshLayout.setOnRefreshListener {
@@ -73,7 +87,6 @@ class WorkstationFragment : Fragment(), Serializable, AnkoLogger {
 
             }
         })
-
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
@@ -100,5 +113,31 @@ class WorkstationFragment : Fragment(), Serializable, AnkoLogger {
 
     fun resetData() {
         workstationProjectsViewModel?.updateData(listWorkstationProject!!)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == REQUEST_CODE_EDIT_PROJECT && resultCode == Activity.RESULT_OK) {
+            projectUpdated = data?.run {
+                data.getSerializableExtra(KEY_EXTRA_PROJECT) as Project
+            }
+            val list = ArrayList<Project>()
+            projectUpdated?.run {
+                workstationsProjectAdapter?.getList()?.forEach {
+                    list.add(it.clone() as Project)
+                }
+
+                list.forEach {
+                    if (it.id == id) {
+                        it.projectDescription = projectDescription
+                        it.completion = completion
+                        it.eta = eta
+                    }
+                }
+                workstationsProjectAdapter?.updateList(list)
+            }
+
+            info { projectUpdated.toString() }
+        }
+        info { "OK Coming back" }
     }
 }

@@ -411,5 +411,4 @@ class HomeActivity : AppCompatActivity(), AnkoLogger {
             super.onBackPressed()
     }
 
-
 }

@@ -1,7 +1,9 @@
 package com.krtechnologies.officemate
 
 import android.animation.ValueAnimator
+import android.app.Activity
 import android.app.ProgressDialog
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.animation.AccelerateDecelerateInterpolator
@@ -11,6 +13,8 @@ import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.JSONObjectRequestListener
+import com.krtechnologies.officemate.fragments.WorkstationFragment
+import com.krtechnologies.officemate.fragments.WorkstationFragment.Companion.KEY_EXTRA_PROJECT
 import com.krtechnologies.officemate.helpers.Helper
 import com.krtechnologies.officemate.helpers.PreferencesManager
 import com.krtechnologies.officemate.helpers.Validator
@@ -30,13 +34,10 @@ import org.json.JSONObject
 
 class WorkstationProjectEditActivity : AppCompatActivity(), AnkoLogger {
 
-    companion object {
-        const val KEY_EXTRA_PROJECT = "EXTRA_PROJECT"
-    }
-
     private var project: Project? = null
     private var completion = ""
     private var eta = ""
+    private var shouldSendResultBack = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,11 +77,11 @@ class WorkstationProjectEditActivity : AppCompatActivity(), AnkoLogger {
         project?.run {
             tvTitle.text = projectName
             etProjectDescription.setText(projectDescription)
-            animateProgress(completion.split(" ")[0].toInt())
-            numberPicker.value = eta.split(" ")[0].toInt()
+            animateProgress(completion.trim().split(" ")[0].toInt())
+            numberPicker.value = eta.trim().split(" ")[0].toInt()
             this@WorkstationProjectEditActivity.completion = completion
             this@WorkstationProjectEditActivity.eta = eta
-            info { eta.split(" ")[0].toInt() }
+
         }
 
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -141,8 +142,19 @@ class WorkstationProjectEditActivity : AppCompatActivity(), AnkoLogger {
                         dialog.dismiss()
                         info { response }
                         when (response?.getInt("status")) {
-                            201 -> Toasty.error(this@WorkstationProjectEditActivity, response.getString("message"), Toast.LENGTH_SHORT, true).show();
-                            202 -> Toasty.error(this@WorkstationProjectEditActivity, response.getString("message"), Toast.LENGTH_SHORT, true).show();
+                            201 -> {
+                                Toasty.success(this@WorkstationProjectEditActivity, response.getString("message"), Toast.LENGTH_SHORT, true).show()
+                                project?.let {
+                                    it.projectDescription = etProjectDescription.text.toString().trim()
+                                    it.completion = completion
+                                    it.eta = eta
+                                    shouldSendResultBack = true
+                                }
+                            }
+                            202 -> {
+                                Toasty.error(this@WorkstationProjectEditActivity, response.getString("message"), Toast.LENGTH_SHORT, true).show()
+                                shouldSendResultBack = false
+                            }
                         }
                     }
 
@@ -153,5 +165,15 @@ class WorkstationProjectEditActivity : AppCompatActivity(), AnkoLogger {
 
                 })
 
+    }
+
+    override fun onBackPressed() {
+        val intent = Intent()
+        intent.putExtra(KEY_EXTRA_PROJECT, project)
+        when (shouldSendResultBack) {
+            true -> setResult(Activity.RESULT_OK, intent)
+            false -> setResult(Activity.RESULT_CANCELED)
+        }
+        finish()
     }
 }

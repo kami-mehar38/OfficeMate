@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.krtechnologies.officemate.MessagingActivity
 import com.krtechnologies.officemate.R
 import com.krtechnologies.officemate.adapters.MembersAdapter
 import com.krtechnologies.officemate.helpers.SimpleDividerItemDecoration
@@ -16,6 +17,7 @@ import com.krtechnologies.officemate.models.Employee
 import com.krtechnologies.officemate.models.Member
 import com.krtechnologies.officemate.models.MembersViewModel
 import kotlinx.android.synthetic.main.fragment_members.*
+import org.jetbrains.anko.startActivity
 import java.io.Serializable
 
 class MembersFragment : Fragment(), Serializable {
@@ -47,6 +49,12 @@ class MembersFragment : Fragment(), Serializable {
 
         membersAdapter?.let {
             rvMembers.adapter = it
+        }
+
+        membersAdapter?.run {
+            setItemClickListener {
+                context.startActivity<MessagingActivity>()
+            }
         }
 
         swipeRefreshLayout.setOnRefreshListener {

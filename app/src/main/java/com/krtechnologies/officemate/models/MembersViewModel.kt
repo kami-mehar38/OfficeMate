@@ -55,7 +55,8 @@ class MembersViewModel(application: Application) : AndroidViewModel(application)
             "0" -> PreferencesManager.getInstance().getUserAdminEmail()
             else -> PreferencesManager.getInstance().getUserEmail()
         }
-        AndroidNetworking.get("${Helper.BASE_URL}/members/$adminEmail")
+
+        AndroidNetworking.get("${Helper.BASE_URL}/members/$adminEmail/${PreferencesManager.getInstance().getUserEmail()}")
                 .setTag("login")
                 .setPriority(Priority.HIGH)
                 .build()
