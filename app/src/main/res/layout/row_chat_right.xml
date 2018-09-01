@@ -8,51 +8,39 @@
     android:orientation="horizontal"
     android:padding="12dp">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/ivProfilePicture"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:orientation="horizontal"
-        tools:ignore="UselessParent">
+        android:layout_gravity="center_vertical"
+        app:civ_fill_color="@color/colorPrimaryLightExtra"
+        app:srcCompat="@drawable/person" />
 
-        <android.support.constraint.ConstraintLayout
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="36dp"
+        android:layout_marginStart="36dp"
+        android:layout_toLeftOf="@+id/ivProfilePicture"
+        android:layout_toStartOf="@id/ivProfilePicture"
+        android:background="@drawable/background_chat_right"
+        android:minHeight="40dp">
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:background="@drawable/background_chat_left"
-            android:minHeight="40dp"
-            android:orientation="horizontal"
+            android:text="hi therae fss heslsfknglsdng ldthknl khetjhyerpmjtghelkdtb jd yjpotigtjy tyoijg rpotiygje hs see"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/circleImageView"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="hi therae fsrgt er se sh se es hes hs see"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </android.support.constraint.ConstraintLayout>
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/ivProfilePicture"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            app:srcCompat="@drawable/person"
-            app:civ_fill_color="@color/colorPrimaryLightExtra"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
 
-    </LinearLayout>
 
 </RelativeLayout>

@@ -63,6 +63,7 @@ class WorkstationProjectsViewModel(application: Application) : AndroidViewModel(
                                     previousList.addAll(list)
                                 }
                             }
+                            202 -> data?.value = list
                         }
                     }
 
