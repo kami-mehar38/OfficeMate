@@ -15,7 +15,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_gravity="center_vertical"
-        app:civ_fill_color="@color/colorPrimaryLightExtra"
+        app:civ_fill_color="@color/colorGrayLight"
         app:srcCompat="@drawable/person" />
 
     <android.support.constraint.ConstraintLayout
@@ -34,6 +34,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
             android:text="hi therae fss heslsfknglsdng ldthknl khetjhyerpmjtghelkdtb jd yjpotigtjy tyoijg rpotiygje hs see"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             app:layout_constraintBottom_toBottomOf="parent"

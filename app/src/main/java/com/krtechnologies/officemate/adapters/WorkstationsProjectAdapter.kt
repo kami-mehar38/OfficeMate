@@ -66,10 +66,10 @@ class WorkstationsProjectAdapter(val context: Context) : RecyclerView.Adapter<Wo
                     holder.tvProjectDescription.text = it["project_description"].toString()
                 }
                 if (it.containsKey("completion")) {
-                    holder.tvCompletion.text = it["completion"].toString()
+                    holder.tvCompletion.text = context.getString(R.string.completed) + it["completion"].toString()
                 }
                 if (it.containsKey("eta")) {
-                    holder.tvEta.text = it["eta"].toString()
+                    holder.tvEta.text = context.getString(R.string.eta) + it["eta"].toString()
                 }
             }
 

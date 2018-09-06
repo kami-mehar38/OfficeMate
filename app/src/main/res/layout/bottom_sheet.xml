@@ -10,17 +10,5 @@
     app:behavior_peekHeight="50dp"
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@drawable/background_edittext_message"
-        android:ems="10"
-        android:minHeight="50dp"
-        android:hint="@string/enter_your_message"
-        android:inputType="textMultiLine|textCapSentences"
-        android:textSize="@dimen/text_size_edit_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+
 </android.support.constraint.ConstraintLayout>

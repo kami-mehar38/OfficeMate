@@ -1,8 +1,12 @@
 package com.krtechnologies.officemate
 
 import android.animation.Animator
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.graphics.Color
 import android.os.Build
@@ -10,20 +14,28 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.OvershootInterpolator
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import com.krtechnologies.officemate.adapters.MessagesAdapter
+import com.krtechnologies.officemate.helpers.Helper
 import com.krtechnologies.officemate.models.Message
-import com.krtechnologies.officemate.models.WorkstationProjectsViewModel
+import com.krtechnologies.officemate.models.MessageViewModel
 import kotlinx.android.synthetic.main.activity_messaging.*
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.doFromSdk
+import org.jetbrains.anko.info
 
-class MessagingActivity : AppCompatActivity() {
+
+class MessagingActivity : AppCompatActivity(), AnkoLogger {
 
     private var messagesAdapter: MessagesAdapter? = null
     private var listMessages: MutableList<Message>? = null
@@ -31,12 +43,15 @@ class MessagingActivity : AppCompatActivity() {
     private var inputMethodManager: InputMethodManager? = null
     private var isSearchExpanded = false
 
+    private lateinit var messageViewModel: MessageViewModel
+
 
     override fun onStart() {
         super.onStart()
         listMessages = ArrayList()
         newListMessages = ArrayList()
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,63 +70,16 @@ class MessagingActivity : AppCompatActivity() {
             rvMessages.adapter = it
         }
 
-        messagesAdapter?.let {
-            it.updateList(ArrayList<Message>().apply {
-                add(Message(1, 1, ""))
-                add(Message(1, 0, ""))
-                add(Message(1, 1, ""))
-                add(Message(1, 0, ""))
-                add(Message(1, 1, ""))
-                add(Message(1, 0, ""))
-                add(Message(1, 1, ""))
-                add(Message(1, 0, ""))
-                add(Message(1, 1, ""))
-                add(Message(1, 0, ""))
-                add(Message(1, 1, ""))
-                add(Message(1, 0, ""))
-                add(Message(1, 1, ""))
-                add(Message(1, 0, ""))
-                add(Message(1, 1, ""))
-                add(Message(1, 0, ""))
-                add(Message(1, 1, ""))
-                add(Message(1, 0, ""))
-                add(Message(1, 1, ""))
-                add(Message(1, 0, ""))
-                add(Message(1, 1, ""))
-                add(Message(1, 0, ""))
-                add(Message(1, 1, ""))
-                add(Message(1, 0, ""))
-                add(Message(1, 1, ""))
-                add(Message(1, 0, ""))
-                add(Message(1, 1, ""))
-                add(Message(1, 0, ""))
-                add(Message(1, 1, ""))
-                add(Message(1, 0, ""))
-                add(Message(1, 1, ""))
-                add(Message(1, 0, ""))
-                add(Message(1, 1, ""))
-                add(Message(1, 0, ""))
-                add(Message(1, 1, ""))
-                add(Message(1, 0, ""))
-                add(Message(1, 1, ""))
-                add(Message(1, 0, ""))
-                add(Message(1, 1, ""))
-                add(Message(1, 0, ""))
-                add(Message(1, 1, ""))
-                add(Message(1, 0, ""))
-                add(Message(1, 1, ""))
-                add(Message(1, 0, ""))
-                add(Message(1, 1, ""))
-                add(Message(1, 0, ""))
-                add(Message(1, 1, ""))
-                add(Message(1, 0, ""))
-            })
-        }
-
         ivBack.setOnClickListener {
             if (isSearchExpanded)
                 hideSearchEditText()
         }
+
+
+        messageViewModel = ViewModelProviders.of(this).get(MessageViewModel::class.java)
+        messageViewModel.getAllMessages().observe(this, Observer<MutableList<Message>> {
+            messagesAdapter?.updateList(it!!)
+        })
 
         etSearch.setOnEditorActionListener { _, action, _ ->
             when (action) {
@@ -121,6 +89,27 @@ class MessagingActivity : AppCompatActivity() {
                 }
                 else -> false
             }
+        }
+
+        etMessage.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                s?.run {
+                    if (length > 0) {
+                        popUp(btnSend, btnRecord)
+                    } else popUp(btnRecord, btnSend)
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+        })
+
+        doAsync {
+            val id = messageViewModel.insert(Message(3, 1, "Hi there", "${Helper.getInstance().getTimeInMillis()}", "Kamran", "kamran@gmail.com", "kamranramzan0982gmail.com", "kamran.jpg"))
+            info { id }
         }
     }
 
@@ -240,4 +229,36 @@ class MessagingActivity : AppCompatActivity() {
         else
             super.onBackPressed()
     }
+
+    private fun popUp(showing: View, hiding: View) {
+
+        val animScaleX = ObjectAnimator.ofFloat(showing, View.SCALE_X.name, 0f, 1f)
+        val animScaleY = ObjectAnimator.ofFloat(showing, View.SCALE_Y.name, 0f, 1f)
+
+        val animatorSet = AnimatorSet()
+        animatorSet.playTogether(animScaleX, animScaleY)
+        animatorSet.duration = 500
+        animatorSet.interpolator = OvershootInterpolator()
+        animatorSet.addListener(object : Animator.AnimatorListener {
+            override fun onAnimationRepeat(animation: Animator?) {
+            }
+
+            override fun onAnimationEnd(animation: Animator?) {
+            }
+
+            override fun onAnimationCancel(animation: Animator?) {
+            }
+
+            override fun onAnimationStart(animation: Animator?) {
+                if (showing.visibility == View.GONE)
+                    showing.visibility = View.VISIBLE
+                if (hiding.visibility == View.VISIBLE)
+                    hiding.visibility = View.GONE
+            }
+
+        })
+        animatorSet.start()
+
+    }
+
 }
