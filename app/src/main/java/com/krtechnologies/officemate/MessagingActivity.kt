@@ -45,6 +45,8 @@ class MessagingActivity : AppCompatActivity(), AnkoLogger {
 
     private lateinit var messageViewModel: MessageViewModel
 
+    private var isMessageMode: Boolean = false
+
 
     override fun onStart() {
         super.onStart()
@@ -97,9 +99,13 @@ class MessagingActivity : AppCompatActivity(), AnkoLogger {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 s?.run {
-                    if (length > 0) {
+                    if (isNotEmpty() && !isMessageMode) {
                         popUp(btnSend, btnRecord)
-                    } else popUp(btnRecord, btnSend)
+                        isMessageMode = true
+                    } else if (isEmpty() && isMessageMode) {
+                        popUp(btnRecord, btnSend)
+                        isMessageMode = false
+                    }
                 }
             }
 
