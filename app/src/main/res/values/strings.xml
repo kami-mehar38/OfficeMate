@@ -43,6 +43,7 @@
     <string name="project_description">Project Description</string>
     <string name="enter_the_project_description">Enter the project description</string>
     <string name="assign_to">Assign To</string>
+    <string name="enter_your_message">Enter your message</string>
 
 
 </resources>

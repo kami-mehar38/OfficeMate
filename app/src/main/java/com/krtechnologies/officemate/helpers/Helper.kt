@@ -223,4 +223,5 @@ class Helper {
         return dp * (metrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
     }
 
+    fun getTimeInMillis(): Long = System.currentTimeMillis()
 }
