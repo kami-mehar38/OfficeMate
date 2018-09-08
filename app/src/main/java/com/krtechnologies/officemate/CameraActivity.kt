@@ -1,46 +1,39 @@
 package com.krtechnologies.officemate
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.*
-import android.hardware.Camera
 import android.hardware.camera2.*
 import android.media.ImageReader
-import android.net.Uri
 import android.os.*
-import android.support.v7.app.AppCompatActivity
 import android.support.annotation.RequiresApi
-import android.support.v4.content.ContextCompat
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.util.Size
 import android.util.SparseIntArray
 import android.view.Surface
 import android.view.TextureView
 import android.view.View
-import android.widget.FrameLayout
 import com.krtechnologies.officemate.helpers.CompareSizesByArea
 import com.krtechnologies.officemate.helpers.ImageSaver
 import kotlinx.android.synthetic.main.activity_camera.*
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.find
-import org.jetbrains.anko.info
-import org.jetbrains.anko.toast
+import org.jetbrains.anko.*
 import java.io.File
-import java.io.FileNotFoundException
-import java.io.FileOutputStream
-import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.Semaphore
 import java.util.concurrent.TimeUnit
 
+
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 
-class CameraActivity : AppCompatActivity(), AnkoLogger, View.OnClickListener {
+class CameraActivity : AppCompatActivity(), AnkoLogger {
+
+
+    private val MEDIA_TYPE_IMAGE = 1
+    private val MEDIA_TYPE_VIDEO = 2
 
     companion object {
 
@@ -48,7 +41,6 @@ class CameraActivity : AppCompatActivity(), AnkoLogger, View.OnClickListener {
          * Conversion from screen rotation to JPEG orientation.
          */
         private val ORIENTATIONS = SparseIntArray()
-        private val FRAGMENT_DIALOG = "dialog"
 
         init {
             ORIENTATIONS.append(Surface.ROTATION_0, 90)
@@ -60,42 +52,41 @@ class CameraActivity : AppCompatActivity(), AnkoLogger, View.OnClickListener {
         /**
          * Tag for the [Log].
          */
-        private val TAG = "CameraActivity"
 
         /**
          * Camera state: Showing camera preview.
          */
-        private val STATE_PREVIEW = 0
+        private const val STATE_PREVIEW = 0
 
         /**
          * Camera state: Waiting for the focus to be locked.
          */
-        private val STATE_WAITING_LOCK = 1
+        private const val STATE_WAITING_LOCK = 1
 
         /**
          * Camera state: Waiting for the exposure to be precapture state.
          */
-        private val STATE_WAITING_PRECAPTURE = 2
+        private const val STATE_WAITING_PRECAPTURE = 2
 
         /**
          * Camera state: Waiting for the exposure state to be something other than precapture.
          */
-        private val STATE_WAITING_NON_PRECAPTURE = 3
+        private const val STATE_WAITING_NON_PRECAPTURE = 3
 
         /**
          * Camera state: Picture was taken.
          */
-        private val STATE_PICTURE_TAKEN = 4
+        private const val STATE_PICTURE_TAKEN = 4
 
         /**
          * Max preview width that is guaranteed by Camera2 API
          */
-        private val MAX_PREVIEW_WIDTH = 1920
+        private const val MAX_PREVIEW_WIDTH = 1920
 
         /**
          * Max preview height that is guaranteed by Camera2 API
          */
-        private val MAX_PREVIEW_HEIGHT = 1080
+        private const val MAX_PREVIEW_HEIGHT = 1080
 
         /**
          * Given `choices` of `Size`s supported by a camera, choose the smallest one that
@@ -147,7 +138,7 @@ class CameraActivity : AppCompatActivity(), AnkoLogger, View.OnClickListener {
             } else if (notBigEnough.size > 0) {
                 return Collections.max(notBigEnough, CompareSizesByArea())
             } else {
-                Log.e(TAG, "Couldn't find any suitable preview size")
+                Log.e("CameraActivity", "Couldn't find any suitable preview size")
                 return choices[0]
             }
         }
@@ -218,7 +209,6 @@ class CameraActivity : AppCompatActivity(), AnkoLogger, View.OnClickListener {
 
         override fun onError(cameraDevice: CameraDevice, error: Int) {
             onDisconnected(cameraDevice)
-
             finish()
         }
 
@@ -345,6 +335,38 @@ class CameraActivity : AppCompatActivity(), AnkoLogger, View.OnClickListener {
 
     }
 
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_camera)
+
+        textureView = find(R.id.texture)
+        picture.setOnClickListener {
+            lockFocus()
+        }
+    }
+
+    override fun onPause() {
+        closeCamera()
+        stopBackgroundThread()
+        super.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        startBackgroundThread()
+
+        // When the screen is turned off and turned back on, the SurfaceTexture is already
+        // available, and "onSurfaceTextureAvailable" will not be called. In that case, we can open
+        // a camera and start preview from here (otherwise, we wait until the surface is ready in
+        // the SurfaceTextureListener).
+        if (textureView.isAvailable) {
+            openCamera(textureView.width, textureView.height)
+        } else {
+            textureView.surfaceTextureListener = surfaceTextureListener
+        }
+    }
+
     /**
      * Sets up member variables related to camera.
      *
@@ -419,12 +441,11 @@ class CameraActivity : AppCompatActivity(), AnkoLogger, View.OnClickListener {
                 return
             }
         } catch (e: CameraAccessException) {
-            Log.e(TAG, e.toString())
+            info { e.stackTrace }
         } catch (e: NullPointerException) {
             // Currently an NPE is thrown when the Camera2API is used but not supported on the
             // device this code runs.
-            /*ErrorDialog.newInstance(getString(R.string.camera_error))
-                    .show(childFragmentManager, FRAGMENT_DIALOG)*/
+            info { e.stackTrace }
         }
 
     }
@@ -450,17 +471,18 @@ class CameraActivity : AppCompatActivity(), AnkoLogger, View.OnClickListener {
                 }
             }
             else -> {
-                Log.e(TAG, "Display rotation is invalid: $displayRotation")
+                info { "Display rotation is invalid: $displayRotation" }
             }
         }
         return swappedDimensions
     }
 
     /**
-     * Opens the camera specified by [CameraActivity.cameraId].
+     * Opens the camera specified by .cameraId].
      */
     @SuppressLint("MissingPermission")
     private fun openCamera(width: Int, height: Int) {
+
         setUpCameraOutputs(width, height)
         configureTransform(width, height)
         val manager = getSystemService(Context.CAMERA_SERVICE) as CameraManager
@@ -471,7 +493,7 @@ class CameraActivity : AppCompatActivity(), AnkoLogger, View.OnClickListener {
             }
             manager.openCamera(cameraId, stateCallback, backgroundHandler)
         } catch (e: CameraAccessException) {
-            Log.e(TAG, e.toString())
+            info { e.stackTrace }
         } catch (e: InterruptedException) {
             throw RuntimeException("Interrupted while trying to lock camera opening.", e)
         }
@@ -515,7 +537,7 @@ class CameraActivity : AppCompatActivity(), AnkoLogger, View.OnClickListener {
             backgroundThread = null
             backgroundHandler = null
         } catch (e: InterruptedException) {
-            Log.e(TAG, e.toString())
+            info { e.toString() }
         }
 
     }
@@ -561,7 +583,7 @@ class CameraActivity : AppCompatActivity(), AnkoLogger, View.OnClickListener {
                                 captureSession?.setRepeatingRequest(previewRequest,
                                         captureCallback, backgroundHandler)
                             } catch (e: CameraAccessException) {
-                                Log.e(TAG, e.toString())
+                                error { e.toString() }
                             }
 
                         }
@@ -571,7 +593,7 @@ class CameraActivity : AppCompatActivity(), AnkoLogger, View.OnClickListener {
                         }
                     }, null)
         } catch (e: CameraAccessException) {
-            Log.e(TAG, e.toString())
+            error { e.toString() }
         }
 
     }
@@ -585,7 +607,6 @@ class CameraActivity : AppCompatActivity(), AnkoLogger, View.OnClickListener {
      * @param viewHeight The height of `textureView`
      */
     private fun configureTransform(viewWidth: Int, viewHeight: Int) {
-
         val rotation = windowManager.defaultDisplay.rotation
         val matrix = Matrix()
         val viewRect = RectF(0f, 0f, viewWidth.toFloat(), viewHeight.toFloat())
@@ -622,7 +643,7 @@ class CameraActivity : AppCompatActivity(), AnkoLogger, View.OnClickListener {
             captureSession?.capture(previewRequestBuilder.build(), captureCallback,
                     backgroundHandler)
         } catch (e: CameraAccessException) {
-            Log.e(TAG, e.toString())
+            info { e.stackTrace }
         }
 
     }
@@ -641,7 +662,7 @@ class CameraActivity : AppCompatActivity(), AnkoLogger, View.OnClickListener {
             captureSession?.capture(previewRequestBuilder.build(), captureCallback,
                     backgroundHandler)
         } catch (e: CameraAccessException) {
-            Log.e(TAG, e.toString())
+            info { e.stackTrace }
         }
 
     }
@@ -652,7 +673,7 @@ class CameraActivity : AppCompatActivity(), AnkoLogger, View.OnClickListener {
      */
     private fun captureStillPicture() {
         try {
-            if (cameraDevice == null) return
+
             val rotation = windowManager.defaultDisplay.rotation
 
             // This is the CaptureRequest.Builder that we use to take a picture.
@@ -678,7 +699,6 @@ class CameraActivity : AppCompatActivity(), AnkoLogger, View.OnClickListener {
                                                 request: CaptureRequest,
                                                 result: TotalCaptureResult) {
                     toast("Saved: $file")
-                    Log.d(TAG, file.toString())
                     unlockFocus()
                 }
             }
@@ -689,7 +709,7 @@ class CameraActivity : AppCompatActivity(), AnkoLogger, View.OnClickListener {
                 capture(captureBuilder?.build(), captureCallback, null)
             }
         } catch (e: CameraAccessException) {
-            Log.e(TAG, e.toString())
+            info { e.stackTrace }
         }
 
     }
@@ -711,16 +731,11 @@ class CameraActivity : AppCompatActivity(), AnkoLogger, View.OnClickListener {
             captureSession?.setRepeatingRequest(previewRequest, captureCallback,
                     backgroundHandler)
         } catch (e: CameraAccessException) {
-            Log.e(TAG, e.toString())
+            Log.e("CameraActivity", e.toString())
         }
 
     }
 
-    override fun onClick(view: View) {
-        when (view.id) {
-            R.id.btnCapture -> lockFocus()
-        }
-    }
 
     private fun setAutoFlash(requestBuilder: CaptureRequest.Builder) {
         if (flashSupported) {
@@ -729,44 +744,6 @@ class CameraActivity : AppCompatActivity(), AnkoLogger, View.OnClickListener {
         }
     }
 
-    private val MEDIA_TYPE_IMAGE = 1
-    private val MEDIA_TYPE_VIDEO = 2
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_camera)
-
-        textureView = find(R.id.texture)
-
-        btnCapture.setOnClickListener(this@CameraActivity)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        startBackgroundThread()
-
-        // When the screen is turned off and turned back on, the SurfaceTexture is already
-        // available, and "onSurfaceTextureAvailable" will not be called. In that case, we can open
-        // a camera and start preview from here (otherwise, we wait until the surface is ready in
-        // the SurfaceTextureListener).
-        if (textureView.isAvailable) {
-            openCamera(textureView.width, textureView.height)
-        } else {
-            textureView.surfaceTextureListener = surfaceTextureListener
-        }
-    }
-
-    override fun onPause() {
-        closeCamera()
-        stopBackgroundThread()
-        super.onPause()
-    }
-
-
-    /** Create a file Uri for saving an image or video */
-    private fun getOutputMediaFileUri(type: Int): Uri {
-        return Uri.fromFile(getOutputMediaFile(type))
-    }
 
     /** Create a File for saving an image or video */
     private fun getOutputMediaFile(type: Int): File? {
