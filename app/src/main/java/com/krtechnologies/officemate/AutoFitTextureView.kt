@@ -1,5 +1,3 @@
-
-
 package com.krtechnologies.officemate
 
 import android.content.Context

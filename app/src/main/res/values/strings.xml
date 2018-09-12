@@ -44,6 +44,7 @@
     <string name="enter_the_project_description">Enter the project description</string>
     <string name="assign_to">Assign To</string>
     <string name="enter_your_message">Enter your message</string>
+    <string name="no_contacts_found">No Contacts found</string>
 
 
 </resources>

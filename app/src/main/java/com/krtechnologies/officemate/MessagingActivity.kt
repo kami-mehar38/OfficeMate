@@ -125,7 +125,11 @@ class MessagingActivity : AppCompatActivity(), AnkoLogger {
         })
 
         btnCamera.setOnClickListener {
-            startActivity<CameraActivity>()
+            //startActivity<CameraActivity>()
+        }
+
+        btnContact.setOnClickListener {
+            startActivity<ContactsActivity>()
         }
 
     }

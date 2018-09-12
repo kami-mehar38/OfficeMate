@@ -22,6 +22,21 @@ import java.util.*
 import android.util.DisplayMetrics
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import android.R.attr.y
+import android.R.attr.x
+import android.annotation.TargetApi
+import android.content.ContentResolver
+import android.content.res.Resources
+import android.graphics.Point
+import android.graphics.PointF
+import android.provider.ContactsContract
+import android.support.v4.view.ViewCompat.getRotation
+import android.util.Size
+import android.view.WindowManager
+import android.view.Display
+import com.krtechnologies.officemate.models.Contact
+import java.io.InputStream
+import kotlin.collections.ArrayList
 
 
 /**
@@ -224,4 +239,73 @@ class Helper {
     }
 
     fun getTimeInMillis(): Long = System.currentTimeMillis()
+
+    fun dpToPx(dp: Int): Int {
+        return ((dp * Resources.getSystem().displayMetrics.density)).toInt()
+    }
+
+    fun getScreenHeight(c: Context): Int {
+        val wm = c.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val display = wm.defaultDisplay
+        val size = Point()
+        display.getSize(size)
+        return size.y
+    }
+
+    fun getScreenWidth(c: Context): Int {
+        val wm = c.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val display = wm.defaultDisplay
+        val size = Point()
+        display.getSize(size)
+        return size.x
+    }
+
+    fun getScreenRatio(c: Context): Float {
+        val metrics = c.resources.displayMetrics
+        return metrics.heightPixels.toFloat() / metrics.widthPixels.toFloat()
+    }
+
+    fun getScreenRotation(c: Context): Int {
+        val wm = c.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        return wm.defaultDisplay.rotation
+    }
+
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    fun sizeToSize(sizes: Array<android.util.Size>): ArrayList<Size> {
+        val size = ArrayList<Size>(sizes.size)
+        for (i in sizes.indices) {
+            size[i] = Size(sizes[i].width, sizes[i].height)
+        }
+        return size
+    }
+
+    fun getContacts(): List<Contact> {
+        val list = ArrayList<Contact>()
+        val contentResolver = context?.contentResolver
+        val cursor = contentResolver?.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null)
+        if (cursor?.count!! > 0) {
+            while (cursor.moveToNext()) {
+                val id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID))
+                if (cursor.getInt(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
+                    val cursorInfo = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?", arrayOf(id), null)
+                    val person = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, id.toLong())
+                    val pURI = Uri.withAppendedPath(person, ContactsContract.Contacts.Photo.CONTENT_DIRECTORY)
+
+                    while (cursorInfo.moveToNext()) {
+                        val contact = Contact(id,
+                                cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)),
+                                cursorInfo.getString(cursorInfo.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)),
+                                pURI)
+                        list.add(contact)
+                    }
+
+                    cursorInfo.close()
+                }
+            }
+            cursor.close()
+        }
+        return list
+    }
 }
