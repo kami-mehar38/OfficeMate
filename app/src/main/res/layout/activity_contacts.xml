@@ -58,6 +58,7 @@
             android:layout_marginStart="8dp"
             android:background="@drawable/background_edittext_white_search"
             android:ems="10"
+            android:imeOptions="actionSearch"
             android:hint="@string/search"
             android:inputType="text"
             android:textSize="@dimen/text_size_edit_text"
@@ -82,8 +83,6 @@
             android:id="@+id/rvContacts"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:paddingBottom="@dimen/padding_recyclerview_bottom_80dp"
             android:scrollbarStyle="outsideOverlay"
             android:scrollbars="vertical" />
 

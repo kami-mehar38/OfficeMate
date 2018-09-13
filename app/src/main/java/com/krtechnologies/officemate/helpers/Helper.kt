@@ -13,7 +13,6 @@ import android.os.Build
 import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
-import android.text.Spannable
 import com.krtechnologies.officemate.R
 import java.io.File
 import java.io.IOException
@@ -22,20 +21,16 @@ import java.util.*
 import android.util.DisplayMetrics
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import android.R.attr.y
-import android.R.attr.x
 import android.annotation.TargetApi
-import android.content.ContentResolver
 import android.content.res.Resources
 import android.graphics.Point
-import android.graphics.PointF
 import android.provider.ContactsContract
-import android.support.v4.view.ViewCompat.getRotation
+import android.text.format.Formatter
 import android.util.Size
 import android.view.WindowManager
-import android.view.Display
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import com.krtechnologies.officemate.models.Contact
-import java.io.InputStream
 import kotlin.collections.ArrayList
 
 
@@ -45,6 +40,10 @@ import kotlin.collections.ArrayList
 class Helper {
 
     private var context: Context? = null
+    private lateinit var inputMethodManager: InputMethodManager
+    private lateinit var fileList: ArrayList<File>
+    private lateinit var files: ArrayList<com.krtechnologies.officemate.models.File>
+
 
     companion object {
         @SuppressLint("StaticFieldLeak")
@@ -64,6 +63,9 @@ class Helper {
 
     fun init(context: Context) {
         this.context = context
+        inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        fileList = ArrayList()
+        files = ArrayList()
     }
 
     private var gson: Gson? = null
@@ -280,32 +282,127 @@ class Helper {
         return size
     }
 
-    fun getContacts(): List<Contact> {
-        val list = ArrayList<Contact>()
-        val contentResolver = context?.contentResolver
-        val cursor = contentResolver?.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null)
-        if (cursor?.count!! > 0) {
-            while (cursor.moveToNext()) {
-                val id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID))
-                if (cursor.getInt(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
-                    val cursorInfo = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
-                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?", arrayOf(id), null)
-                    val person = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, id.toLong())
-                    val pURI = Uri.withAppendedPath(person, ContactsContract.Contacts.Photo.CONTENT_DIRECTORY)
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    fun getContacts(): ArrayList<Contact> {
 
-                    while (cursorInfo.moveToNext()) {
-                        val contact = Contact(id,
-                                cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)),
-                                cursorInfo.getString(cursorInfo.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)),
-                                pURI)
+        val list = ArrayList<Contact>()
+        val projection = arrayOf(
+                ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+                ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
+                ContactsContract.CommonDataKinds.Phone.NUMBER,
+                ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER
+                //plus any other properties you wish to query
+        )
+
+        val sortOrder = "${ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME} ASC"
+
+        var cursor: Cursor? = null
+        try {
+            cursor = context?.contentResolver?.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, projection, null, null, sortOrder)
+        } catch (e: SecurityException) {
+            //SecurityException can be thrown if we don't have the right permissions
+        }
+
+        if (cursor != null) {
+            try {
+                val normalizedNumbersAlreadyFound = HashSet<String>()
+                val indexOfNormalizedNumber = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER)
+                val indexOfContactId = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID)
+                val indexOfDisplayName = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)
+                val indexOfDisplayNumber = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
+
+                while (cursor.moveToNext()) {
+                    val normalizedNumber = cursor.getString(indexOfNormalizedNumber)
+                    if (normalizedNumbersAlreadyFound.add(normalizedNumber)) {
+
+                        val id = cursor.getString(indexOfContactId)
+                        val displayName = cursor.getString(indexOfDisplayName)
+                        val displayNumber = cursor.getString(indexOfDisplayNumber)
+                        val contact = Contact(id, displayName, displayNumber)
                         list.add(contact)
                     }
-
-                    cursorInfo.close()
                 }
+            } finally {
+                cursor.close()
             }
-            cursor.close()
         }
         return list
+    }
+
+
+    fun hideKeyboard(view: View) {
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    fun showKeyboard() {
+        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
+    }
+
+
+    fun getFiles(dir: File): ArrayList<com.krtechnologies.officemate.models.File> {
+        val listFile = dir.listFiles()
+        if (listFile != null && listFile.isNotEmpty())
+            for (i in listFile.indices) {
+                if (listFile[i].isDirectory) {
+                    fileList.add(listFile[i])
+                    getFiles(listFile[i])
+                } else if (listFile[i].name.endsWith(".doc") ||
+                        listFile[i].name.endsWith(".txt") ||
+                        listFile[i].name.endsWith(".csv") ||
+                        listFile[i].name.endsWith(".pps")||
+                        listFile[i].name.endsWith(".ppt")||
+                        listFile[i].name.endsWith(".pptx")||
+                        listFile[i].name.endsWith(".xml")||
+                        listFile[i].name.endsWith(".m4a")||
+                        listFile[i].name.endsWith(".mp3")||
+                        listFile[i].name.endsWith(".wav")||
+                        listFile[i].name.endsWith(".3gp")||
+                        listFile[i].name.endsWith(".avi")||
+                        listFile[i].name.endsWith(".flv")||
+                        listFile[i].name.endsWith(".mp4")||
+                        listFile[i].name.endsWith(".gif")||
+                        listFile[i].name.endsWith(".jpg")||
+                        listFile[i].name.endsWith(".png")||
+                        listFile[i].name.endsWith(".svg")||
+                        listFile[i].name.endsWith(".pdf")||
+                        listFile[i].name.endsWith(".xls")||
+                        listFile[i].name.endsWith(".apk")||
+                        listFile[i].name.endsWith(".asp")||
+                        listFile[i].name.endsWith(".aspx")||
+                        listFile[i].name.endsWith(".cer")||
+                        listFile[i].name.endsWith(".cfm")||
+                        listFile[i].name.endsWith(".css")||
+                        listFile[i].name.endsWith(".htm")||
+                        listFile[i].name.endsWith(".html")||
+                        listFile[i].name.endsWith(".js")||
+                        listFile[i].name.endsWith(".jsp")||
+                        listFile[i].name.endsWith(".php")||
+                        listFile[i].name.endsWith(".xhtml")||
+                        listFile[i].name.endsWith(".7z")||
+                        listFile[i].name.endsWith(".rar")||
+                        listFile[i].name.endsWith(".zip")||
+                        listFile[i].name.endsWith(".zipx")||
+                        listFile[i].name.endsWith(".tar.gz")||
+                        listFile[i].name.endsWith(".c")||
+                        listFile[i].name.endsWith(".class")||
+                        listFile[i].name.endsWith(".cpp")||
+                        listFile[i].name.endsWith(".cs")||
+                        listFile[i].name.endsWith(".dtd")||
+                        listFile[i].name.endsWith(".fla")||
+                        listFile[i].name.endsWith(".h")||
+                        listFile[i].name.endsWith(".java")||
+                        listFile[i].name.endsWith(".lua")||
+                        listFile[i].name.endsWith(".m")||
+                        listFile[i].name.endsWith(".pl")||
+                        listFile[i].name.endsWith(".py")||
+                        listFile[i].name.endsWith(".sh")||
+                        listFile[i].name.endsWith(".sln")||
+                        listFile[i].name.endsWith(".swift")||
+                        listFile[i].name.endsWith(".vb")) {
+
+                    files.add(com.krtechnologies.officemate.models.File(listFile[i].name, Formatter.formatFileSize(context, listFile[i].length())))
+                }
+            }
+        return files
     }
 }

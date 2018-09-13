@@ -114,9 +114,19 @@ class MemberSelectingActivity : AppCompatActivity(), AnkoLogger {
             }
         })
 
+        etSearch.setOnEditorActionListener { editText, action, _ ->
+            when (action) {
+                EditorInfo.IME_ACTION_SEARCH -> {
+                    Helper.getInstance().hideKeyboard(editText)
+                    true
+                }
+                else -> false
+            }
+        }
+
         ivCancel.setOnClickListener {
             etSearch.text.clear()
-            showKeyboard()
+            Helper.getInstance().showKeyboard()
         }
 
         btnDone.setOnClickListener {
@@ -152,9 +162,5 @@ class MemberSelectingActivity : AppCompatActivity(), AnkoLogger {
         }
     }
 
-    private fun showKeyboard() {
-        if (etSearch.requestFocus())
-            inputMethodManager?.showSoftInputFromInputMethod(etSearch.windowToken, InputMethodManager.SHOW_IMPLICIT)
-    }
 
 }

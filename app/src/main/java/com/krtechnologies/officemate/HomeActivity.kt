@@ -45,7 +45,6 @@ class HomeActivity : AppCompatActivity(), AnkoLogger {
     private var settingsFragment: SettingsFragment? = null
 
     private var isSearchExpanded = false
-    private var inputMethodManager: InputMethodManager? = null
 
     // keys
     private val KEY_CURRENT_INDEX_OF_BOTTOM_NAVIGATION = "CURRENT_INDEX"
@@ -73,7 +72,6 @@ class HomeActivity : AppCompatActivity(), AnkoLogger {
             selectBottomNavigationItem()
         }
 
-        inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -160,10 +158,10 @@ class HomeActivity : AppCompatActivity(), AnkoLogger {
                 }
             }
         })
-        etSearch.setOnEditorActionListener { _, action, _ ->
+        etSearch.setOnEditorActionListener { editText, action, _ ->
             when (action) {
                 EditorInfo.IME_ACTION_SEARCH -> {
-                    hideKeyboard()
+                    Helper.getInstance().hideKeyboard(editText)
                     true
                 }
                 else -> false
@@ -321,7 +319,7 @@ class HomeActivity : AppCompatActivity(), AnkoLogger {
                         if (toolbar.visibility != View.INVISIBLE)
                             toolbar.visibility = View.INVISIBLE
                         etSearch.requestFocus()
-                        showKeyboard()
+                        Helper.getInstance().showKeyboard()
 
                     }
 
@@ -344,9 +342,6 @@ class HomeActivity : AppCompatActivity(), AnkoLogger {
         }
     }
 
-    fun showKeyboard() {
-        inputMethodManager?.showSoftInput(etSearch, InputMethodManager.SHOW_IMPLICIT)
-    }
 
     @SuppressLint("NewApi")
     private fun hideSearchEditText() {
@@ -368,7 +363,7 @@ class HomeActivity : AppCompatActivity(), AnkoLogger {
                             1 -> workstationFragment?.resetData()
                             2 -> membersFragment?.resetData()
                         }
-                        hideKeyboard()
+                        Helper.getInstance().hideKeyboard(etSearch)
                         etSearch.text.clear()
                     }
 
@@ -388,10 +383,6 @@ class HomeActivity : AppCompatActivity(), AnkoLogger {
             }, 1)
         }
 
-    }
-
-    fun hideKeyboard() {
-        inputMethodManager?.hideSoftInputFromWindow(etSearch.windowToken, InputMethodManager.HIDE_IMPLICIT_ONLY)
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)

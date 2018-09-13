@@ -3,6 +3,7 @@ package com.krtechnologies.officemate.adapters
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.support.constraint.ConstraintLayout
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -27,63 +28,28 @@ import com.krtechnologies.officemate.models.Project
  **/
 class ContactsAdapter(val context: Context) : RecyclerView.Adapter<ContactsAdapter.ViewHolder>() {
 
-    private var projectsList: MutableList<Contact> = ArrayList()
+    private var contactsList: MutableList<Contact> = ArrayList()
+    private lateinit var listener: ((contact: Contact) -> Unit)
+
+    public fun setOnItemClickListener(listener: (contact: Contact) -> Unit) {
+        this.listener = listener
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactsAdapter.ViewHolder = ViewHolder(LayoutInflater.from(context).inflate(R.layout.row_contact, parent, false))
 
 
     override fun getItemCount(): Int {
-        return projectsList.size
+        return contactsList.size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        val contact = projectsList[position]
+        val contact = contactsList[position]
         holder.tvName.text = contact.name
         holder.tvPhoneNo.text = contact.phoneNo
-
-        /*Glide.with(context)
-                .asBitmap()
-                .load(project.profilePicture)
-                .apply(RequestOptions().override(Helper.getInstance().convertDpToPixel(50f).toInt(), Helper.getInstance().convertDpToPixel(50f).toInt()).fallback(R.drawable.person).error(R.drawable.person))
-                .into(object : Target<Bitmap> {
-                    override fun onLoadStarted(placeholder: Drawable?) {
-                    }
-
-                    override fun onLoadFailed(errorDrawable: Drawable?) {
-                    }
-
-                    override fun getSize(cb: SizeReadyCallback) {
-                    }
-
-                    override fun getRequest(): Request? {
-                        return null
-                    }
-
-                    override fun onStop() {
-                    }
-
-                    override fun setRequest(request: Request?) {
-                    }
-
-                    override fun removeCallback(cb: SizeReadyCallback) {
-                    }
-
-                    override fun onLoadCleared(placeholder: Drawable?) {
-                    }
-
-                    override fun onStart() {
-                    }
-
-                    override fun onDestroy() {
-                    }
-
-                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                        holder.ivProfilePicture.setImageBitmap(resource)
-                    }
-
-                })*/
-
+        holder.item.setOnClickListener {
+            listener(contact)
+        }
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
@@ -95,14 +61,15 @@ class ContactsAdapter(val context: Context) : RecyclerView.Adapter<ContactsAdapt
     }
 
     fun updateList(newList: List<Contact>) {
-        val diffResult = DiffUtil.calculateDiff(ContactsDiffUtils(newList, this.projectsList), true)
+        val diffResult = DiffUtil.calculateDiff(ContactsDiffUtils(newList, this.contactsList), true)
         diffResult.dispatchUpdatesTo(this)
-        this.projectsList.clear()
-        this.projectsList.addAll(newList)
+        this.contactsList.clear()
+        this.contactsList.addAll(newList)
     }
 
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         val tvName = view.findViewById<TextView>(R.id.tvName)!!
         val tvPhoneNo = view.findViewById<TextView>(R.id.tvPhoneNo)!!
+        val item = view.findViewById<ConstraintLayout>(R.id.item)
     }
 }

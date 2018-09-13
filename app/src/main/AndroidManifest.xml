@@ -61,7 +61,8 @@
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity android:name=".MessagingActivity" />
         <activity android:name=".CameraActivity" />
-        <activity android:name=".ContactsActivity"></activity>
+        <activity android:name=".ContactsActivity" />
+        <activity android:name=".FilesActivity"></activity>
     </application>
 
 </manifest>

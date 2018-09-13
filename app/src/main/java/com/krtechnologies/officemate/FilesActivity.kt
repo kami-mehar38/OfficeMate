@@ -2,51 +2,54 @@ package com.krtechnologies.officemate
 
 import android.app.Activity
 import android.content.Intent
-import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.os.Bundle
+import android.os.Environment
 import android.support.v7.widget.LinearLayoutManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.inputmethod.EditorInfo
 import com.krtechnologies.officemate.adapters.ContactsAdapter
+import com.krtechnologies.officemate.adapters.FilesAdapter
 import com.krtechnologies.officemate.helpers.ContactItemDivider
 import com.krtechnologies.officemate.helpers.Helper
-import com.krtechnologies.officemate.models.Contact
-import kotlinx.android.synthetic.main.activity_contacts.*
+import com.krtechnologies.officemate.models.File
+import kotlinx.android.synthetic.main.activity_files.*
 import org.jetbrains.anko.*
 
-class ContactsActivity : AppCompatActivity(), AnkoLogger {
+class FilesActivity : AppCompatActivity(), AnkoLogger {
 
     companion object {
-        const val EXTRA_CONTACT = "EXTRA_CONTACT"
+        const val EXTRA_FILE = "EXTRA_FILE"
     }
 
-    private lateinit var contactsAdapter: ContactsAdapter
-    private lateinit var list: ArrayList<Contact>
-    private lateinit var newList: ArrayList<Contact>
+    private lateinit var filesAdapter: FilesAdapter
+    private lateinit var list: ArrayList<File>
+    private lateinit var newList: ArrayList<File>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_contacts)
-        contactsAdapter = ContactsAdapter(this)
-        contactsAdapter.setOnItemClickListener { contact ->
-            alert("Send this contact?") {
+        setContentView(R.layout.activity_files)
+
+        filesAdapter = FilesAdapter(this)
+        filesAdapter.setOnItemClickListener { file ->
+            alert("Send this file?") {
                 yesButton {
-                    sendResultBack(contact)
+                    sendResultBack(file)
                 }
                 cancelButton { }
             }.show()
         }
 
-        rvContacts.layoutManager = LinearLayoutManager(this)
+        rvFiles.layoutManager = LinearLayoutManager(this)
         val itemDecoration = ContactItemDivider(this)
-        rvContacts.addItemDecoration(itemDecoration)
-        rvContacts.adapter = contactsAdapter
+        rvFiles.addItemDecoration(itemDecoration)
+        rvFiles.adapter = filesAdapter
 
         swipeRefreshLayout.setOnRefreshListener {
-            loadContacts()
+            loadFiles()
         }
-        loadContacts()
+        loadFiles()
 
         ivBack.setOnClickListener {
             onBackPressed()
@@ -71,16 +74,15 @@ class ContactsActivity : AppCompatActivity(), AnkoLogger {
                     if (text.isNotEmpty()) {
                         newList.clear()
                         list.forEach {
-                            if (it.name.contains(text, true)) {
+                            if (it.fileName.contains(text, true)) {
                                 newList.add(it)
                                 info { it.toString() }
                             }
                         }
-                        contactsAdapter.updateList(newList)
-                    } else contactsAdapter.updateList(list)
+                        filesAdapter.updateList(newList)
+                    } else filesAdapter.updateList(list)
                 }
             }
-
         })
 
         etSearch.setOnEditorActionListener { editText, action, _ ->
@@ -94,21 +96,21 @@ class ContactsActivity : AppCompatActivity(), AnkoLogger {
         }
     }
 
-    private fun sendResultBack(contact: Contact) {
-        val returnIntent = Intent()
-        returnIntent.putExtra(EXTRA_CONTACT, contact)
-        setResult(Activity.RESULT_OK, returnIntent)
-        finish()
-    }
-
-    private fun loadContacts() {
+    private fun loadFiles() {
         doAsync {
             swipeRefreshLayout.isRefreshing = true
-            list = Helper.getInstance().getContacts()
+            list = Helper.getInstance().getFiles(java.io.File(Environment.getExternalStorageDirectory().absolutePath))
             uiThread {
                 swipeRefreshLayout.isRefreshing = false
-                contactsAdapter.updateList(list)
+                filesAdapter.updateList(list)
             }
         }
+    }
+
+    private fun sendResultBack(file: File) {
+        val returnIntent = Intent()
+        returnIntent.putExtra(EXTRA_FILE, file)
+        setResult(Activity.RESULT_OK, returnIntent)
+        finish()
     }
 }

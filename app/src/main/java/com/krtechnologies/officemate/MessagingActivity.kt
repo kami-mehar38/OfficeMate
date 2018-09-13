@@ -5,9 +5,11 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
+import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -27,6 +29,8 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import com.krtechnologies.officemate.adapters.MessagesAdapter
 import com.krtechnologies.officemate.helpers.Helper
+import com.krtechnologies.officemate.models.Contact
+import com.krtechnologies.officemate.models.File
 import com.krtechnologies.officemate.models.Message
 import com.krtechnologies.officemate.models.MessageViewModel
 import kotlinx.android.synthetic.main.activity_messaging.*
@@ -40,7 +44,8 @@ class MessagingActivity : AppCompatActivity(), AnkoLogger {
     private var newListMessages: MutableList<Message>? = null
     private var inputMethodManager: InputMethodManager? = null
     private var isSearchExpanded = false
-
+    private val REQUEST_CODE_CONTACT = 1
+    private val REQUEST_CODE_FILE = 2
     private lateinit var messageViewModel: MessageViewModel
 
     private var isMessageMode: Boolean = false
@@ -129,7 +134,11 @@ class MessagingActivity : AppCompatActivity(), AnkoLogger {
         }
 
         btnContact.setOnClickListener {
-            startActivity<ContactsActivity>()
+            startActivityForResult<ContactsActivity>(REQUEST_CODE_CONTACT)
+        }
+
+        btnAttachment.setOnClickListener {
+            startActivityForResult<FilesActivity>(REQUEST_CODE_FILE)
         }
 
     }
@@ -279,7 +288,21 @@ class MessagingActivity : AppCompatActivity(), AnkoLogger {
 
         })
         animatorSet.start()
+    }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_CONTACT && resultCode == Activity.RESULT_OK) {
+            data?.run {
+                val contact = getSerializableExtra(ContactsActivity.EXTRA_CONTACT) as Contact
+                toast(contact.name)
+            }
+        } else if (requestCode == REQUEST_CODE_FILE && resultCode == Activity.RESULT_OK) {
+            data?.run {
+                val file = getSerializableExtra(FilesActivity.EXTRA_FILE) as File
+                toast(file.fileName)
+            }
+        }
     }
 
 }
