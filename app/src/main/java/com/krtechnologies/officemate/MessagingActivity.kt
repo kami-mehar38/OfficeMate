@@ -11,9 +11,12 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.FileProvider
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -35,6 +38,7 @@ import com.krtechnologies.officemate.models.Message
 import com.krtechnologies.officemate.models.MessageViewModel
 import kotlinx.android.synthetic.main.activity_messaging.*
 import org.jetbrains.anko.*
+import java.io.IOException
 
 
 class MessagingActivity : AppCompatActivity(), AnkoLogger {
@@ -44,8 +48,14 @@ class MessagingActivity : AppCompatActivity(), AnkoLogger {
     private var newListMessages: MutableList<Message>? = null
     private var inputMethodManager: InputMethodManager? = null
     private var isSearchExpanded = false
+
+    // request codes
     private val REQUEST_CODE_CONTACT = 1
     private val REQUEST_CODE_FILE = 2
+    private val REQUEST_IMAGE__VIDEO_SELECT = 3
+    private val REQUEST_IMAGE_CAPTURE = 4
+    private val REQUEST_VIDEO_CAPTURE = 5
+
     private lateinit var messageViewModel: MessageViewModel
 
     private var isMessageMode: Boolean = false
@@ -130,7 +140,7 @@ class MessagingActivity : AppCompatActivity(), AnkoLogger {
         })
 
         btnCamera.setOnClickListener {
-            //startActivity<CameraActivity>()
+            showCameraOptions()
         }
 
         btnContact.setOnClickListener {
@@ -139,6 +149,10 @@ class MessagingActivity : AppCompatActivity(), AnkoLogger {
 
         btnAttachment.setOnClickListener {
             startActivityForResult<FilesActivity>(REQUEST_CODE_FILE)
+        }
+
+        btnGallery.setOnClickListener {
+            dispatchSelectImageVideoIntent()
         }
 
     }
@@ -290,6 +304,79 @@ class MessagingActivity : AppCompatActivity(), AnkoLogger {
         animatorSet.start()
     }
 
+
+    private fun dispatchSelectImageVideoIntent() {
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.addCategory(Intent.CATEGORY_OPENABLE)
+        intent.type = "image/*"
+        intent.type = "video/*"
+        startActivityForResult(Intent.createChooser(intent, "Select File"), REQUEST_IMAGE__VIDEO_SELECT)
+    }
+
+    // this function show the options of Camera or Gallery to the user
+    private fun showCameraOptions() {
+        selector(null, listOf("Take Picture", "Record Video")
+        ) { _, position ->
+            when (position) {
+                0 -> dispatchTakePictureIntent()
+
+                1 -> dispatchTakeVideoIntent()
+            }
+        }
+    }
+
+    private var photoFile: java.io.File? = null
+
+    // this function dispatches the intent to start the camera and capture image
+    private fun dispatchTakePictureIntent() {
+        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(packageManager) != null) {
+            // Create the File where the photo should go
+
+            try {
+                photoFile = Helper.getInstance().createImageFile()
+                //mCurrentPhotoPath = photoFile?.absolutePath
+            } catch (ex: IOException) {
+
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                val photoURI: Uri = FileProvider.getUriForFile(this,
+                        "com.krtechnologies.officemate.fileprovider",
+                        photoFile!!)
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+            }
+        }
+    }
+
+    private var videoFile: java.io.File? = null
+    private fun dispatchTakeVideoIntent() {
+        val takeVideoIntent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
+        takeVideoIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 60)
+
+        // Ensure that there's a camera activity to handle the intent
+        if (takeVideoIntent.resolveActivity(packageManager) != null) {
+            // Create the File where the photo should go
+
+            try {
+                videoFile = Helper.getInstance().createVideoFile()
+                //mCurrentPhotoPath = photoFile?.absolutePath
+            } catch (ex: IOException) {
+
+            }
+            // Continue only if the File was successfully created
+            if (videoFile != null) {
+                val photoURI: Uri = FileProvider.getUriForFile(this,
+                        "com.krtechnologies.officemate.fileprovider",
+                        videoFile!!)
+                takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE)
+            }
+        }
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_CONTACT && resultCode == Activity.RESULT_OK) {
@@ -302,7 +389,18 @@ class MessagingActivity : AppCompatActivity(), AnkoLogger {
                 val file = getSerializableExtra(FilesActivity.EXTRA_FILE) as File
                 toast(file.fileName)
             }
+        } else if (requestCode == REQUEST_IMAGE__VIDEO_SELECT && resultCode == Activity.RESULT_OK) {
+            data?.run {
+                toast("Ok")
+            }
+        } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
+            photoFile?.run {
+                toast(name)
+            }
+        } else if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == Activity.RESULT_OK) {
+            videoFile?.run {
+                toast(name)
+            }
         }
     }
-
 }

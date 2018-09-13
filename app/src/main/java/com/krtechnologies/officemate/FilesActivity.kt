@@ -70,18 +70,7 @@ class FilesActivity : AppCompatActivity(), AnkoLogger {
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                p0?.let { text ->
-                    if (text.isNotEmpty()) {
-                        newList.clear()
-                        list.forEach {
-                            if (it.fileName.contains(text, true)) {
-                                newList.add(it)
-                                info { it.toString() }
-                            }
-                        }
-                        filesAdapter.updateList(newList)
-                    } else filesAdapter.updateList(list)
-                }
+                filterFiles(p0)
             }
         })
 
@@ -93,6 +82,28 @@ class FilesActivity : AppCompatActivity(), AnkoLogger {
                 }
                 else -> false
             }
+        }
+    }
+
+    fun filterFiles(p0: CharSequence?) {
+        p0?.let { text ->
+            if (text.isNotEmpty()) {
+                swipeRefreshLayout.isRefreshing = true
+                newList.clear()
+                doAsync {
+                    list.forEach {
+                        if (it.fileName.contains(text, true)) {
+                            newList.add(it)
+                            info { it.toString() }
+                        }
+                    }
+                    uiThread {
+                        filesAdapter.updateList(newList)
+                        swipeRefreshLayout.isRefreshing = false
+                    }
+                }
+
+            } else filesAdapter.updateList(list)
         }
     }
 
