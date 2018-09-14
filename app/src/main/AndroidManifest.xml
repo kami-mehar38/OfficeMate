@@ -50,7 +50,7 @@
         <activity android:name=".LoginActivity" />
         <activity
             android:name=".HomeActivity"
-
+            android:configChanges="orientation|screenSize"
             android:theme="@style/AppTheme.NoFade" />
         <activity android:name=".WorkstationProjectEditActivity" />
         <activity
