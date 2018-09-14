@@ -35,6 +35,10 @@ class SettingsFragment : Fragment(), Serializable {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        tvName.text = PreferencesManager.getInstance().getUserName()
+        tvDesignation.text = PreferencesManager.getInstance().getUserDesignation()
+
         ivProfilePicture.setOnClickListener {
             val options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity!!, ivProfilePicture as View, "ivProfilePicture")
             val intent = Intent(context!!, ProfileSettingsActivity::class.java)

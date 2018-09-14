@@ -21,9 +21,7 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+            android:layout_height="?attr/actionBarSize">
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
@@ -70,8 +68,8 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline13"
         app:layout_constraintStart_toStartOf="@+id/guideline12"
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
-        tools:targetApi="lollipop"
-        tools:ignore="VectorDrawableCompat" />
+        tools:ignore="VectorDrawableCompat"
+        tools:targetApi="lollipop" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline12"
@@ -107,10 +105,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
         android:background="@android:color/white"
-        android:clickable="true"
         android:elevation="1dp"
-        android:focusable="true"
-        android:foreground="?selectableItemBackground"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ivProfilePicture"
@@ -153,10 +148,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:background="@android:color/white"
-        android:clickable="true"
         android:elevation="1dp"
-        android:focusable="true"
-        android:foreground="?selectableItemBackground"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout"

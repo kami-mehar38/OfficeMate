@@ -5,4 +5,4 @@
         <target android:excludeId="@android:id/navigationBarBackground" />
         <target android:excludeId="@id/appBarLayout" />
     </targets>
-</fade> 
+</fade>

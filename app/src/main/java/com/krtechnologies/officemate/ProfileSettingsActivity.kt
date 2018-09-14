@@ -1,6 +1,7 @@
 package com.krtechnologies.officemate
 
 import android.annotation.SuppressLint
+import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
@@ -40,9 +41,11 @@ class ProfileSettingsActivity : AppCompatActivity() {
     private val REQUEST_IMAGE_SELECT = 2
     private var photoFile: File? = null
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile_settings)
+        setSupportActionBar(toolbar)
         initViews()
 
     }
@@ -195,7 +198,7 @@ class ProfileSettingsActivity : AppCompatActivity() {
             // start cropping activity for pre-acquired image saved on the device
             CropImage.activity(Uri.fromFile(photoFile))
                     .setAspectRatio(1, 1)
-                    .setCropShape(CropImageView.CropShape.OVAL)
+                    .setCropShape(CropImageView.CropShape.RECTANGLE)
                     .start(this)
 
             galleryAddPic()

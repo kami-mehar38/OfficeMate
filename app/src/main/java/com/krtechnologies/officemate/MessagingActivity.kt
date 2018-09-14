@@ -10,10 +10,12 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
+import android.database.Cursor
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.provider.MediaStore
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.FileProvider
@@ -32,8 +34,6 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import com.krtechnologies.officemate.adapters.MessagesAdapter
 import com.krtechnologies.officemate.helpers.Helper
-import com.krtechnologies.officemate.models.Contact
-import com.krtechnologies.officemate.models.File
 import com.krtechnologies.officemate.models.Message
 import com.krtechnologies.officemate.models.MessageViewModel
 import kotlinx.android.synthetic.main.activity_messaging.*
@@ -51,10 +51,10 @@ class MessagingActivity : AppCompatActivity(), AnkoLogger {
 
     // request codes
     private val REQUEST_CODE_CONTACT = 1
-    private val REQUEST_CODE_FILE = 2
-    private val REQUEST_IMAGE__VIDEO_SELECT = 3
+    private val REQUEST_IMAGE_VIDEO_SELECT = 3
     private val REQUEST_IMAGE_CAPTURE = 4
     private val REQUEST_VIDEO_CAPTURE = 5
+    private val REQUEST_FILE_SELECT = 6
 
     private lateinit var messageViewModel: MessageViewModel
 
@@ -89,7 +89,7 @@ class MessagingActivity : AppCompatActivity(), AnkoLogger {
             override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 when (newState) {
-                    RecyclerView.SCROLL_STATE_DRAGGING -> hideKeyboard(recyclerView!!)
+                    RecyclerView.SCROLL_STATE_DRAGGING -> Helper.getInstance().hideKeyboard(recyclerView!!)
                 }
             }
         })
@@ -112,7 +112,7 @@ class MessagingActivity : AppCompatActivity(), AnkoLogger {
         etSearch.setOnEditorActionListener { _, action, _ ->
             when (action) {
                 EditorInfo.IME_ACTION_SEARCH -> {
-                    hideKeyboard(etSearch)
+                    Helper.getInstance().hideKeyboard(etSearch)
                     true
                 }
                 else -> false
@@ -144,11 +144,11 @@ class MessagingActivity : AppCompatActivity(), AnkoLogger {
         }
 
         btnContact.setOnClickListener {
-            startActivityForResult<ContactsActivity>(REQUEST_CODE_CONTACT)
+            pickContact()
         }
 
         btnAttachment.setOnClickListener {
-            startActivityForResult<FilesActivity>(REQUEST_CODE_FILE)
+            dispatchSelectFileIntent()
         }
 
         btnGallery.setOnClickListener {
@@ -189,7 +189,7 @@ class MessagingActivity : AppCompatActivity(), AnkoLogger {
                         if (toolbar.visibility != View.INVISIBLE)
                             toolbar.visibility = View.INVISIBLE
                         etSearch.requestFocus()
-                        showKeyboard()
+                        Helper.getInstance().showKeyboard()
 
                     }
 
@@ -227,7 +227,7 @@ class MessagingActivity : AppCompatActivity(), AnkoLogger {
                         if (searchContainer.visibility != View.INVISIBLE)
                             searchContainer.visibility = View.INVISIBLE
                         isSearchExpanded = false
-                        hideKeyboard(etSearch)
+                        Helper.getInstance().hideKeyboard(etSearch)
                         etSearch.text.clear()
                     }
 
@@ -249,13 +249,6 @@ class MessagingActivity : AppCompatActivity(), AnkoLogger {
 
     }
 
-    fun showKeyboard() {
-        inputMethodManager?.showSoftInput(etSearch, InputMethodManager.SHOW_IMPLICIT)
-    }
-
-    fun hideKeyboard(view: View) {
-        inputMethodManager?.hideSoftInputFromWindow(view.windowToken, 0)
-    }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private fun changeStatusBarColorToBlack() {
@@ -310,7 +303,15 @@ class MessagingActivity : AppCompatActivity(), AnkoLogger {
         intent.addCategory(Intent.CATEGORY_OPENABLE)
         intent.type = "image/*"
         intent.type = "video/*"
-        startActivityForResult(Intent.createChooser(intent, "Select File"), REQUEST_IMAGE__VIDEO_SELECT)
+        startActivityForResult(Intent.createChooser(intent, "Select image or video"), REQUEST_IMAGE_VIDEO_SELECT)
+    }
+
+
+    private fun dispatchSelectFileIntent() {
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.addCategory(Intent.CATEGORY_OPENABLE)
+        intent.type = "*/*"
+        startActivityForResult(Intent.createChooser(intent, "Select File"), REQUEST_FILE_SELECT)
     }
 
     // this function show the options of Camera or Gallery to the user
@@ -377,30 +378,68 @@ class MessagingActivity : AppCompatActivity(), AnkoLogger {
         }
     }
 
+
+    private fun pickContact() {
+        val contactPickerIntent = Intent(Intent.ACTION_PICK,
+                ContactsContract.CommonDataKinds.Phone.CONTENT_URI)
+        startActivityForResult(contactPickerIntent, REQUEST_CODE_CONTACT)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE_CONTACT && resultCode == Activity.RESULT_OK) {
-            data?.run {
-                val contact = getSerializableExtra(ContactsActivity.EXTRA_CONTACT) as Contact
-                toast(contact.name)
-            }
-        } else if (requestCode == REQUEST_CODE_FILE && resultCode == Activity.RESULT_OK) {
-            data?.run {
-                val file = getSerializableExtra(FilesActivity.EXTRA_FILE) as File
-                toast(file.fileName)
-            }
-        } else if (requestCode == REQUEST_IMAGE__VIDEO_SELECT && resultCode == Activity.RESULT_OK) {
+        if (requestCode == REQUEST_IMAGE_VIDEO_SELECT && resultCode == Activity.RESULT_OK) {
             data?.run {
                 toast("Ok")
             }
         } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             photoFile?.run {
                 toast(name)
+                galleryAddFile(photoFile!!)
             }
         } else if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == Activity.RESULT_OK) {
             videoFile?.run {
                 toast(name)
+                galleryAddFile(videoFile!!)
             }
+        } else if (requestCode == REQUEST_FILE_SELECT && resultCode == Activity.RESULT_OK) {
+            data?.run {
+                toast(getData().path)
+            }
+        } else if (requestCode == REQUEST_CODE_CONTACT && resultCode == Activity.RESULT_OK) {
+            data?.run {
+                contactPicked(data)
+            }
+        }
+    }
+
+    private fun galleryAddFile(file: java.io.File) {
+        val mediaScanIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
+        val contentUri = Uri.fromFile(file)
+        mediaScanIntent.data = contentUri
+        this.sendBroadcast(mediaScanIntent)
+    }
+
+    private fun contactPicked(data: Intent) {
+        var cursor: Cursor? = null
+        try {
+            val phoneNo: String
+            val name: String
+            // getData() method will have the Content Uri of the selected contact
+            val uri = data.data
+            //Query the content uri
+            cursor = contentResolver.query(uri, null, null, null, null)
+            cursor.moveToFirst()
+            // column index of the phone number
+            val phoneIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
+            // column index of the contact name
+            val nameIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)
+            phoneNo = cursor.getString(phoneIndex)
+            name = cursor.getString(nameIndex)
+            toast(name)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            cursor?.close()
         }
     }
 }

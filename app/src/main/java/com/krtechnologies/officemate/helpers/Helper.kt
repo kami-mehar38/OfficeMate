@@ -30,7 +30,6 @@ import android.util.Size
 import android.view.WindowManager
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import com.krtechnologies.officemate.models.Contact
 import kotlin.collections.ArrayList
 
 
@@ -41,8 +40,6 @@ class Helper {
 
     private var context: Context? = null
     private lateinit var inputMethodManager: InputMethodManager
-    private lateinit var fileList: ArrayList<File>
-    private lateinit var files: ArrayList<com.krtechnologies.officemate.models.File>
 
 
     companion object {
@@ -64,8 +61,6 @@ class Helper {
     fun init(context: Context) {
         this.context = context
         inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        fileList = ArrayList()
-        files = ArrayList()
     }
 
     private var gson: Gson? = null
@@ -106,8 +101,9 @@ class Helper {
         // Create an image file name
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         val imageFileName = "JPEG_" + timeStamp + "_"
-        val storageDir = context!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-
+        val storageDir = File(Environment.getExternalStorageDirectory(), File.separator + "Office Mate/")
+        if (!storageDir.exists())
+            storageDir.mkdirs()
         // Save a file: path for use with ACTION_VIEW intents
         return File.createTempFile(
                 imageFileName, /* prefix */
@@ -121,7 +117,9 @@ class Helper {
         // Create an image file name
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         val imageFileName = "MP4_" + timeStamp + "_"
-        val storageDir = context!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        val storageDir = File(Environment.getExternalStorageDirectory(), File.separator + "Office Mate/")
+        if (!storageDir.exists())
+            storageDir.mkdirs()
 
         // Save a file: path for use with ACTION_VIEW intents
         return File.createTempFile(
@@ -297,54 +295,6 @@ class Helper {
         return size
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    fun getContacts(): ArrayList<Contact> {
-
-        val list = ArrayList<Contact>()
-        val projection = arrayOf(
-                ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
-                ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
-                ContactsContract.CommonDataKinds.Phone.NUMBER,
-                ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER
-                //plus any other properties you wish to query
-        )
-
-        val sortOrder = "${ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME} ASC"
-
-        var cursor: Cursor? = null
-        try {
-            cursor = context?.contentResolver?.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, projection, null, null, sortOrder)
-        } catch (e: SecurityException) {
-            //SecurityException can be thrown if we don't have the right permissions
-        }
-
-        if (cursor != null) {
-            try {
-                val normalizedNumbersAlreadyFound = HashSet<String>()
-                val indexOfNormalizedNumber = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER)
-                val indexOfContactId = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID)
-                val indexOfDisplayName = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)
-                val indexOfDisplayNumber = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
-
-                while (cursor.moveToNext()) {
-                    val normalizedNumber = cursor.getString(indexOfNormalizedNumber)
-                    if (normalizedNumbersAlreadyFound.add(normalizedNumber)) {
-
-                        val id = cursor.getString(indexOfContactId)
-                        val displayName = cursor.getString(indexOfDisplayName)
-                        val displayNumber = cursor.getString(indexOfDisplayNumber)
-                        val contact = Contact(id, displayName, displayNumber)
-                        list.add(contact)
-                    }
-                }
-            } finally {
-                cursor.close()
-            }
-        }
-        return list
-    }
-
-
     fun hideKeyboard(view: View) {
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
@@ -353,71 +303,4 @@ class Helper {
         inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
     }
 
-
-    fun getFiles(dir: File): ArrayList<com.krtechnologies.officemate.models.File> {
-        val listFile = dir.listFiles()
-        if (listFile != null && listFile.isNotEmpty())
-            for (i in listFile.indices) {
-                if (listFile[i].isDirectory) {
-                    fileList.add(listFile[i])
-                    getFiles(listFile[i])
-                } else if (listFile[i].name.endsWith(".doc") ||
-                        listFile[i].name.endsWith(".txt") ||
-                        listFile[i].name.endsWith(".csv") ||
-                        listFile[i].name.endsWith(".pps") ||
-                        listFile[i].name.endsWith(".ppt") ||
-                        listFile[i].name.endsWith(".pptx") ||
-                        listFile[i].name.endsWith(".xml") ||
-                        listFile[i].name.endsWith(".m4a") ||
-                        listFile[i].name.endsWith(".mp3") ||
-                        listFile[i].name.endsWith(".wav") ||
-                        listFile[i].name.endsWith(".3gp") ||
-                        listFile[i].name.endsWith(".avi") ||
-                        listFile[i].name.endsWith(".flv") ||
-                        listFile[i].name.endsWith(".mp4") ||
-                        listFile[i].name.endsWith(".gif") ||
-                        listFile[i].name.endsWith(".jpg") ||
-                        listFile[i].name.endsWith(".png") ||
-                        listFile[i].name.endsWith(".svg") ||
-                        listFile[i].name.endsWith(".pdf") ||
-                        listFile[i].name.endsWith(".xls") ||
-                        listFile[i].name.endsWith(".apk") ||
-                        listFile[i].name.endsWith(".asp") ||
-                        listFile[i].name.endsWith(".aspx") ||
-                        listFile[i].name.endsWith(".cer") ||
-                        listFile[i].name.endsWith(".cfm") ||
-                        listFile[i].name.endsWith(".css") ||
-                        listFile[i].name.endsWith(".htm") ||
-                        listFile[i].name.endsWith(".html") ||
-                        listFile[i].name.endsWith(".js") ||
-                        listFile[i].name.endsWith(".jsp") ||
-                        listFile[i].name.endsWith(".php") ||
-                        listFile[i].name.endsWith(".xhtml") ||
-                        listFile[i].name.endsWith(".7z") ||
-                        listFile[i].name.endsWith(".rar") ||
-                        listFile[i].name.endsWith(".zip") ||
-                        listFile[i].name.endsWith(".zipx") ||
-                        listFile[i].name.endsWith(".tar.gz") ||
-                        listFile[i].name.endsWith(".c") ||
-                        listFile[i].name.endsWith(".class") ||
-                        listFile[i].name.endsWith(".cpp") ||
-                        listFile[i].name.endsWith(".cs") ||
-                        listFile[i].name.endsWith(".dtd") ||
-                        listFile[i].name.endsWith(".fla") ||
-                        listFile[i].name.endsWith(".h") ||
-                        listFile[i].name.endsWith(".java") ||
-                        listFile[i].name.endsWith(".lua") ||
-                        listFile[i].name.endsWith(".m") ||
-                        listFile[i].name.endsWith(".pl") ||
-                        listFile[i].name.endsWith(".py") ||
-                        listFile[i].name.endsWith(".sh") ||
-                        listFile[i].name.endsWith(".sln") ||
-                        listFile[i].name.endsWith(".swift") ||
-                        listFile[i].name.endsWith(".vb")) {
-
-                    files.add(com.krtechnologies.officemate.models.File(listFile[i].name, Formatter.formatFileSize(context, listFile[i].length()), listFile[i].absolutePath))
-                }
-            }
-        return files
-    }
 }
