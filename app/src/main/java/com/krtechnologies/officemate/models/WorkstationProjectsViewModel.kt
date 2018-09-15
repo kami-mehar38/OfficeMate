@@ -1,8 +1,7 @@
 package com.krtechnologies.officemate.models
 
-import android.app.Application
-import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.ViewModel
 import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
@@ -17,11 +16,12 @@ import org.json.JSONObject
  * Created by ingizly on 8/16/18
  **/
 
-class WorkstationProjectsViewModel(application: Application) : AndroidViewModel(application), AnkoLogger {
+class WorkstationProjectsViewModel(private val userEmail: String) : AnkoLogger, ViewModel() {
 
     private var data: MutableLiveData<MutableList<Project>>? = null
     private var list = ArrayList<Project>()
     private var previousList = ArrayList<Project>()
+
 
     init {
         loadData()
@@ -44,7 +44,8 @@ class WorkstationProjectsViewModel(application: Application) : AndroidViewModel(
 
     fun loadDataFromServer() {
         list.clear()
-        AndroidNetworking.get("${Helper.BASE_URL}/project/${PreferencesManager.getInstance().getUserAdminEmail()}/${PreferencesManager.getInstance().getUserEmail()}")
+
+        AndroidNetworking.get("${Helper.BASE_URL}/project/${PreferencesManager.getInstance().getUserAdminEmail()}/$userEmail")
                 .setTag("projects")
                 .setPriority(Priority.HIGH)
                 .build()

@@ -91,7 +91,7 @@ class HomeActivity : AppCompatActivity(), AnkoLogger {
         menu?.run {
             when (currentIndex) {
                 3 -> findItem(R.id.action_search).isVisible = false
-                1 -> if (PreferencesManager.getInstance().getIsAdmin() == "1") findItem(R.id.action_search).isVisible = false
+                1 -> if (PreferencesManager.getInstance().getIsAdmin()) findItem(R.id.action_search).isVisible = false
                 else -> findItem(R.id.action_search).isVisible = true
             }
         }
@@ -172,32 +172,32 @@ class HomeActivity : AppCompatActivity(), AnkoLogger {
     private fun selectBottomNavigationItem() {
         when (currentIndex) {
             0 -> {
-                Helper.getInstance().changeToSecondary(menuNewsfeed.compoundDrawables[1])
-                menuNewsfeed.setTextColor(ContextCompat.getColor(this, R.color.colorSecondary))
+                Helper.getInstance().changeRed(menuNewsfeed.compoundDrawables[1])
+                menuNewsfeed.setTextColor(ContextCompat.getColor(this, R.color.colorRed))
                 tvTitle.text = resources.getString(R.string.news_feed)
                 loadFragment()
                 ivBack.performClick()
             }
 
             1 -> {
-                Helper.getInstance().changeToSecondary(menuWorkstation.compoundDrawables[1])
-                menuWorkstation.setTextColor(ContextCompat.getColor(this, R.color.colorSecondary))
+                Helper.getInstance().changeRed(menuWorkstation.compoundDrawables[1])
+                menuWorkstation.setTextColor(ContextCompat.getColor(this, R.color.colorRed))
                 tvTitle.text = resources.getString(R.string.workstation)
                 loadFragment()
                 ivBack.performClick()
             }
 
             2 -> {
-                Helper.getInstance().changeToSecondary(menuMembers.compoundDrawables[1])
-                menuMembers.setTextColor(ContextCompat.getColor(this, R.color.colorSecondary))
+                Helper.getInstance().changeRed(menuMembers.compoundDrawables[1])
+                menuMembers.setTextColor(ContextCompat.getColor(this, R.color.colorRed))
                 tvTitle.text = resources.getString(R.string.members)
                 loadFragment()
                 ivBack.performClick()
             }
 
             3 -> {
-                Helper.getInstance().changeToSecondary(menuSettings.compoundDrawables[1])
-                menuSettings.setTextColor(ContextCompat.getColor(this, R.color.colorSecondary))
+                Helper.getInstance().changeRed(menuSettings.compoundDrawables[1])
+                menuSettings.setTextColor(ContextCompat.getColor(this, R.color.colorRed))
                 tvTitle.text = resources.getString(R.string.settings)
                 loadFragment()
                 ivBack.performClick()
@@ -295,7 +295,7 @@ class HomeActivity : AppCompatActivity(), AnkoLogger {
     private fun getFragment(): Fragment = when (currentIndex) {
         0 -> newsFeedFragment as Fragment
         1 -> {
-            if (PreferencesManager.getInstance().getIsAdmin() == "0")
+            if (PreferencesManager.getInstance().getIsAdmin())
                 workstationFragment as Fragment
             else workstationFragmentForAdmin as Fragment
         }

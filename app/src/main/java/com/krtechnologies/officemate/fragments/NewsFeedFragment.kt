@@ -8,13 +8,16 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.krtechnologies.officemate.ProjectsActivity
 import com.krtechnologies.officemate.R
 import com.krtechnologies.officemate.adapters.NewsFeedAdapter
+import com.krtechnologies.officemate.helpers.PreferencesManager
 import com.krtechnologies.officemate.models.NewsFeedViewModel
 import com.krtechnologies.officemate.models.Project
 import kotlinx.android.synthetic.main.fragment_news_feed.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
+import org.jetbrains.anko.startActivity
 import java.io.Serializable
 
 
@@ -44,6 +47,11 @@ class NewsFeedFragment : Fragment(), Serializable, AnkoLogger {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         rvNewsFeed.layoutManager = LinearLayoutManager(context)
         rvNewsFeed.hasFixedSize()
+        if (PreferencesManager.getInstance().getIsAdmin())
+            newsFeedAdapter?.setOnItemClickListener {
+                info { it.toString() }
+                context?.startActivity<ProjectsActivity>(ProjectsActivity.KEY_EXTRA_PROJECT to it)
+            }
 
         newsFeedAdapter?.let {
             rvNewsFeed.adapter = it

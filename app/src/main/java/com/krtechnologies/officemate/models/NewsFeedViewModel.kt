@@ -46,7 +46,7 @@ class NewsFeedViewModel(application: Application) : AndroidViewModel(application
     fun loadDataFromServer() {
         list.clear()
         val adminEmail = when (PreferencesManager.getInstance().getIsAdmin()) {
-            "0" -> PreferencesManager.getInstance().getUserAdminEmail()
+            true -> PreferencesManager.getInstance().getUserAdminEmail()
             else -> PreferencesManager.getInstance().getUserEmail()
         }
         AndroidNetworking.get("${Helper.BASE_URL}/project/$adminEmail")

@@ -104,9 +104,21 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@drawable/background_messaging_layout"
+        android:paddingTop="1dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvProjects"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="@android:color/white"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/etMessage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/etMessage"
@@ -115,19 +127,17 @@
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:layout_marginTop="8dp"
             android:background="@drawable/background_edittext_message"
             android:ems="10"
             android:hint="@string/enter_your_message"
             android:inputType="textMultiLine|textCapSentences"
             android:maxLines="6"
-            android:scrollbars="vertical"
             android:minHeight="34dp"
+            android:scrollbars="vertical"
             android:textSize="@dimen/text_size_edit_text"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/imageButton"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/imageButton"
@@ -154,11 +164,11 @@
                 android:background="?actionBarItemBackground"
                 android:clickable="true"
                 android:focusable="true"
-                app:srcCompat="@drawable/ic_action_mic"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_action_mic"
                 tools:ignore="ContentDescription" />
 
             <ImageView
@@ -174,12 +184,12 @@
                 android:background="?actionBarItemBackground"
                 android:clickable="true"
                 android:focusable="true"
-                app:srcCompat="@drawable/ic_action_send"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_action_send"
                 tools:ignore="ContentDescription" />
 
         </android.support.constraint.ConstraintLayout>

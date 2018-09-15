@@ -30,4 +30,10 @@ data class Project(
                 this.timestamp,
                 this.profilePicture)
     }
+
+    override fun toString(): String {
+        return "Project(id='$id', projectName='$projectName', projectDescription='$projectDescription', eta='$eta', completion='$completion', assignedTo='$assignedTo', email='$email', adminEmail='$adminEmail', timestamp='$timestamp', profilePicture='$profilePicture')"
+    }
+
+
 }

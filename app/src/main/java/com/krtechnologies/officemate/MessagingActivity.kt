@@ -12,6 +12,7 @@ import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.graphics.Color
+import android.graphics.Typeface
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -23,7 +24,10 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.text.Editable
+import android.text.SpannableStringBuilder
+import android.text.Spanned
 import android.text.TextWatcher
+import android.text.style.StyleSpan
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -33,9 +37,12 @@ import android.view.animation.OvershootInterpolator
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import com.krtechnologies.officemate.adapters.MessagesAdapter
+import com.krtechnologies.officemate.adapters.NewsFeedAdapter
+import com.krtechnologies.officemate.adapters.ProjectAdapter
+import com.krtechnologies.officemate.adapters.WorkstationsProjectAdapter
 import com.krtechnologies.officemate.helpers.Helper
-import com.krtechnologies.officemate.models.Message
-import com.krtechnologies.officemate.models.MessageViewModel
+import com.krtechnologies.officemate.helpers.PreferencesManager
+import com.krtechnologies.officemate.models.*
 import kotlinx.android.synthetic.main.activity_messaging.*
 import org.jetbrains.anko.*
 import java.io.IOException
@@ -47,7 +54,14 @@ class MessagingActivity : AppCompatActivity(), AnkoLogger {
     private var listMessages: MutableList<Message>? = null
     private var newListMessages: MutableList<Message>? = null
     private var inputMethodManager: InputMethodManager? = null
+
+    private var projectAdapter: ProjectAdapter? = null
+    private var listProjects: MutableList<Project>? = null
+    private var newListProjects: MutableList<Project>? = null
+    private var projectViewModel: NewsFeedViewModel? = null
+
     private var isSearchExpanded = false
+    private var isSearchProject = false
 
     // request codes
     private val REQUEST_CODE_CONTACT = 1
@@ -59,12 +73,17 @@ class MessagingActivity : AppCompatActivity(), AnkoLogger {
     private lateinit var messageViewModel: MessageViewModel
 
     private var isMessageMode: Boolean = false
+    private var isFirstTime: Boolean = true
+    private var lastIndex: Int = 0
 
 
     override fun onStart() {
         super.onStart()
         listMessages = ArrayList()
         newListMessages = ArrayList()
+
+        listProjects = ArrayList()
+        newListProjects = ArrayList()
     }
 
 
@@ -124,18 +143,64 @@ class MessagingActivity : AppCompatActivity(), AnkoLogger {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                s?.run {
-                    if (isNotEmpty() && !isMessageMode) {
+                s?.let {
+                    if (it.isNotEmpty() && !isMessageMode) {
                         popUp(btnSend, btnRecord)
                         isMessageMode = true
-                    } else if (isEmpty() && isMessageMode) {
+                    } else if (it.isEmpty() && isMessageMode) {
                         popUp(btnRecord, btnSend)
                         isMessageMode = false
                     }
+
+                    if (it.isNotEmpty())
+                        if (it.toString()[it.toString().length - 1] == '@') {
+                            lastIndex = it.toString().length - 1
+                            isSearchProject = true
+                            if (rvProjects.visibility != View.VISIBLE)
+                                rvProjects.visibility = View.VISIBLE
+                        } else if (isSearchProject) {
+                            toast("Ok")
+                            filterProjects(s.toString().trim().replace("@", ""))
+                        }
                 }
             }
 
             override fun afterTextChanged(s: Editable?) {
+            }
+        })
+
+        rvProjects.layoutManager = LinearLayoutManager(this)
+        rvProjects.hasFixedSize()
+        if (PreferencesManager.getInstance().getIsAdmin())
+            projectAdapter?.setOnItemClickListener {
+                info { it.toString() }
+                startActivity<ProjectsActivity>(ProjectsActivity.KEY_EXTRA_PROJECT to it)
+            }
+
+        projectAdapter = ProjectAdapter(this)
+        projectAdapter?.setOnItemClickListener {
+            info { it.toString() }
+            isSearchProject = false
+            etMessage.text.append(SpannableStringBuilder().withSpan(StyleSpan(Typeface.BOLD)) {
+                append("@${it.projectName}")
+            })
+        }
+
+        projectAdapter?.let {
+            rvProjects.adapter = it
+        }
+
+
+
+        projectViewModel = ViewModelProviders.of(this).get(NewsFeedViewModel::class.java)
+        projectViewModel?.getData()?.observe(this, Observer<MutableList<Project>> {
+            if (!it!!.isEmpty()) {
+                projectAdapter?.updateList(it)
+                rvProjects?.smoothScrollToPosition(0)
+                if (isFirstTime) {
+                    listProjects = it
+                    isFirstTime = !isFirstTime
+                }
             }
         })
 
@@ -441,5 +506,28 @@ class MessagingActivity : AppCompatActivity(), AnkoLogger {
         } finally {
             cursor?.close()
         }
+    }
+
+    inline fun SpannableStringBuilder.withSpan(span: Any, action: SpannableStringBuilder.() -> Unit): SpannableStringBuilder {
+        val from = length
+        action()
+        setSpan(span, from, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        return this
+    }
+
+    fun filterProjects(searchText: String) {
+        if (searchText.isNotEmpty()) {
+            listProjects?.let {
+                it.forEach { project: Project ->
+                    if (project.projectName.contains(searchText, true)) {
+                        newListProjects?.add(project)
+                        info { true }
+                    }
+                }
+            }
+            projectViewModel?.updateData(newListProjects!!)
+        } else projectViewModel?.updateData(listProjects!!)
+
+        newListProjects?.clear()
     }
 }

@@ -10,11 +10,12 @@
 
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?selectableItemBackground"
         android:clickable="true"
-        android:focusable="true"
-        android:foreground="?selectableItemBackground">
+        android:focusable="true">
 
         <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/ivProfilePicture"
@@ -63,12 +64,12 @@
             app:layout_constraintTop_toBottomOf="@+id/tvName" />
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/tvProjectName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvDescription" />
@@ -88,7 +89,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView4" />
+            app:layout_constraintTop_toBottomOf="@+id/tvProjectName" />
 
         <TextView
             android:id="@+id/tvEta"
@@ -105,7 +106,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/tvCompletion"
-            app:layout_constraintTop_toBottomOf="@+id/textView4" />
+            app:layout_constraintTop_toBottomOf="@+id/tvProjectName" />
 
 
     </android.support.constraint.ConstraintLayout>

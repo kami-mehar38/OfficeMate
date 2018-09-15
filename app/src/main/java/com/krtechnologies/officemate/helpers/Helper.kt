@@ -25,11 +25,14 @@ import android.annotation.TargetApi
 import android.content.res.Resources
 import android.graphics.Point
 import android.provider.ContactsContract
+import android.text.SpannableStringBuilder
+import android.text.Spanned
 import android.text.format.Formatter
 import android.util.Size
 import android.view.WindowManager
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import java.util.regex.Pattern
 import kotlin.collections.ArrayList
 
 
@@ -56,6 +59,8 @@ class Helper {
         }
 
         const val BASE_URL = "https://kamranramzan098.000webhostapp.com"
+
+        val sPattern: Pattern = Pattern.compile("@\\w+\\s")
     }
 
     fun init(context: Context) {
@@ -80,9 +85,9 @@ class Helper {
     }
 
     // changes the color filter of drawable to red color
-    fun changeToSecondary(drawable: Drawable) {
+    fun changeRed(drawable: Drawable) {
         drawable.mutate()
-        drawable.setColorFilter(context!!.resources.getColor(R.color.colorSecondary), PorterDuff.Mode.SRC_ATOP)
+        drawable.setColorFilter(context!!.resources.getColor(R.color.colorRed), PorterDuff.Mode.SRC_ATOP)
     }
 
     // changes the color filter of drawable to primary color

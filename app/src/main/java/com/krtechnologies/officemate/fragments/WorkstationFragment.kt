@@ -13,7 +13,9 @@ import android.view.ViewGroup
 import com.krtechnologies.officemate.R
 import com.krtechnologies.officemate.WorkstationProjectEditActivity
 import com.krtechnologies.officemate.adapters.WorkstationsProjectAdapter
+import com.krtechnologies.officemate.helpers.PreferencesManager
 import com.krtechnologies.officemate.models.Project
+import com.krtechnologies.officemate.models.ViewModelFactory
 import com.krtechnologies.officemate.models.WorkstationProjectsViewModel
 import kotlinx.android.synthetic.main.fragment_workstation.*
 import org.jetbrains.anko.AnkoLogger
@@ -21,7 +23,7 @@ import org.jetbrains.anko.info
 import java.io.Serializable
 
 
-class WorkstationFragment : Fragment(), Serializable, AnkoLogger {
+class WorkstationFragment : Fragment(), AnkoLogger {
 
     companion object {
         const val REQUEST_CODE_EDIT_PROJECT = 3
@@ -68,7 +70,7 @@ class WorkstationFragment : Fragment(), Serializable, AnkoLogger {
 
         swipeRefreshLayout.isRefreshing = true
 
-        workstationProjectsViewModel = ViewModelProviders.of(this).get(WorkstationProjectsViewModel::class.java)
+        workstationProjectsViewModel = ViewModelProviders.of(this, ViewModelFactory(PreferencesManager.getInstance().getUserEmail())).get(WorkstationProjectsViewModel::class.java)
         workstationProjectsViewModel?.getData()?.observe(this, Observer<MutableList<Project>> {
             swipeRefreshLayout.isRefreshing = false
             if (!it!!.isEmpty()) {

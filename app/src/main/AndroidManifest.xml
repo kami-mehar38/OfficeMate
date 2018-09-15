@@ -60,6 +60,7 @@
             android:name=".MemberSelectingActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity android:name=".MessagingActivity" />
+        <activity android:name=".ProjectsActivity"></activity>
     </application>
 
 </manifest>

@@ -111,10 +111,14 @@ class PreferencesManager {
         }
     }
 
-    fun getIsAdmin(): String {
-        sharedPreferences!!.run {
-            return getString(KEY_IS_ADMIN, "")
+    fun getIsAdmin(): Boolean {
+        return when (sharedPreferences!!.run {
+            getString(KEY_IS_ADMIN, "")
+        }) {
+            "1" -> true
+            else -> true
         }
+
     }
 
     fun getProfilePicture(): String {

@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.support.constraint.ConstraintLayout
-import android.support.v4.content.ContextCompat
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -12,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import antonkozyriatskyi.circularprogressindicator.CircularProgressIndicator
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.Request
 import com.bumptech.glide.request.RequestOptions
@@ -24,21 +22,19 @@ import com.krtechnologies.officemate.helpers.Helper
 import com.krtechnologies.officemate.helpers.NewsFeedDiffUtils
 import com.krtechnologies.officemate.models.Project
 
-
 /**
- * This project is created by Kamran Ramzan on 13-Aug-18.
- */
-
-class NewsFeedAdapter(val context: Context) : RecyclerView.Adapter<NewsFeedAdapter.ViewHolder>() {
+ * Created by ingizly on 9/15/18
+ **/
+class ProjectAdapter(val context: Context) : RecyclerView.Adapter<ProjectAdapter.ViewHolder>() {
 
     private var projectsList: MutableList<Project> = ArrayList()
     private lateinit var listener: ((project: Project) -> Unit)
 
-    fun setOnItemClickListener(listener: (projecy: Project) -> Unit) {
+    fun setOnItemClickListener(listener: (project: Project) -> Unit) {
         this.listener = listener
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(LayoutInflater.from(context).inflate(R.layout.row_news_feed, parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(LayoutInflater.from(context).inflate(R.layout.row_project, parent, false))
 
 
     override fun getItemCount(): Int {
@@ -48,15 +44,10 @@ class NewsFeedAdapter(val context: Context) : RecyclerView.Adapter<NewsFeedAdapt
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val project = projectsList[position]
-        holder.tvCompletion.text = context.resources.getString(R.string.completed) + project.completion
-        holder.tvEta.text = context.resources.getString(R.string.eta) + project.eta
-        holder.tvDescription.text = project.projectDescription
-        holder.tvName.text = project.assignedTo
+        holder.tvAssignedTo.text = project.assignedTo
         holder.tvProjectName.text = project.projectName
         holder.item.setOnClickListener { _ ->
-            listener.let {
-                it(project)
-            }
+            listener(project)
         }
 
         Glide.with(context)
@@ -120,12 +111,8 @@ class NewsFeedAdapter(val context: Context) : RecyclerView.Adapter<NewsFeedAdapt
 
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         val ivProfilePicture = view.findViewById<ImageView>(R.id.ivProfilePicture)!!
-        val tvName = view.findViewById<TextView>(R.id.tvName)!!
-        val tvCompletion = view.findViewById<TextView>(R.id.tvCompletion)!!
-        val tvEta = view.findViewById<TextView>(R.id.tvEta)!!
-        val tvDescription = view.findViewById<TextView>(R.id.tvDescription)!!
+        val tvAssignedTo = view.findViewById<TextView>(R.id.tvAssignedTo)!!
         val tvProjectName = view.findViewById<TextView>(R.id.tvProjectName)!!
         val item = view.findViewById<ConstraintLayout>(R.id.item)!!
-
     }
 }
