@@ -105,6 +105,10 @@ class HomeActivity : AppCompatActivity(), AnkoLogger {
                 showSearchEditText()
                 true
             }
+            R.id.action_tasks -> {
+                showSearchEditText()
+                true
+            }
             else -> false
         }
     }
