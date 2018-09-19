@@ -130,14 +130,18 @@ class MemberSelectingActivity : AppCompatActivity(), AnkoLogger {
         }
 
         btnDone.setOnClickListener {
-            val returnIntent = Intent()
-
-            returnIntent.putExtra(EXTRA_EMPLOYEE, employee)
-            if (employee != null)
-                setResult(Activity.RESULT_OK, returnIntent)
-            else setResult(Activity.RESULT_CANCELED, returnIntent)
-            finish()
+            sendBackData()
         }
+    }
+
+    private fun sendBackData() {
+        val returnIntent = Intent()
+
+        returnIntent.putExtra(EXTRA_EMPLOYEE, employee)
+        if (employee != null)
+            setResult(Activity.RESULT_OK, returnIntent)
+        else setResult(Activity.RESULT_CANCELED, returnIntent)
+        finish()
     }
 
     fun filterMembers(searchText: String) {

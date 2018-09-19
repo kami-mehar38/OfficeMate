@@ -61,7 +61,8 @@
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity android:name=".MessagingActivity" />
         <activity android:name=".ProjectsActivity" />
-        <activity android:name=".TasksActivity"></activity>
+        <activity android:name=".TasksActivity" />
+        <activity android:name=".TaskAddingActivity" />
     </application>
 
 </manifest>

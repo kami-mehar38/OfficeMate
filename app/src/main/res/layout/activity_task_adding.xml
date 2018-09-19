@@ -4,8 +4,43 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
-    tools:context=".fragments.WorkstationFragmentForAdmin">
+    tools:context=".TaskAddingActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="?android:attr/colorPrimary"
+        android:elevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:targetApi="lollipop">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+            android:theme="@style/StyleToolbar">
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/tvTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_task"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </android.support.constraint.ConstraintLayout>
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline16"
@@ -32,10 +67,11 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/project_title"
+        android:layout_marginTop="8dp"
+        android:text="Task Title"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         app:layout_constraintStart_toStartOf="@+id/guideline16"
-        app:layout_constraintTop_toTopOf="@+id/guideline19" />
+        app:layout_constraintTop_toBottomOf="@id/appBarLayout" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline19"
@@ -51,10 +87,11 @@
         android:layout_marginTop="8dp"
         android:background="@drawable/background_edittext_rounded_project_edit"
         android:ems="10"
-        android:hint="@string/enter_the_project_title"
+        android:hint="Enter task title"
         android:inputType="textCapWords"
         android:textSize="@dimen/text_size_edit_text"
         app:layout_constraintEnd_toStartOf="@+id/guideline17"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guideline16"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
@@ -63,7 +100,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="@string/project_description"
+        android:text="Task Description"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         app:layout_constraintStart_toStartOf="@+id/guideline16"
         app:layout_constraintTop_toBottomOf="@+id/etTitle" />
@@ -76,7 +113,7 @@
         android:background="@drawable/background_edittext_rounded_project_edit"
         android:ems="10"
         android:gravity="top"
-        android:hint="@string/enter_the_project_description"
+        android:hint="Enter task details"
         android:inputType="textMultiLine"
         android:lines="6"
         android:maxLines="9"
@@ -86,68 +123,14 @@
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
     <Button
-        android:id="@+id/btnAssignTo"
+        android:id="@+id/btnAddTask"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="@string/assign_to"
+        android:layout_marginTop="16dp"
+        android:text="ADD TASK"
         app:layout_constraintEnd_toStartOf="@+id/guideline17"
         app:layout_constraintStart_toStartOf="@+id/guideline16"
         app:layout_constraintTop_toBottomOf="@+id/etDescription" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/btnAssignProject"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@drawable/ic_action_assign"
-        app:layout_constraintBottom_toTopOf="@+id/guideline18"
-        app:layout_constraintEnd_toStartOf="@+id/guideline17" />
-
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/sendToChip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:background="@drawable/background_chip"
-        android:elevation="4dp"
-        android:padding="@dimen/padding_drawable"
-        android:visibility="gone"
-        app:layout_constraintEnd_toStartOf="@+id/guideline17"
-        app:layout_constraintStart_toStartOf="@+id/guideline16"
-        app:layout_constraintTop_toBottomOf="@+id/etDescription"
-        tools:targetApi="lollipop">
-
-        <TextView
-            android:id="@+id/tvEmployeeName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            android:text="Kamran Ramzan"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/ivRemoveEmployee"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/ivRemoveEmployee"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?actionBarItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            android:src="@drawable/ic_action_cancel"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="ContentDescription" />
-    </android.support.constraint.ConstraintLayout>
-
 
 </android.support.constraint.ConstraintLayout>

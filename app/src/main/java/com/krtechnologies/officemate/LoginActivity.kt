@@ -1,5 +1,6 @@
 package com.krtechnologies.officemate
 
+import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.ProgressDialog
 import android.graphics.Color
@@ -20,6 +21,7 @@ import com.krtechnologies.officemate.models.Employee
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_login.*
 import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.doFromSdk
 import org.jetbrains.anko.info
 import org.jetbrains.anko.startActivity
 import org.json.JSONObject
@@ -45,10 +47,15 @@ class LoginActivity : AppCompatActivity(), AnkoLogger {
 
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+
+    @SuppressLint("NewApi")
     private fun setStatusBarColor() {
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-        window.statusBarColor = Color.TRANSPARENT
+        doFromSdk(Build.VERSION_CODES.JELLY_BEAN) {
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        }
+        doFromSdk(Build.VERSION_CODES.LOLLIPOP) {
+            window.statusBarColor = Color.TRANSPARENT
+        }
     }
 
     private fun logIn() {
@@ -90,6 +97,7 @@ class LoginActivity : AppCompatActivity(), AnkoLogger {
                             }
 
                             override fun onError(anError: ANError?) {
+                                info { anError?.message }
                                 dialog.dismiss()
                                 Toasty.error(this@LoginActivity, "Login failed", Toast.LENGTH_SHORT, true).show();
                             }

@@ -132,7 +132,7 @@ class SignUpActivity : AppCompatActivity(), AnkoLogger {
                 if (cbAdmin.isChecked)
                     cbAdmin.isChecked = false
                 etOrganizationName.hint = resources.getString(R.string.enter_admin_email)
-                etOrganizationName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_email, 0, 0, 0)
+                etOrganizationName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_email_21, 0, 0, 0)
             } else {
                 if (!cbAdmin.isChecked)
                     cbAdmin.isChecked = true

@@ -30,6 +30,7 @@ import kotlinx.android.synthetic.main.activity_home.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.doFromSdk
 import org.jetbrains.anko.info
+import org.jetbrains.anko.startActivity
 
 
 class HomeActivity : AppCompatActivity(), AnkoLogger {
@@ -106,7 +107,7 @@ class HomeActivity : AppCompatActivity(), AnkoLogger {
                 true
             }
             R.id.action_tasks -> {
-                showSearchEditText()
+                startActivity<TasksActivity>()
                 true
             }
             else -> false
@@ -300,8 +301,8 @@ class HomeActivity : AppCompatActivity(), AnkoLogger {
         0 -> newsFeedFragment as Fragment
         1 -> {
             if (PreferencesManager.getInstance().getIsAdmin())
-                workstationFragment as Fragment
-            else workstationFragmentForAdmin as Fragment
+                workstationFragmentForAdmin as Fragment
+            else workstationFragment as Fragment
         }
         2 -> membersFragment as Fragment
         3 -> settingsFragment as Fragment

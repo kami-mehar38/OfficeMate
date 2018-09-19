@@ -38,4 +38,8 @@ class Validator {
     fun validateText(text: String): Boolean {
         return !TextUtils.isEmpty(text)
     }
+
+    fun validateTitle(name: String): Boolean {
+        return (!TextUtils.isEmpty(name) && name.length >= 6)
+    }
 }

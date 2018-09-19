@@ -141,8 +141,8 @@ class WorkstationFragmentForAdmin : Fragment(), AnkoLogger {
     }
 
     private fun postProject() {
-        if (etProjectTitle.text.toString().trim().isNotEmpty()) {
-            if (etProjectDescription.text.toString().trim().isNotEmpty()) {
+        if (etTitle.text.toString().trim().isNotEmpty()) {
+            if (etDescription.text.toString().trim().isNotEmpty()) {
                 if (employee != null) {
                     employee?.run {
                         val dialog = ProgressDialog(context)
@@ -158,8 +158,8 @@ class WorkstationFragmentForAdmin : Fragment(), AnkoLogger {
 
                         dialog.show()
                         AndroidNetworking.post("${Helper.BASE_URL}/project")
-                                .addBodyParameter("project_name", etProjectTitle.text.toString().trim())
-                                .addBodyParameter("project_description", etProjectDescription.text.toString().trim())
+                                .addBodyParameter("project_name", etTitle.text.toString().trim())
+                                .addBodyParameter("project_description", etDescription.text.toString().trim())
                                 .addBodyParameter("eta", "0 days")
                                 .addBodyParameter("completion", "0 %")
                                 .addBodyParameter("assigned_to", name)

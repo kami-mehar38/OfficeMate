@@ -13,22 +13,13 @@ import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.JSONObjectRequestListener
-import com.krtechnologies.officemate.fragments.WorkstationFragment
 import com.krtechnologies.officemate.fragments.WorkstationFragment.Companion.KEY_EXTRA_PROJECT
 import com.krtechnologies.officemate.helpers.Helper
-import com.krtechnologies.officemate.helpers.PreferencesManager
-import com.krtechnologies.officemate.helpers.Validator
-import com.krtechnologies.officemate.models.Admin
-import com.krtechnologies.officemate.models.Employee
 import com.krtechnologies.officemate.models.Project
-import com.krtechnologies.officemate.models.WorkstationProject
 import es.dmoral.toasty.Toasty
-import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_workstation_project_edit.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
-import org.jetbrains.anko.startActivity
-import org.jetbrains.anko.toast
 import org.json.JSONObject
 
 
@@ -76,7 +67,7 @@ class WorkstationProjectEditActivity : AppCompatActivity(), AnkoLogger {
 
         project?.run {
             tvTitle.text = projectName
-            etProjectDescription.setText(projectDescription)
+            etDescription.setText(projectDescription)
             animateProgress(completion.trim().split(" ")[0].toInt())
             numberPicker.value = eta.trim().split(" ")[0].toInt()
             this@WorkstationProjectEditActivity.completion = completion
@@ -130,7 +121,7 @@ class WorkstationProjectEditActivity : AppCompatActivity(), AnkoLogger {
         dialog.show()
         AndroidNetworking.post("${Helper.BASE_URL}/update/project")
                 .setTag("login")
-                .addBodyParameter("project_description", etProjectDescription.text.toString().trim())
+                .addBodyParameter("project_description", etDescription.text.toString().trim())
                 .addBodyParameter("completion", completion)
                 .addBodyParameter("eta", eta)
                 .addBodyParameter("id", project!!.id)
@@ -145,7 +136,7 @@ class WorkstationProjectEditActivity : AppCompatActivity(), AnkoLogger {
                             201 -> {
                                 Toasty.success(this@WorkstationProjectEditActivity, response.getString("message"), Toast.LENGTH_SHORT, true).show()
                                 project?.let {
-                                    it.projectDescription = etProjectDescription.text.toString().trim()
+                                    it.projectDescription = etDescription.text.toString().trim()
                                     it.completion = completion
                                     it.eta = eta
                                     shouldSendResultBack = true

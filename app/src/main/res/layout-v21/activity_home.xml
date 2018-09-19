@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TasksActivity">
+    android:background="@android:color/white"
+    tools:context=".HomeActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -20,7 +21,8 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?android:attr/actionBarSize">
+            android:layout_height="?android:attr/actionBarSize"
+            android:theme="@style/StyleToolbar">
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
@@ -30,7 +32,6 @@
                     android:id="@+id/tvTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/my_tasks"
                     android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -86,14 +87,92 @@
 
     </android.support.constraint.ConstraintLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rvTasks"
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_bottom_navigation"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchContainer" />
+        app:layout_constraintTop_toBottomOf="@+id/frame">
 
+        <TextView
+            android:id="@+id/menuNewsfeed"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?android:selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:drawableTop="@drawable/ic_menu_newsfeed"
+            android:focusable="true"
+            android:gravity="center_vertical|center_horizontal"
+            android:maxWidth="60dp"
+            android:padding="@dimen/padding_drawable"
+            android:text="@string/news_feed"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            android:textColor="@android:color/black" />
 
+        <TextView
+            android:id="@+id/menuWorkstation"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:drawableTop="@drawable/ic_menu_workstation"
+            android:focusable="true"
+            android:background="?android:selectableItemBackgroundBorderless"
+            android:gravity="center_vertical|center_horizontal"
+            android:maxWidth="60dp"
+            android:padding="@dimen/padding_drawable"
+            android:text="@string/workstation"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:id="@+id/menuMembers"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:drawableTop="@drawable/ic_menu_members"
+            android:focusable="true"
+            android:background="?android:selectableItemBackgroundBorderless"
+            android:gravity="center_vertical|center_horizontal"
+            android:maxWidth="60dp"
+            android:padding="@dimen/padding_drawable"
+            android:text="@string/members"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:id="@+id/menuSettings"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:drawableTop="@drawable/ic_menu_settings"
+            android:focusable="true"
+            android:background="?android:selectableItemBackgroundBorderless"
+            android:gravity="center_vertical|center_horizontal"
+            android:maxWidth="60dp"
+            android:padding="@dimen/padding_drawable"
+            android:text="@string/settings"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            android:textColor="@android:color/black" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/frame"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
+
+    </FrameLayout>
 </android.support.constraint.ConstraintLayout>

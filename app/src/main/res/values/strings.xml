@@ -46,6 +46,8 @@
     <string name="enter_your_message">Enter your message</string>
     <string name="no_contacts_found">No Contacts found</string>
     <string name="tasks">Tasks</string>
+    <string name="my_tasks">My Tasks</string>
+    <string name="add_task">Add Task</string>
 
 
 </resources>
