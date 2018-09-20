@@ -90,6 +90,7 @@ class TasksActivity : AppCompatActivity(), AnkoLogger {
                 if (tvNoTasks.visibility != View.GONE)
                     tvNoTasks.visibility = View.GONE
                 tasksAdapter?.updateList(it)
+                listTasks?.addAll(it)
                 rvTasks?.smoothScrollToPosition(0)
                 info { it }
             } else {
@@ -191,7 +192,6 @@ class TasksActivity : AppCompatActivity(), AnkoLogger {
         }
     }
 
-
     @SuppressLint("NewApi")
     private fun hideSearchEditText() {
 
@@ -249,10 +249,10 @@ class TasksActivity : AppCompatActivity(), AnkoLogger {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_ADD_TASK && resultCode == Activity.RESULT_OK) {
-            data?.let { data ->
-                val task = data.getSerializableExtra(TaskAddingActivity.EXTRA_TASK) as Task
-                toast(task.toString())
-                info { tasksAdapter?.getList()?.forEach { info { it.toString() } } }
+            data?.let { dataa ->
+                val task = dataa.getSerializableExtra(TaskAddingActivity.EXTRA_TASK) as Task
+                listTasks?.add(task)
+                tasksViewModel?.updateData(listTasks!!)
             }
         }
     }
