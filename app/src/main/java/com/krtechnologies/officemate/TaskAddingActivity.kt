@@ -25,7 +25,7 @@ import org.json.JSONObject
 class TaskAddingActivity : AppCompatActivity(), AnkoLogger {
 
     companion object {
-        val EXTRA_TASK = "TASK"
+        const val EXTRA_TASK = "TASK"
     }
 
     private var task: Task? = null

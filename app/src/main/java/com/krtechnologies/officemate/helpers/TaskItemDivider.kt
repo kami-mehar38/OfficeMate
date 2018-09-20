@@ -10,7 +10,7 @@ import com.krtechnologies.officemate.R
 /**
  * This project is created by Kamran Ramzan on 13-Sep-18.
  */
-class ContactItemDivider(context: Context) : RecyclerView.ItemDecoration() {
+class TaskItemDivider(context: Context) : RecyclerView.ItemDecoration() {
     private var mDivider: Drawable? = null
 
     init {

@@ -17,6 +17,4 @@ data class Task(
     override fun toString(): String {
         return "Task(id='$id', title='$title', description='$description', email='$email', adminEmail='$adminEmail', timestamp='$timestamp', isDone='$isDone')"
     }
-
-
 }

@@ -4,12 +4,15 @@ import android.animation.Animator
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.Activity
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Menu
@@ -18,8 +21,12 @@ import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.inputmethod.EditorInfo
+import com.krtechnologies.officemate.adapters.TasksAdapter
 import com.krtechnologies.officemate.helpers.Helper
+import com.krtechnologies.officemate.helpers.SimpleDividerItemDecoration
+import com.krtechnologies.officemate.helpers.TaskItemDivider
 import com.krtechnologies.officemate.models.Task
+import com.krtechnologies.officemate.models.TasksViewModel
 import kotlinx.android.synthetic.main.activity_tasks.*
 import org.jetbrains.anko.*
 
@@ -27,6 +34,19 @@ class TasksActivity : AppCompatActivity(), AnkoLogger {
 
     private var isSearchExpanded = false
     private val REQUEST_CODE_ADD_TASK = 1
+
+    private var isFirstLoad = true
+    private var tasksAdapter: TasksAdapter? = null
+    private var listTasks: MutableList<Task>? = null
+    private var newListTasks: MutableList<Task>? = null
+    private var tasksViewModel: TasksViewModel? = null
+    private var task: Task? = null
+
+    override fun onStart() {
+        super.onStart()
+        listTasks = ArrayList()
+        newListTasks = ArrayList()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +59,53 @@ class TasksActivity : AppCompatActivity(), AnkoLogger {
     }
 
     private fun initViews() {
+
+        tasksAdapter = TasksAdapter(this)
+        tasksAdapter?.run {
+            setItemClickListener {
+                info { it.toString() }
+                task = it
+            }
+        }
+
+        rvTasks.layoutManager = LinearLayoutManager(this)
+        rvTasks.addItemDecoration(TaskItemDivider(this))
+        rvTasks.hasFixedSize()
+
+        tasksAdapter?.let {
+            rvTasks.adapter = it
+        }
+
+        swipeRefreshLayout.setOnRefreshListener {
+            tasksViewModel?.loadDataFromServer()
+        }
+
+        swipeRefreshLayout.isRefreshing = true
+        tasksViewModel = ViewModelProviders.of(this).get(TasksViewModel::class.java)
+        tasksViewModel?.getData()?.observe(this, Observer<MutableList<Task>> {
+            swipeRefreshLayout.isRefreshing = false
+            if (!it!!.isEmpty()) {
+                if (rvTasks.visibility != View.VISIBLE)
+                    rvTasks.visibility = View.VISIBLE
+                if (tvNoTasks.visibility != View.GONE)
+                    tvNoTasks.visibility = View.GONE
+                tasksAdapter?.updateList(it)
+                rvTasks?.smoothScrollToPosition(0)
+                info { it }
+            } else {
+                if (rvTasks.visibility != View.GONE)
+                    rvTasks.visibility = View.GONE
+                if (tvNoTasks.visibility != View.VISIBLE)
+                    tvNoTasks.visibility = View.VISIBLE
+            }
+
+            if (isFirstLoad) {
+                listTasks = it
+                isFirstLoad = false
+            }
+        })
+
+
         ivBack.setOnClickListener {
             if (isSearchExpanded)
                 hideSearchEditText()
@@ -182,9 +249,10 @@ class TasksActivity : AppCompatActivity(), AnkoLogger {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_ADD_TASK && resultCode == Activity.RESULT_OK) {
-            data?.let {
-                val task = it.getSerializableExtra(TaskAddingActivity.EXTRA_TASK) as Task
-                info { task.toString() }
+            data?.let { data ->
+                val task = data.getSerializableExtra(TaskAddingActivity.EXTRA_TASK) as Task
+                toast(task.toString())
+                info { tasksAdapter?.getList()?.forEach { info { it.toString() } } }
             }
         }
     }

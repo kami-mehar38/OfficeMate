@@ -1,5 +1,7 @@
 package com.krtechnologies.officemate.models
 
+import android.app.Application
+import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import com.androidnetworking.AndroidNetworking
@@ -15,11 +17,11 @@ import org.json.JSONObject
 /**
  * Created by ingizly on 9/19/18
  **/
-class TasksViewModel(private val userEmail: String, private val adminEmail: String) : AnkoLogger, ViewModel() {
+class TasksViewModel(application: Application) : AnkoLogger, AndroidViewModel(application) {
 
-    private var data: MutableLiveData<MutableList<Project>>? = null
-    private var list = ArrayList<Project>()
-    private var previousList = ArrayList<Project>()
+    private var data: MutableLiveData<MutableList<Task>>? = null
+    private var list = ArrayList<Task>()
+    private var previousList = ArrayList<Task>()
 
 
     init {
@@ -33,18 +35,18 @@ class TasksViewModel(private val userEmail: String, private val adminEmail: Stri
         }
     }
 
-    fun getData(): MutableLiveData<MutableList<Project>> {
+    fun getData(): MutableLiveData<MutableList<Task>> {
         return data!!
     }
 
-    fun updateData(workstationProjectList: MutableList<Project>) {
+    fun updateData(workstationProjectList: MutableList<Task>) {
         data?.value = workstationProjectList
     }
 
-    private fun loadDataFromServer() {
+    fun loadDataFromServer() {
         list.clear()
 
-        AndroidNetworking.get("${Helper.BASE_URL}/project/${PreferencesManager.getInstance().getUserAdminEmail()}/$userEmail")
+        AndroidNetworking.get("${Helper.BASE_URL}/task/${PreferencesManager.getInstance().getUserEmail()}")
                 .setTag("projects")
                 .setPriority(Priority.HIGH)
                 .build()
@@ -53,11 +55,11 @@ class TasksViewModel(private val userEmail: String, private val adminEmail: Stri
                         info { response }
                         when (response?.getInt("status")) {
                             201 -> {
-                                if (response.has("projects")) {
-                                    val jsonArray = response.getJSONArray("projects")
+                                if (response.has("tasks")) {
+                                    val jsonArray = response.getJSONArray("tasks")
                                     for (employeeAt in 0 until jsonArray.length()) {
-                                        val project = Helper.getInstance().getGson().fromJson(jsonArray.getJSONObject(employeeAt).toString(), Project::class.java)
-                                        list.add(project)
+                                        val task = Helper.getInstance().getGson().fromJson(jsonArray.getJSONObject(employeeAt).toString(), Task::class.java)
+                                        list.add(task)
                                     }
                                     data?.value = list
                                     previousList.addAll(list)

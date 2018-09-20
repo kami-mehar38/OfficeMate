@@ -48,6 +48,7 @@
     <string name="tasks">Tasks</string>
     <string name="my_tasks">My Tasks</string>
     <string name="add_task">Add Task</string>
+    <string name="there_are_no_tasks_yet">There are no tasks yet</string>
 
 
 </resources>
