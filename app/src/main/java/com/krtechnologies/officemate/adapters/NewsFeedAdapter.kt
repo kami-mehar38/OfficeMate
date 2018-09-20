@@ -34,7 +34,7 @@ class NewsFeedAdapter(val context: Context) : RecyclerView.Adapter<NewsFeedAdapt
     private var projectsList: MutableList<Project> = ArrayList()
     private lateinit var listener: ((project: Project) -> Unit)
 
-    fun setOnItemClickListener(listener: (projecy: Project) -> Unit) {
+    fun setOnItemClickListener(listener: (project: Project) -> Unit) {
         this.listener = listener
     }
 
@@ -54,9 +54,7 @@ class NewsFeedAdapter(val context: Context) : RecyclerView.Adapter<NewsFeedAdapt
         holder.tvName.text = project.assignedTo
         holder.tvProjectName.text = project.projectName
         holder.item.setOnClickListener { _ ->
-            listener.let {
-                it(project)
-            }
+            listener(project)
         }
 
         Glide.with(context)

@@ -26,6 +26,7 @@ import android.text.Editable
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.TextWatcher
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -39,10 +40,11 @@ import com.krtechnologies.officemate.helpers.Helper
 import com.krtechnologies.officemate.models.Message
 import com.krtechnologies.officemate.models.MessageViewModel
 import kotlinx.android.synthetic.main.activity_messaging.*
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.doFromSdk
-import org.jetbrains.anko.selector
-import org.jetbrains.anko.toast
+import org.jetbrains.anko.*
+import org.jivesoftware.smack.AbstractXMPPConnection
+import org.jivesoftware.smack.ConnectionConfiguration
+import org.jivesoftware.smack.tcp.XMPPTCPConnection
+import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration
 import java.io.IOException
 
 
@@ -66,8 +68,6 @@ class MessagingActivity : AppCompatActivity(), AnkoLogger {
     private lateinit var messageViewModel: MessageViewModel
 
     private var isMessageMode: Boolean = false
-    private var isFirstTime: Boolean = true
-    private var lastIndex: Int = 0
 
 
     override fun onStart() {
@@ -111,6 +111,10 @@ class MessagingActivity : AppCompatActivity(), AnkoLogger {
         ivBack.setOnClickListener {
             if (isSearchExpanded)
                 hideSearchEditText()
+        }
+
+        btnSend.setOnClickListener {
+            connectWithJabber()
         }
 
 
@@ -458,6 +462,34 @@ class MessagingActivity : AppCompatActivity(), AnkoLogger {
         action()
         setSpan(span, from, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         return this
+    }
+
+    private fun connectWithJabber() {
+        doAsync {
+            val config = XMPPTCPConnectionConfiguration.builder()
+                    .setUsernameAndPassword("user1", "12345")
+                    .setHost("10.0.2.2")
+                    .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
+                    .setServiceName("localhost")
+                    .setPort(5222)
+                    .setDebuggerEnabled(true) // to view what's happening in detail
+                    .build()
+
+            val conn1 = XMPPTCPConnection(config)
+            try {
+                conn1.connect()
+                if (conn1.isConnected) {
+                    info { "conn done" }
+                }
+                conn1.login()
+
+                if (conn1.isAuthenticated) {
+                    info { "Auth done" }
+                }
+            } catch (e: Exception) {
+                info { e.toString() }
+            }
+        }
     }
 
 }

@@ -116,7 +116,7 @@ class PreferencesManager {
             getString(KEY_IS_ADMIN, "")
         }) {
             "1" -> true
-            else -> true
+            else -> false
         }
 
     }
